@@ -279,11 +279,32 @@ class ControlScreen {
   }
 }
 // Helper function for smooth page transitions
+let isNavigating = false;
 function smoothNavigate(url) {
+  // Prevent double navigation
+  if (isNavigating) return;
+  isNavigating = true;
+  
+  // Disable all clicks during navigation
+  document.body.style.pointerEvents = 'none';
   document.body.classList.add('fade-out');
+  
+  // Listen for transition end to navigate at the perfect time
+  const onTransitionEnd = (e) => {
+    // Only trigger on opacity transition, not other properties
+    if (e.propertyName === 'opacity') {
+      document.body.removeEventListener('transitionend', onTransitionEnd);
+      window.location.href = url;
+    }
+  };
+  
+  document.body.addEventListener('transitionend', onTransitionEnd);
+  
+  // Fallback timeout in case transitionend doesn't fire
   setTimeout(() => {
+    document.body.removeEventListener('transitionend', onTransitionEnd);
     window.location.href = url;
-  }, 150);
+  }, 130); // Match CSS fade-out duration (120ms) + small buffer
 }
 
 function handlePdaModeNavigation() {
@@ -301,8 +322,7 @@ function handlePdaModeNavigation() {
     href = "suspend.html";
   }
   
-  // Always go to main page with smooth transition
-  smoothNavigate(href);
+  window.location.href = href;
 }
 
 // Export for use in other files
@@ -311,7 +331,6 @@ if (typeof module !== "undefined" && module.exports) {
 } else if (typeof window !== "undefined") {
   window.ControlScreen = ControlScreen;
   window.handlePdaModeNavigation = handlePdaModeNavigation;
-  window.smoothNavigate = smoothNavigate;
 }
 // For direct browser usage
 if (typeof window !== "undefined") {
