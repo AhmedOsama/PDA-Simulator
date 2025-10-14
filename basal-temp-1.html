@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=480, initial-scale=1.0" />
+  <title>01_القاعدة المؤقت</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <style>
+    .screen.active {
+      display: flex;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px 20px 30px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: normal;
+      color: #333;
+      margin: 0;
+    }
+
+    .content {
+      background: #fafafa;
+      flex-grow: 1;
+      padding: 0;
+    }
+
+    .blood-sugar-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      margin: 30px 0;
+    }
+
+    .meal {
+      display: block;
+      font-size: 20px;
+      color: #333;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .meal.val {
+      font-size: 16px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .blood-sugar-button {
+      width: 60px;
+      height: 60px;
+      background-color: #1b52a4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 40px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .blood-sugar-value {
+      color: #4ade80;
+      font-size: 50px;
+      font-weight: 500;
+      position: relative;
+      margin: 0 30px;
+    }
+
+    .blood-sugar-value::after {
+      content: "";
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 10px solid #4ade80;
+    }
+
+    .ruler-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .ruler {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      height: 90px;
+      overflow: hidden;
+    }
+
+    .ruler-track {
+      display: flex;
+      position: absolute;
+      top: 0;
+      height: 4px;
+      align-items: flex-start;
+    }
+
+    .ruler-ticks {
+      display: flex;
+      position: absolute;
+      top: 4px;
+      height: 40px;
+    }
+
+    .ruler-pointer {
+      position: absolute;
+      top: 20px;
+      width: 4px;
+      height: 40px;
+      background-color: #4ade80;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      border-radius: 5px;
+    }
+
+    .question-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .food-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 40px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: white;
+    }
+
+    .question-buttons {
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      align-items: baseline;
+      margin-top: 200px;
+      margin-inline: 50px;
+    }
+
+    .question-button {
+      flex: 1;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #1b52a4;
+      color: white;
+    }
+
+    .carb-input-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .carb-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .carb-input-field {
+      border: 2px solid #1b52a4;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 24px;
+      text-align: center;
+      background: white;
+      width: 200px;
+      display: block;
+    }
+
+    .carb-unit {
+      font-size: 18px;
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .summary-screen {
+      padding: 20px;
+    }
+
+    .summary-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+    }
+
+    .summary-dose {
+      text-align: center;
+    }
+
+    .summary-dose-number {
+      font-size: 48px;
+      color: #1b52a4;
+      margin-bottom: 10px;
+    }
+
+    .summary-dose-unit {
+      font-size: 20px;
+      color: #1b52a4;
+    }
+
+    .summary-details {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .summary-detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-detail-item:first-child {
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .summary-detail-label {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .summary-detail-value {
+      font-size: 24px;
+      color: #666;
+    }
+
+    .summary-button {
+      background: #1b52a4;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      width: 80%;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+      margin-top: 58px;
+    }
+
+    .insulin-input-screen {
+      padding: 20px;
+    }
+
+    .insulin-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+
+    .insulin-input-sections {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .insulin-input-section {
+      text-align: center;
+      flex: 1;
+    }
+
+    .insulin-input-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .insulin-input-field {
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 20px;
+      text-align: center;
+      background: white;
+      width: 80px;
+      margin: 0 auto;
+    }
+
+    .insulin-input-field:focus {
+      border-color: #1b52a4;
+      outline: none;
+    }
+
+    .insulin-total {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .insulin-duration {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .insulin-duration-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .insulin-duration-field {
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 20px;
+      text-align: center;
+      background: white;
+      width: 100px;
+      margin: 0 auto;
+    }
+
+    .insulin-duration-unit {
+      font-size: 16px;
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .screen {
+      background-color: #fff;
+    }
+
+    .main-footer {
+      padding: 20px;
+    }
+
+    .nav-button {
+      background: none;
+      border: none;
+      color: #1b52a4;
+      font-size: 17px;
+      cursor: pointer;
+      padding: 0;
+      font-weight: 400;
+    }
+
+    .nav-button:disabled {
+      color: #c7c7cc;
+      cursor: not-allowed;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .note i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid #737373;
+      color: #737373;
+      font-style: normal;
+      text-align: center;
+      line-height: 18px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .food-categories {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      padding: 0 10px;
+    }
+
+    .food-category {
+      text-align: center;
+      opacity: 0.4;
+    }
+
+    .food-category span {
+      display: block;
+      font-size: 12px;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    .food-category-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 5px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .bottom-tabs {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 60px;
+      background: white;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .bottom-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .bottom-tab.active {
+      color: #1b52a4;
+    }
+
+    .bottom-tab i {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .extended-dose-tabs {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 30px;
+    }
+
+    .extended-dose-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .extended-dose-tab.active {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .header {
+      margin-top: 10px;
+    }
+
+    .basal-duration-container {
+      direction: rtl;
+      width: 100%;
+    }
+
+    .basal-duration-title {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .basal-duration-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .basal-duration-unit {
+      white-space: nowrap;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .basal-duration-input {
+      border: 2px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 18px;
+      text-align: center;
+      background: white;
+      width: 80px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 480px;
+      height: 740px;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1000;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .picker-container {
+      background: white;
+      padding: 20px 0;
+      padding-bottom: 0;
+      width: 100%;
+    }
+
+    .picker-title {
+      text-align: center;
+      font-size: 25px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .dual-picker-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 210px;
+      margin-bottom: 20px;
+      position: relative;
+      direction: ltr;
+    }
+
+    .picker-wheel {
+      margin-bottom: 0;
+      height: 210px;
+      width: 80px;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      z-index: 44;
+      /* Add gradient mask for fade effect on top/bottom */
+      -webkit-mask-image: linear-gradient(to bottom,
+          transparent 0%,
+          black 20%,
+          black 80%,
+          transparent 100%);
+      mask-image: linear-gradient(to bottom,
+          transparent 0%,
+          black 20%,
+          black 80%,
+          transparent 100%);
+    }
+
+    .picker-dot {
+      font-size: 24px;
+      color: white;
+      margin: 0 20px;
+      align-self: center;
+      z-index: 15;
+      position: relative;
+    }
+
+    .dual-picker-container::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      height: 40px;
+      width: 100%;
+      background-color: #1b52a4;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .picker-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      width: 100%;
+      transition: top 0.2s ease-out;
+      z-index: 10;
+    }
+
+    .picker-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #8e8e93;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+      position: relative;
+      z-index: 10;
+    }
+
+    .picker-item.selected {
+      color: white;
+      background: transparent;
+      font-weight: 500;
+      z-index: 10;
+    }
+
+    .picker-selection-indicator {
+      display: none;
+    }
+
+    .picker-buttons {
+      border-top: 1px solid #ddd;
+      display: flex;
+    }
+
+    .picker-btn {
+      flex: 1;
+      padding: 15px;
+      background: white;
+      border: none;
+      font-size: 18px;
+      color: #1b52a4;
+      cursor: pointer;
+    }
+
+    .picker-btn:first {
+      border-left: 1px solid #ddd;
+    }
+
+    .picker-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .border-left-1 {
+      border-left: 1px solid #ddd;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <header>
+      <div class="white-overlay">
+        <div class="icon-block block1"></div>
+        <div class="icon-block block2"></div>
+        <div class="icon-block block3"></div>
+        <div class="icon-block block4"></div>
+      </div>
+    </header>
+    <div id="screen1" class="screen active">
+      <div class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2"
+        style="font-size: 20px">
+        <div class="position-absolute" style="left: 20px; font-size: 17px">
+          إعداد السجل
+        </div>
+        <div>القاعدي المؤقت</div>
+        <div class="position-absolute" style="right: 20px;cursor:pointer" onclick="handlePdaModeNavigation(); localStorage.setItem('openMenuOnLoad', 'true');">
+          <i class="fa fa-chevron-left"></i>
+          رجوع
+        </div>
+      </div>
+      <div class="content">
+        <div class="blood-sugar-screen p-0">
+          <div class="p-3 text-end">اعداد القاعدي المؤقت (ساعة)</div>
+          <section class="d-flex flex-column align-items-center bg-white py-3"
+            style="font-family: sans-serif; direction: ltr">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-5"
+              style="font-family: 'Roboto', sans-serif">
+              <button id="increment" class="btn" style="
+                    width: 45px;
+                    height: 45px;
+                    background-color: #2e61ae;
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 25px;
+                    line-height: 1;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  ">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="basal-time" style="
+                    font-size: 25px;
+                    font-weight: 500;
+                    position: relative;
+                    margin-inline: 30px;
+                  ">
+                0.0
+              </div>
+              <button id="decrement" class="btn" style="
+                    width: 45px;
+                    height: 45px;
+                    background-color: #2e61ae;
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 25px;
+                    line-height: 1;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  ">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+        <div class="blood-sugar-screen p-0 mt-2">
+          <section class="d-flex flex-column align-items-center bg-white py-3" style="font-family: sans-serif">
+            <div class="d-flex justify-content-between gap-3 mb-1 w-100 px-3 align-items-center">
+              <div class="basal-duration-title mb-0" style="font-size: 25px; width: 50%; text-align: right">
+                تعيين القاعدي المؤقت
+              </div>
+              <div class="basal-duration-input-wrapper align-items-center">
+                <input type="text" id="basalDuration" value="0" readonly class="basal-duration-input" />
+              </div>
+              <span class="basal-duration-unit">وحدة/ساعة</span>
+            </div>
+          </section>
+        </div>
+        <div class="main-footer mt-4">
+          <button class="btn-primary m-auto d-block text-center save-period-btn" id="saveButton"
+            style="width: 95%; background: #a0a8b3">
+            تفعيل
+          </button>
+        </div>
+        <div id="successPopup" class="success-popup-overlay">
+          <div class="success-popup">
+            <div class="success-icon">
+              <i class="fas fa-check"></i>
+            </div>
+            <p class="success-message">تم الحفظ</p>
+          </div>
+        </div>
+
+        <!-- Time Picker Modal -->
+        <div id="timePickerModal" class="modal-overlay">
+          <div class="picker-container">
+            <h3 class="picker-title">تعيين القاعدي المؤقت</h3>
+            <div class="dual-picker-container">
+              <div class="picker-wheel">
+                <div class="picker-list" id="firstPicker">
+                  <!-- Items will be populated dynamically -->
+                </div>
+              </div>
+              <div class="picker-dot">•</div>
+              <div class="picker-wheel">
+                <div class="picker-list" id="secondPicker">
+                  <!-- Items will be populated dynamically -->
+                </div>
+              </div>
+            </div>
+            <div class="picker-buttons">
+              <button class="picker-btn border-left-1" onclick="hideTimeModal()">
+                إلغاء
+              </button>
+              <button class="picker-btn" onclick="confirmTimeSelection()">
+                تأكيد
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    window.onload = function () {
+      document.querySelectorAll('.save-period-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          let bgColor = window.getComputedStyle(btn).backgroundColor;
+          if (bgColor === "rgb(27, 82, 164)") {
+            showSuccessPopup();
+          }
+        });
+      });
+    };
+  
+    function showSuccessPopup() {
+      document.getElementById("successPopup").classList.add("active");
+      setTimeout(() => {
+        hideSuccessPopup();
+      }, 2000);
+    }
+  
+    function hideSuccessPopup() {
+      document.getElementById("successPopup").classList.remove("active");
+    }
+  
+    const firstValues = [0, 1];
+    const secondValues = Array.from({ length: 19 }, (_, i) => 50 + i * 50);
+  
+    let selectedFirstValue = 0;
+    let selectedSecondValue = 550;
+  
+    function initDualTimePicker() {
+      initSinglePicker("firstPicker", firstValues, selectedFirstValue);
+      initSinglePicker("secondPicker", secondValues, selectedSecondValue);
+    }
+  
+    function initSinglePicker(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      const totalItems = values.length * 20;
+      picker.innerHTML = "";
+      for (let i = 0; i < totalItems; i++) {
+        const item = document.createElement("div");
+        item.className = "picker-item";
+        item.textContent = values[i % values.length];
+        item.dataset.value = values[i % values.length];
+        picker.appendChild(item);
+      }
+      const selectedIndex = values.indexOf(selectedValue);
+      const centerIndex = values.length + selectedIndex;
+      const topPosition = -(centerIndex * itemHeight) + 210 / 2 - itemHeight / 2 - 35;
+      picker.style.top = topPosition + "px";
+      updateSinglePickerSelection(pickerId, values);
+      setupSinglePickerInteraction(pickerId, values);
+    }
+  
+    function setupSinglePickerInteraction(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      let startY = 0;
+      let startTop = 0;
+      let isDragging = false;
+  
+      picker.addEventListener("mousedown", startDrag);
+      picker.addEventListener("touchstart", startDrag);
+  
+      function startDrag(e) {
+        isDragging = true;
+        startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+        startTop = parseInt(picker.style.top) || 0;
+        picker.style.transition = "none";
+        e.preventDefault();
+      }
+  
+      function keepInfiniteLoop() {
+        const currentTop = parseInt(picker.style.top) || 0;
+        const totalHeight = values.length * itemHeight;
+        const loopHeight = totalHeight * 25;
+        if (currentTop <= -loopHeight) {
+          picker.style.top = currentTop + loopHeight + "px";
+        } else if (currentTop >= loopHeight) {
+          picker.style.top = currentTop - loopHeight + "px";
+        }
+      }
+      
+  
+      function drag(e) {
+        if (!isDragging) return;
+        const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+        const deltaY = currentY - startY;
+        const newTop = startTop + deltaY;
+        picker.style.top = newTop + "px";
+        keepInfiniteLoop();
+        updateSinglePickerSelection(pickerId, values);
+      }
+  
+      function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        keepInfiniteLoop();
+        snapToNearestItem();
+      }
+  
+      function snapToNearestItem() {
+        picker.style.transition = "top 0.2s ease-out";
+        const currentTop = parseInt(picker.style.top) || 0;
+        const centerY = 70;
+        let selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+      
+        const totalItems = picker.querySelectorAll(".picker-item").length;
+      
+        selectedIndex = ((selectedIndex % totalItems) + totalItems) % totalItems;
+      
+        const snappedTop = -(selectedIndex * itemHeight) + centerY - itemHeight / 2;
+        picker.style.top = snappedTop + "px";
+      
+        setTimeout(() => {
+          updateSinglePickerSelection(pickerId, values);
+          picker.style.transition = "none";
+        }, 200);
+      }
+      
+      
+  
+      const boundDrag = drag;
+      const boundEndDrag = endDrag;
+      picker.boundDrag = boundDrag;
+      picker.boundEndDrag = boundEndDrag;
+      document.addEventListener("mousemove", boundDrag);
+      document.addEventListener("touchmove", boundDrag);
+      document.addEventListener("mouseup", boundEndDrag);
+      document.addEventListener("touchend", boundEndDrag);
+    }
+  
+    function updateSinglePickerSelection(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const items = picker.querySelectorAll(".picker-item");
+      const currentTop = parseInt(picker.style.top) || 0;
+      const centerY = 70;
+      let selectedIndex = Math.round((centerY - currentTop) / 40);
+    
+      const totalItems = items.length;
+      selectedIndex = ((selectedIndex % totalItems) + totalItems) % totalItems;
+    
+      items.forEach((item, index) => {
+        item.classList.remove("selected");
+        if (index === selectedIndex) {
+          item.classList.add("selected");
+          const value = parseInt(item.dataset.value);
+          if (pickerId === "firstPicker") {
+            selectedFirstValue = value;
+          } else if (pickerId === "secondPicker") {
+            selectedSecondValue = value;
+          }
+        }
+      });
+    }
+    
+    function showTimeModal() {
+      document.getElementById("timePickerModal").classList.add("active");
+      const currentValue = document.getElementById("basalDuration").value;
+      if (currentValue && currentValue !== "0") {
+        const numValue = parseInt(currentValue);
+        if (numValue >= 100) {
+          selectedFirstValue = Math.floor(numValue / 1000);
+          selectedSecondValue = numValue % 1000;
+        } else {
+          selectedFirstValue = 0;
+          selectedSecondValue = numValue;
+        }
+      }
+      updatePickerPosition("firstPicker", firstValues, selectedFirstValue);
+      updatePickerPosition("secondPicker", secondValues, selectedSecondValue);
+    }
+  
+    function updatePickerPosition(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const valueIndex = values.indexOf(selectedValue);
+      if (valueIndex !== -1) {
+        const centerIndex = values.length + valueIndex;
+        const topPosition = -(centerIndex * 40) + 105 - 20;
+        picker.style.top = topPosition + "px";
+        updateSinglePickerSelection(pickerId, values);
+      }
+    }
+  
+    function hideTimeModal() {
+      document.getElementById("timePickerModal").classList.remove("active");
+    }
+  
+    function confirmTimeSelection() {
+      const combinedValue = selectedFirstValue + "." + selectedSecondValue;
+      document.getElementById("basalDuration").value = combinedValue;
+      localStorage.setItem("basalDuration", combinedValue);
+      localStorage.setItem("basalFirstValue", selectedFirstValue);
+      localStorage.setItem("basalSecondValue", selectedSecondValue);
+      var btn = document.querySelector("#saveButton");
+      if (btn) {
+        btn.style.backgroundColor = "#1b52a4";
+      }
+      hideTimeModal();
+    }
+  
+    document.getElementById("basalDuration").addEventListener("click", showTimeModal);
+  
+    document.addEventListener("DOMContentLoaded", function () {
+      initDualTimePicker();
+    });
+  
+    document.getElementById("increment").onclick = function () {
+      let basalTime = parseFloat(document.getElementById("basal-time").innerText);
+      basalTime += 0.1;
+      document.getElementById("basal-time").innerText = basalTime.toFixed(1);
+    };
+  
+    document.getElementById("decrement").onclick = function () {
+      let basalTime = parseFloat(document.getElementById("basal-time").innerText);
+      basalTime -= 0.1;
+      if (basalTime < 0) {
+        basalTime = 0;
+      }
+      document.getElementById("basal-time").innerText = basalTime.toFixed(1);
+    };
+  </script>
+  
+</body>
+<script src="js/control-screen.js"></script>
+
+</html>

@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مكتبة الطعام</title>
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <!-- Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style/app.css" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&display=swap");
+
+    :root {
+      --app-blue: #1e5a9d;
+      --app-bg: #f8f9fa;
+      --header-bg: #ffffff;
+      --border-color: #eaeaea;
+      --text-primary: #212529;
+      --text-secondary: #8e8e93;
+      --placeholder-text: #c7c7cd;
+      --section-header-bg: #f1f1f1;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans Arabic", sans-serif;
+      background-color: #dcdde1;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px 0;
+    }
+
+    .phone-container {
+      width: 480px;
+      height: 740px;
+      background: var(--app-bg);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- Page System --- */
+    .page {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--app-bg);
+      transition: transform 0.3s ease-in-out;
+      visibility: hidden;
+      transform: translateX(100%);
+    }
+
+    .page.active {
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 24px;
+      background: #000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      color: white;
+      font-size: 12px;
+    }
+
+    /* --- Common Header --- */
+    .header {
+      background-color: var(--header-bg);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+      flex-direction: row-reverse;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .header-action {
+      color: var(--app-blue);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .header-action.icon {
+      font-size: 24px;
+    }
+
+    .back-button {
+      color: var(--text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .back-button i {
+      margin-left: 5px;
+    }
+
+    .add-button {
+      color: var(--app-blue);
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      border: 2px solid var(--app-blue);
+    }
+
+    /* --- Search Bar --- */
+    .search-container {
+      background: #fff;
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .search-container-with-cancel {
+      background: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-bar {
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .search-bar i {
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      font-size: 16px;
+      width: 100%;
+      outline: none;
+    }
+
+    .cancel-text {
+      color: var(--app-blue);
+      font-size: 16px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* --- Main Content Area --- */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 250px;
+      background: #f1f1f1;
+      padding-inline: 0;
+    }
+
+    /* --- Category Page --- */
+    #category-page .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 25px;
+      background-color: #fff;
+    }
+
+    .category-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .category-item .icon {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 32px;
+      color: var(--app-blue);
+    }
+
+    .category-item .label {
+      font-size: 14px;
+      color: var(--text-primary);
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    /* --- Food List Page --- */
+    #food-list-page .list-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: #444;
+      background-color: #fff;
+      border-bottom: 1px solid var(--border-color);
+      direction: ltr;
+    }
+
+    .food-item-list {
+      background-color: #fff;
+    }
+
+    .list-section-header {
+      background-color: #f5f5f5;
+      padding: 8px 30px;
+      font-size: 14px;
+      color: #606060;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .food-item {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #d1d1d1;
+      background: white;
+    }
+
+    .food-item .info .name {
+      font-size: 16px;
+      text-align: right;
+    }
+
+    .food-item .info .desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    .food-item .carbs {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-primary);
+      text-align: end;
+    }
+
+    /* --- Add Food Page --- */
+    #add-food-page .form-container {
+      padding: 20px 0;
+    }
+
+    .form-field {
+      background: #fff;
+      padding: 18px 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    #add-food-page .form-field {
+      margin: 0;
+      border-radius: 0;
+      border: none;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .form-field input,
+    .form-field select {
+      border: none;
+      width: 100%;
+      background: transparent;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .form-field input::placeholder {
+      color: var(--placeholder-text);
+    }
+
+    .form-field select {
+      color: var(--text-primary);
+    }
+
+    .form-field select option {
+      color: var(--text-primary);
+    }
+
+    .add-btn {
+      background-color: var(--app-blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Special styling for category selector with arrow */
+    .category-dropdown {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    .category-dropdown .text {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .category-dropdown .text.selected {
+      color: var(--text-primary);
+    }
+
+    .category-dropdown .arrow {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    /* Form field labels */
+    .form-label {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    /* Custom cursor animation */
+    .cursor-blink::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 20px;
+      background-color: var(--text-primary);
+      animation: blink 1s step-end infinite;
+      margin-left: 4px;
+    }
+
+    @keyframes blink {
+
+      from,
+      to {
+        background-color: transparent;
+      }
+
+      50% {
+        background-color: var(--text-primary);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <header>  <div class="white-overlay">
+      <div class="icon-block block1"></div>
+      <div class="icon-block block2"></div>
+      <div class="icon-block block3"></div>
+      <div class="icon-block block4"></div>
+    </div></header>
+    <!-- Category Icons Page -->
+    <div id="category-page" class="page">
+      <div class="header">
+        <span class="back-button position-absolute" style="right: 20px" onclick="handlePdaModeNavigation(); localStorage.setItem('openMenuOnLoad', 'true');">
+          <i class="fa-solid fa-angle-left"></i> رجوع
+        </span>
+        <div class="header-title text-center w-100">مكتبة الطعام</div>
+      </div>
+      <div class="search-container-with-cancel">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="بحث"
+            id="search-input-cat"
+            class="virtual-keyboard-input" />
+        </div>
+        <span class="cancel-text">الغاء</span>
+      </div>
+      <div class="content">
+        <div class="category-grid">
+          <div class="category-item" data-category="الحليب والبيض">
+            <div class="icon">
+              <img class="w-100" src="assets/food/rice.png" />
+            </div>
+            <span class="label">الحليب<br />والبيض</span>
+          </div>
+          <div class="category-item" data-category="الفاكهة">
+            <div class="icon">
+              <img class="w-100" src="assets/food/fries.png" />
+            </div>
+            <span class="label">الفاكهة</span>
+          </div>
+          <div class="category-item" data-category="خضروات">
+            <div class="icon">
+              <img class="w-100" src="assets/food/lemon.png" />
+            </div>
+            <span class="label">خضروات</span>
+          </div>
+          <div class="category-item" data-category="المشروبات">
+            <div class="icon">
+              <img class="w-100" src="assets/food/carrot.png" />
+            </div>
+            <span class="label">المشروبات</span>
+          </div>
+          <div class="category-item" data-category="المأكولات البحرية">
+            <div class="icon">
+              <img class="w-100" src="assets/food/onion.png" />
+            </div>
+            <span class="label">المأكولات<br />البحرية</span>
+          </div>
+          <div class="category-item" data-category="مأكولات معتادة">
+            <div class="icon">
+              <img class="w-100" src="assets/food/drink.png" />
+            </div>
+            <span class="label">مأكولات<br />معتادة</span>
+          </div>
+          <div class="category-item" data-category="وجبات خفيفة">
+            <div class="icon">
+              <img class="w-100" src="assets/food/fish.png" />
+            </div>
+            <span class="label">وجبات<br />خفيفة</span>
+          </div>
+          <div class="category-item" data-category="أخرى">
+            <div class="icon">
+              <img class="w-100" src="assets/food/other.png" />
+            </div>
+            <span class="label">أخرى</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food List Page -->
+    <div id="food-list-page" class="page active">
+      <div class="header">
+        <div class="add-button" id="add-food-btn">
+          <i class="fas fa-plus"></i>
+        </div>
+        <span class="header-title">مكتبة الطعام</span>
+        <span class="back-button">
+          <i class="fa-solid fa-angle-left"></i> رجوع
+        </span>
+      </div>
+      <div class="search-container">
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input
+            type="text"
+            placeholder="بحث"
+            class="virtual-keyboard-input"
+            id="search-input-list" />
+        </div>
+      </div>
+      <div class="list-header">
+        <span>الكربوهيدرات / ١٠٠ جرام</span>
+        <span>اسم الطعام</span>
+      </div>
+      <div class="content" id="food-list-container">
+        <!-- Food items will be rendered here by JS -->
+      </div>
+    </div>
+
+    <!-- Add Food Page -->
+    <div id="add-food-page" class="page">
+      <div class="header">
+        <span class="back-button">
+          <i class="fa-solid fa-angle-left"></i> رجوع
+        </span>
+        <span class="header-title">إضافة بيانات الطعام</span>
+      </div>
+      <div class="content">
+        <div class="form-container">
+          <div class="category-dropdown" id="category-dropdown">
+            <span class="text selected">الفئة</span>
+            <span>
+              <span
+                class="text opacity-50"
+                id="category-dropdown-text"></span>
+              <i class="fa-solid fa-angle-left arrow"></i></span>
+          </div>
+          <div class="form-field d-flex">
+            <label class="form-label mb-0 ms-2 text-black">طعام</label>
+            <input
+              type="text"
+              id="new-food-name"
+              placeholder="الرجاء إدخال اسم الطعام"
+              class="virtual-keyboard-input" />
+          </div>
+          <div class="form-field d-flex">
+            <label class="form-label mb-0 ms-2 text-black">كربوهيدرات</label>
+            <input
+              type="number"
+              id="new-food-carbs"
+              placeholder="الرجاء إدخال الكربوهيدرات (جم/١٠٠ جم)"
+              class="virtual-keyboard-input" />
+          </div>
+          <div class="px-3 mt-3">
+            <button class="add-btn" id="confirm-add-food-btn">إضافة</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category selection modal -->
+    <div id="category-modal" class="page">
+      <div class="header">
+        <span class="back-button" id="category-modal-back">
+          <i class="fa-solid fa-angle-left"></i> الحليب والبيض
+        </span>
+        <span class="header-title">الفئة</span>
+      </div>
+      <div class="content">
+        <div id="category-list" style="background: #fff">
+          <!-- Category options will be populated here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/keyboard.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Initialize food data from localStorage or use default
+      let foodData = JSON.parse(localStorage.getItem("foodData")) || [
+        {
+          name: "جبن، موزاريلا",
+          desc: "حليب كامل",
+          carbs: 2.19,
+          category: "الحليب والبيض",
+        },
+        {
+          name: "حليب",
+          desc: "منقوص الدسم، سائل، 2% دسم الحليب، مع فيتامين أ و د",
+          carbs: 4.8,
+          category: "الحليب والبيض",
+        },
+        {
+          name: "حليب",
+          desc: "قليل الدسم، سائل، 1% دسم الحليب، بروتين، مع فيتامين أ وفيتامين د",
+          carbs: 5.52,
+          category: "الحليب والبيض",
+        },
+        {
+          name: "حليب",
+          desc: "خالي الدسم، سائل، مع فيتامين أ مضاف وفيتامين د (خالي من الدهون أو منزوع الدسم)",
+          carbs: 4.96,
+          category: "الحليب والبيض",
+        },
+        {
+          name: "لبن",
+          desc: "سادة، حليب كامل، 8 غرام بروتين لكل 225 غ",
+          carbs: 4.66,
+          category: "الحليب والبيض",
+        },
+        { name: "جزر", desc: "طازج", carbs: 9.58, category: "خضروات" },
+        { name: "خس", desc: "طازج", carbs: 2.97, category: "خضروات" },
+        {
+          name: "ذرة",
+          desc: "حلوة، صفراء، طازجة",
+          carbs: 18.7,
+          category: "خضروات",
+        },
+        { name: "باذنجان", desc: "طازج", carbs: 5.7, category: "خضروات" },
+        { name: "ثوم", desc: "طازج", carbs: 33.06, category: "خضروات" },
+        { name: "بصل أخضر", desc: "طازج", carbs: 14.15, category: "خضروات" },
+        { name: "بصل", desc: "طازج", carbs: 9.34, category: "خضروات" },
+        {
+          name: "بازلاء",
+          desc: "خضراء، طازجة",
+          carbs: 14.45,
+          category: "خضروات",
+        },
+        { name: "سبانخ", desc: "طازج", carbs: 3.63, category: "خضروات" },
+        {
+          name: "بطاطس",
+          desc: "مقشرة وغير مقشرة، طازجة",
+          carbs: 17.47,
+          category: "خضروات",
+        },
+        {
+          name: "بطاطس حلوة",
+          desc: "طازج",
+          carbs: 20.12,
+          category: "خضروات",
+        },
+        { name: "قلقاس", desc: "طازج", carbs: 26.46, category: "خضروات" },
+        {
+          name: "بندورة",
+          desc: "حمراء، ناضجة، طازجة",
+          carbs: 3.89,
+          category: "خضروات",
+        },
+        {
+          name: "أعواد البروكلي",
+          desc: "طازجة",
+          carbs: 5.24,
+          category: "خضروات",
+        },
+        {
+          name: "مشروب غازي كربوني",
+          desc: "صودا ليمون، يحتوي على الكافايين",
+          carbs: 10.42,
+          category: "المشروبات",
+        },
+        {
+          name: "مشروب غازي كربوني",
+          desc: "منقوص السكر، كولا، يحتوي على الكافايين والمحليات",
+          carbs: 5.16,
+          category: "المشروبات",
+        },
+        {
+          name: "قهوة عادية",
+          desc: "سريعة التحضير، سوداء محضرة",
+          carbs: 41.1,
+          category: "المشروبات",
+        },
+        {
+          name: "حليب صويا",
+          desc: "غير محلى، مع كالسيوم، وفيتامينات A & D",
+          carbs: 1.74,
+          category: "المشروبات",
+        },
+        {
+          name: "ظفارية(أذن البحر)",
+          desc: "أنواع مختلطة، طازج",
+          carbs: 6.01,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "جمبري",
+          desc: "أنواع مختلطة، طازج",
+          carbs: 0.91,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "محار",
+          desc: "أنواع مختلطة، طازج",
+          carbs: 3.57,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "بلح البحر",
+          desc: "أزرق، طازج",
+          carbs: 3.69,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "أخطبوط",
+          desc: "طازج",
+          carbs: 2.2,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "محار المحيط الهادئ",
+          desc: "طازج",
+          carbs: 4.95,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "الأسكالوب البحري",
+          desc: "أنواع مختلطة، طازج",
+          carbs: 3.18,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "حبار بحري",
+          desc: "أنواع مختلطة، طازج",
+          carbs: 3.08,
+          category: "المأكولات البحرية",
+        },
+        {
+          name: "خبز",
+          desc: "قمح",
+          carbs: 49.46,
+          category: "مأكولات معتادة",
+        },
+        {
+          name: "خبز",
+          desc: "أبيض",
+          carbs: 49.06,
+          category: "مأكولات معتادة",
+        },
+        {
+          name: "أرز",
+          desc: "أبيض، حبوب طويلة، مطبوخ",
+          carbs: 28.17,
+          category: "مأكولات معتادة",
+        },
+        {
+          name: "أرز",
+          desc: "أبيض، لزج، مطبوخ",
+          carbs: 21.09,
+          category: "مأكولات معتادة",
+        },
+        {
+          name: "باستا",
+          desc: "مبردة طازجة، مطبوخة",
+          carbs: 24.93,
+          category: "مأكولات معتادة",
+        },
+        {
+          name: "معكرونة",
+          desc: "مطبوخة، بدون ملح/ملح",
+          carbs: 30.86,
+          category: "مأكولات معتادة",
+        },
+        {
+          name: "شعيرية الأرز",
+          desc: "مطبوخة",
+          carbs: 24.9,
+          category: "مأكولات معتادة",
+        },
+        { name: "كيك عادي", desc: "", carbs: 57.8, category: "وجبات خفيفة" },
+        { name: "كيك", desc: "شوكولا", carbs: 53.4, category: "وجبات خفيفة" },
+        {
+          name: "رقائق بسكويت مقرمشة",
+          desc: "قليلة الملح",
+          carbs: 61.37,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "بوشار",
+          desc: "مصنوع بدون زيت",
+          carbs: 77.9,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "بوشار",
+          desc: "مصنوع بالزيت",
+          carbs: 45.06,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "حلوى",
+          desc: "نصف محلاة",
+          carbs: 63.9,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "حلوى",
+          desc: "شوكولا حلوة",
+          carbs: 60.4,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "حلوى",
+          desc: "شوكولاتة الحليب",
+          carbs: 59.4,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "بطاطس شيبس",
+          desc: "سادة، مملحة",
+          carbs: 50.81,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "الفول السوداني",
+          desc: "محمص بالزيت، بدون أو مع ملح",
+          carbs: 18.92,
+          category: "وجبات خفيفة",
+        },
+        {
+          name: "الفول السوداني",
+          desc: "محمص جاف، بدون أو مع ملح",
+          carbs: 21.51,
+          category: "وجبات خفيفة",
+        },
+        { name: "عسل", desc: "", carbs: 82.4, category: "أخرى" },
+        {
+          name: "توفو قطع",
+          desc: "مع الكالسيوم والمغنيزيوم(بيكري)",
+          carbs: 1.69,
+          category: "أخرى",
+        },
+        {
+          name: "توفو طري",
+          desc: "مع الكالسيوم والمغنيزيوم(بيكري)",
+          carbs: 1.8,
+          category: "أخرى",
+        },
+        {
+          name: "توفو مملح ومخمر",
+          desc: "(فيويد)",
+          carbs: 5.15,
+          category: "أخرى",
+        },
+        { name: "برتقال", desc: "طازج", carbs: 11.75, category: "الفاكهة" },
+        { name: "دراق", desc: "طازج", carbs: 9.54, category: "الفاكهة" },
+        { name: "إجاص", desc: "طازج", carbs: 15.46, category: "الفاكهة" },
+        { name: "أناناس", desc: "طازج", carbs: 13.12, category: "الفاكهة" },
+        { name: "خوخ", desc: "طازج", carbs: 11.42, category: "الفاكهة" },
+        { name: "فريز", desc: "طازجة", carbs: 7.68, category: "الفاكهة" },
+        { name: "بروكلي", desc: "طازج", carbs: 6.64, category: "خضروات" },
+        { name: "ملفوف", desc: "طازج", carbs: 5.8, category: "خضروات" },
+        { name: "جزر", desc: "طازج", carbs: 9.58, category: "خضروات" },
+        {
+          name: "بيض",
+          desc: "كامل، نيء، طازج",
+          carbs: 0.72,
+          category: "الحليب والبيض",
+        },
+        {
+          name: "تفاح",
+          desc: "طازج، مع القشرة",
+          carbs: 13.81,
+          category: "الفاكهة",
+        },
+        { name: "موز", desc: "طازج", carbs: 22.84, category: "الفاكهة" },
+        { name: "توت", desc: "طازج", carbs: 14.49, category: "الفاكهة" },
+        {
+          name: "غريبفون",
+          desc: "جميع الأنواع",
+          carbs: 8.08,
+          category: "الفاكهة",
+        },
+        {
+          name: "عنب أحمر أو أخضر",
+          desc: "طازج",
+          carbs: 18.1,
+          category: "الفاكهة",
+        },
+        { name: "برتقال", desc: "طازج", carbs: 11.75, category: "الفاكهة" },
+      ];
+
+      const categories = [
+        "الحليب والبيض",
+        "الفاكهة",
+        "خضروات",
+        "المشروبات",
+        "المأكولات البحرية",
+        "مأكولات معتادة",
+        "وجبات خفيفة",
+        "أخرى",
+      ];
+
+      let selectedCategory = "";
+
+      // Save food data to localStorage
+      function saveFoodData() {
+        localStorage.setItem("foodData", JSON.stringify(foodData));
+      }
+
+      const foodListContainer = document.getElementById(
+        "food-list-container"
+      );
+
+      function renderFoodList(filter = "") {
+        foodListContainer.innerHTML = "";
+        let currentCategory = "";
+        const lowerCaseFilter = filter.toLowerCase();
+
+        const filteredData = foodData.filter(
+          (item) =>
+            item.name.toLowerCase().includes(lowerCaseFilter) ||
+            item.desc.toLowerCase().includes(lowerCaseFilter) ||
+            item.category.toLowerCase().includes(lowerCaseFilter)
+        );
+
+        filteredData.sort(
+          (a, b) =>
+            categories.indexOf(a.category) - categories.indexOf(b.category)
+        );
+
+        filteredData.forEach((item) => {
+          if (item.category !== currentCategory) {
+            currentCategory = item.category;
+            const header = document.createElement("div");
+            header.className = "list-section-header";
+            header.textContent = currentCategory;
+            foodListContainer.appendChild(header);
+          }
+          const foodItemDiv = document.createElement("div");
+          foodItemDiv.className = "food-item";
+          foodItemDiv.innerHTML = `
+                <div class="carbs">${item.carbs} جم</div>
+                <div class="info">
+                    <div class="name">${item.name}</div>
+                    <div class="desc">${item.desc || " "}</div>
+                </div>`;
+          foodListContainer.appendChild(foodItemDiv);
+        });
+      }
+
+      function populateCategoryList() {
+        const categoryList = document.getElementById("category-list");
+        categoryList.innerHTML = "";
+
+        categories.forEach((category) => {
+          const categoryItem = document.createElement("div");
+          categoryItem.className = "form-field";
+          categoryItem.style.cursor = "pointer";
+          categoryItem.style.margin = "0";
+          categoryItem.style.borderRadius = "0";
+          categoryItem.style.borderLeft = "none";
+          categoryItem.style.borderRight = "none";
+          categoryItem.style.borderTop = "none";
+          categoryItem.textContent = category;
+
+          categoryItem.addEventListener("click", () => {
+            selectedCategory = category;
+            document.getElementById("category-dropdown-text").textContent =
+              category;
+            document
+              .getElementById("category-dropdown-text")
+              .classList.add("selected");
+            showPage("add-food-page");
+          });
+
+          categoryList.appendChild(categoryItem);
+        });
+      }
+
+      function showPage(pageId) {
+        document
+          .querySelectorAll(".page")
+          .forEach((page) => page.classList.remove("active"));
+        document.getElementById(pageId).classList.add("active");
+      }
+
+      // Initialize
+      populateCategoryList();
+      renderFoodList();
+
+      // --- Event Listeners ---
+
+      // Category items
+      document.querySelectorAll(".category-item").forEach((item) => {
+        item.addEventListener("click", () => {
+          const category = item.dataset.category;
+          renderFoodList(category);
+          showPage("food-list-page");
+        });
+      });
+
+      // Search inputs
+      document
+        .getElementById("search-input-cat")
+        .addEventListener("input", (e) => {
+          const searchTerm = e.target.value;
+          if (searchTerm.length > 0) {
+            renderFoodList(searchTerm);
+            showPage("food-list-page");
+            document.getElementById("search-input-list").value = searchTerm;
+          }
+        });
+
+      document
+        .getElementById("search-input-list")
+        .addEventListener("input", (e) => {
+          renderFoodList(e.target.value);
+        });
+
+      // Add food button
+      document
+        .getElementById("add-food-btn")
+        .addEventListener("click", () => {
+          showPage("add-food-page");
+        });
+
+      // Category dropdown
+      document
+        .getElementById("category-dropdown")
+        .addEventListener("click", () => {
+          showPage("category-modal");
+        });
+
+      // Back buttons
+      document.querySelectorAll(".back-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const currentPage = document.querySelector(".page.active");
+          if (currentPage.id === "food-list-page") {
+            showPage("category-page");
+          } else if (currentPage.id === "add-food-page") {
+            showPage("food-list-page");
+          } else if (currentPage.id === "category-modal") {
+            showPage("add-food-page");
+          }
+        });
+      });
+
+      // Add food confirmation
+      document
+        .getElementById("confirm-add-food-btn")
+        .addEventListener("click", () => {
+          const name = document.getElementById("new-food-name").value.trim();
+          const carbs = document
+            .getElementById("new-food-carbs")
+            .value.trim();
+
+          if (name && carbs && selectedCategory) {
+            const newFood = {
+              name,
+              desc: "مضاف حديثًا في " + selectedCategory,
+              carbs: parseFloat(carbs),
+              category: selectedCategory,
+            };
+
+            foodData.unshift(newFood);
+            saveFoodData();
+            renderFoodList();
+            showPage("food-list-page");
+
+            // Clear form
+            document.getElementById("new-food-name").value = "";
+            document.getElementById("new-food-carbs").value = "";
+            selectedCategory = "";
+            document.getElementById("category-dropdown-text").textContent =
+              "الفئة";
+            document
+              .getElementById("category-dropdown-text")
+              .classList.remove("selected");
+          } else {
+            alert("الرجاء ملء جميع الحقول");
+          }
+        });
+
+      // Cancel search
+      document.querySelector(".cancel-text").addEventListener("click", () => {
+        document.getElementById("search-input-cat").value = "";
+        renderFoodList();
+      });
+    });
+  </script>
+</body>
+<script src="js/control-screen.js"></script>
+
+</html>

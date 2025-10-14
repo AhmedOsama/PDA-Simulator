@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار كامل للـ Switches</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/switches-fix.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .switch-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .switch-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .switch-icon {
+            width: 40px;
+            height: 40px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .switch-text h5 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        .switch-text p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.on {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        .status-badge.off {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+        .debug-panel {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .alert-info {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">🔧 اختبار كامل للـ Switches</h1>
+        
+        <div class="alert alert-info">
+            <strong>ملاحظة:</strong> يجب تفعيل الوضع التلقائي الرئيسي أولاً قبل تفعيل الأوضاع الفرعية
+        </div>
+        
+        <div class="test-container">
+            <h4 class="mb-3">⚙️ الوضع التلقائي الرئيسي</h4>
+            <div class="switch-row">
+                <div class="switch-info">
+                    <div class="switch-icon">🤖</div>
+                    <div class="switch-text">
+                        <h5>الوضع الأوتوماتيكي</h5>
+                        <p>112-140 mg/dl</p>
+                    </div>
+                </div>
+                <div class="auto-switch form-check form-switch p-0">
+                    <label class="switch-label">
+                        <input type="checkbox" id="autoModeSwitch" class="switch-input" aria-label="الوضع الأوتوماتيكي">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </label>
+                </div>
+                <span class="status-badge" id="autoStatus">OFF</span>
+            </div>
+        </div>
+        
+        <div class="test-container">
+            <h4 class="mb-3">📊 الأوضاع الفرعية</h4>
+            
+            <div class="switch-row">
+                <div class="switch-info">
+                    <div class="switch-icon">🏃</div>
+                    <div class="switch-text">
+                        <h5>حالة التمارين</h5>
+                        <p>140-160 mg/dl</p>
+                    </div>
+                </div>
+                <div class="auto-switch form-check form-switch p-0">
+                    <label class="switch-label">
+                        <input type="checkbox" id="exerciseautoModeSwitch" class="switch-input" aria-label="حالة التمارين">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </label>
+                </div>
+                <span class="status-badge" id="exerciseStatus">OFF</span>
+            </div>
+            
+            <div class="switch-row">
+                <div class="switch-info">
+                    <div class="switch-icon">😴</div>
+                    <div class="switch-text">
+                        <h5>حالة النوم</h5>
+                        <p>112-120 mg/dl</p>
+                    </div>
+                </div>
+                <div class="auto-switch form-check form-switch p-0">
+                    <label class="switch-label">
+                        <input type="checkbox" id="statusautoModeSwitch" class="switch-input" aria-label="حالة النوم">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </label>
+                </div>
+                <span class="status-badge" id="statusStatus">OFF</span>
+            </div>
+            
+            <div class="switch-row">
+                <div class="switch-info">
+                    <div class="switch-icon">📅</div>
+                    <div class="switch-text">
+                        <h5>خطة النوم</h5>
+                        <p>غير محدد</p>
+                    </div>
+                </div>
+                <div class="auto-switch form-check form-switch p-0">
+                    <label class="switch-label">
+                        <input type="checkbox" id="planautoModeSwitch" class="switch-input" aria-label="خطة النوم">
+                        <span class="switch-track"></span>
+                        <span class="switch-thumb"></span>
+                    </label>
+                </div>
+                <span class="status-badge" id="planStatus">OFF</span>
+            </div>
+        </div>
+        
+        <div class="test-container">
+            <h4 class="mb-3">🔍 أدوات التشخيص</h4>
+            <div class="btn-group" role="group">
+                <button class="btn btn-primary" onclick="checkStatus()">فحص الحالة</button>
+                <button class="btn btn-warning" onclick="resetAll()">إعادة تعيين الكل</button>
+                <button class="btn btn-success" onclick="testMainToggle()">تبديل الرئيسي</button>
+                <button class="btn btn-info" onclick="simulateRequirements()">محاكاة المتطلبات</button>
+            </div>
+            <div class="debug-panel" id="debugInfo"></div>
+        </div>
+    </div>
+    
+    <!-- Include the fix script -->
+    <script src="js/fix-switches.js"></script>
+    
+    <script>
+        // Update status displays
+        function updateStatusDisplays() {
+            const switches = {
+                'autoModeSwitch': 'autoStatus',
+                'exerciseautoModeSwitch': 'exerciseStatus',
+                'statusautoModeSwitch': 'statusStatus',
+                'planautoModeSwitch': 'planStatus'
+            };
+            
+            Object.entries(switches).forEach(([switchId, statusId]) => {
+                const switchEl = document.getElementById(switchId);
+                const statusEl = document.getElementById(statusId);
+                if (switchEl && statusEl) {
+                    if (switchEl.checked) {
+                        statusEl.textContent = 'ON';
+                        statusEl.className = 'status-badge on';
+                    } else {
+                        statusEl.textContent = 'OFF';
+                        statusEl.className = 'status-badge off';
+                    }
+                }
+            });
+        }
+        
+        // Check status
+        function checkStatus() {
+            const status = {
+                'الوضع الرئيسي': {
+                    'DOM': document.getElementById('autoModeSwitch')?.checked,
+                    'localStorage': localStorage.getItem('autoModeSwitch')
+                },
+                'حالة التمارين': {
+                    'DOM': document.getElementById('exerciseautoModeSwitch')?.checked,
+                    'localStorage': localStorage.getItem('exerciseautoModeSwitch')
+                },
+                'حالة النوم': {
+                    'DOM': document.getElementById('statusautoModeSwitch')?.checked,
+                    'localStorage': localStorage.getItem('statusautoModeSwitch')
+                },
+                'خطة النوم': {
+                    'DOM': document.getElementById('planautoModeSwitch')?.checked,
+                    'localStorage': localStorage.getItem('planautoModeSwitch')
+                },
+                'المتطلبات': {
+                    'pump-pairing': localStorage.getItem('pump-pairing'),
+                    'insulin-qaedy': localStorage.getItem('insulin-qaedy'),
+                    'glucose_limits_v2_cleared': localStorage.getItem('glucose_limits_v2_cleared'),
+                    'active_time_selected': localStorage.getItem('active_time_selected'),
+                    'daily_dose_selected': localStorage.getItem('daily_dose_selected'),
+                    'cgms_paired': localStorage.getItem('cgms_paired')
+                }
+            };
+            
+            document.getElementById('debugInfo').innerHTML = 
+                '<h5>حالة النظام:</h5><pre>' + JSON.stringify(status, null, 2) + '</pre>';
+        }
+        
+        // Reset all
+        function resetAll() {
+            const switches = ['autoModeSwitch', 'exerciseautoModeSwitch', 'statusautoModeSwitch', 'planautoModeSwitch'];
+            switches.forEach(switchId => {
+                const switchEl = document.getElementById(switchId);
+                if (switchEl) {
+                    switchEl.checked = false;
+                    localStorage.removeItem(switchId);
+                }
+            });
+            updateStatusDisplays();
+            alert('✅ تم إعادة تعيين جميع المفاتيح');
+        }
+        
+        // Test main toggle
+        function testMainToggle() {
+            const mainSwitch = document.getElementById('autoModeSwitch');
+            if (mainSwitch) {
+                mainSwitch.checked = !mainSwitch.checked;
+                mainSwitch.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
+        
+        // Simulate requirements
+        function simulateRequirements() {
+            // Set all requirements to true
+            localStorage.setItem('pump-pairing', 'true');
+            localStorage.setItem('insulin-qaedy', 'true');
+            localStorage.setItem('glucose_limits_v2_cleared', 'true');
+            localStorage.setItem('active_time_selected', 'true');
+            localStorage.setItem('daily_dose_selected', 'true');
+            localStorage.setItem('cgms_paired', 'true');
+            alert('✅ تم تفعيل جميع المتطلبات - يمكنك الآن تفعيل الوضع التلقائي');
+            checkStatus();
+        }
+        
+        // Mock showConfirmationModal for testing
+        window.showConfirmationModal = function(message) {
+            alert('⚠️ ' + message);
+        };
+        
+        // Mock showExerciseTimePicker for testing
+        window.showExerciseTimePicker = function() {
+            const minutes = prompt('الرجاء إدخال وقت التمرين بالدقائق (1-120):', '30');
+            if (minutes && !isNaN(minutes) && minutes >= 1 && minutes <= 120) {
+                localStorage.setItem('exerciseautoModeSwitch', 'true');
+                localStorage.setItem('exerciseSelectedMinutes', minutes);
+                document.getElementById('exerciseautoModeSwitch').checked = true;
+                updateStatusDisplays();
+                alert(`✅ تم تعيين وقت التمرين: ${minutes} دقيقة`);
+            } else if (minutes !== null) {
+                document.getElementById('exerciseautoModeSwitch').checked = false;
+                updateStatusDisplays();
+                alert('❌ قيمة غير صحيحة');
+            } else {
+                document.getElementById('exerciseautoModeSwitch').checked = false;
+                updateStatusDisplays();
+            }
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add change listeners
+            const switches = ['autoModeSwitch', 'exerciseautoModeSwitch', 'statusautoModeSwitch', 'planautoModeSwitch'];
+            switches.forEach(switchId => {
+                const switchEl = document.getElementById(switchId);
+                if (switchEl) {
+                    switchEl.addEventListener('change', updateStatusDisplays);
+                }
+            });
+            
+            // Initial update
+            updateStatusDisplays();
+            checkStatus();
+        });
+    </script>
+</body>
+</html>

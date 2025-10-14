@@ -1,0 +1,2177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>استبدال الخزان/البطارية</title>
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <!-- CSS Files -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Arial, sans-serif;
+      background-color: #f5f5f5;
+      direction: rtl;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overscroll-behavior: none;
+    }
+
+    .phone-container {
+      width: 480px;
+      height: 740px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      contain: layout style paint;
+    }
+
+    .status-bar {
+      background: white;
+      height: 45px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+      position: relative;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .battery-icon {
+      width: 24px;
+      height: 12px;
+      border: 1px solid #000;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .battery-icon::after {
+      content: "";
+      position: absolute;
+      right: -3px;
+      top: 3px;
+      width: 2px;
+      height: 6px;
+      background: #000;
+      border-radius: 0 1px 1px 0;
+    }
+
+    .battery-fill {
+      background: #000;
+      height: 100%;
+      width: 70%;
+      border-radius: 1px;
+    }
+
+    .signal-icon,
+    .wifi-icon {
+      width: 17px;
+      height: 12px;
+      background: #000;
+      clip-path: polygon(0 100%,
+          20% 80%,
+          40% 90%,
+          60% 70%,
+          80% 85%,
+          100% 60%);
+    }
+
+    .wifi-icon {
+      clip-path: polygon(50% 0%, 0% 50%, 15% 65%, 50% 30%, 85% 65%, 100% 50%);
+    }
+
+    .status-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 20px;
+      background: #333;
+      border-radius: 10px;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #000;
+      cursor: pointer;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: white;
+    }
+
+    .header-title {
+      font-size: 19px;
+      text-align: center;
+      color: #000;
+      padding: 0 20px;
+    }
+
+    .step-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .step-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.4;
+      margin-bottom: 30px;
+    }
+
+    .illustration {
+      width: 100%;
+      height: 240px;
+      margin: 20px 0 40px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .illustration img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .illustration svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .progress-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ddd;
+    }
+
+    .dot.active {
+      background: #1b52a4;
+    }
+
+    .button-container {
+      padding: 30px 20px;
+      background: white;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 23px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 19px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .btn-primary {
+      background: #255cae;
+      color: white;
+    }
+    .btn-primary:focus {
+      background: none;
+    }
+    .btn-primary:hover {
+      background: #255cae;
+    }
+
+    .btn-secondary {
+      background: #9ca3af;
+      color: white;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.2);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 99999;
+    }
+
+    .overlay.centered {
+      align-items: center;
+    }
+
+    .modal-bottom {
+      background: white;
+      border-radius: 0;
+      padding: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .modal-centered {
+      background: rgb(234, 234, 234);
+      border-radius: 16px;
+      padding: 30px 20px 20px 20px;
+      margin: 20px;
+      max-width: 350px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px auto;
+      background: #fcd34d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: #000;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+      margin-top: 25px;
+      line-height: 1.4;
+    }
+
+    .modal-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .modal-header {
+      display: flex;
+      font-size: 24px;
+      font-weight: 600;
+      color: #666;
+      padding: 25px 20px 10px 20px;
+      line-height: 1.4;
+      text-align: center !important;
+      justify-content: center !important;
+      align-items: center !important;
+      direction: rtl;
+      border-bottom: none !important;
+    }
+
+    .modal-message {
+      font-size: 22px;
+      color: #000;
+      padding: 25px 20px;
+      line-height: 1.4;
+    }
+
+    .modal-buttons {
+      display: flex;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 18px 20px;
+      border: none;
+      background: white;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .modal-btn-no {
+      color: #1b52a4;
+      border-left: 1px solid #e0e0e0;
+    }
+
+    .modal-btn-yes {
+      color: #1b52a4;
+    }
+
+    .modal-btn:active {
+      background: #f0f0f0;
+    }
+
+    .phone-container .modal {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      z-index: 99999 !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .phone-container .modal.show {
+      display: flex !important;
+    }
+
+    .phone-container .modal-dialog {
+      margin: 0 auto !important;
+      max-width: 90% !important;
+    }
+
+    .phone-container .modal-body {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      text-align: center !important;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .step1 .step-title {
+      color: #000;
+    }
+
+    .step2 .step-title {
+      color: #000;
+    }
+
+    .step3 .step-title {
+      color: #000;
+    }
+
+    .step4 .step-title {
+      color: #000;
+    }
+
+    .step5 .step-title {
+      color: #000;
+    }
+
+    .step6 .step-title {
+      color: #000;
+    }
+
+    .step7 .step-title {
+      color: #000;
+    }
+
+    .step8 .step-title {
+      color: #000;
+    }
+
+    .video-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-container video {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+      clip-path: inset(10% 5% 10% 5%);
+    }
+
+    .confirmation-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .confirmation-buttons .btn {
+      flex: 1;
+      margin: 0;
+    }
+
+    .choice-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #255cae;
+      color: white;
+    }
+
+    .choice-btn.secondary {
+      background: #9ca3af;
+    }
+
+    .choice-btn:disabled {
+      background: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .choice-btn.secondary:disabled {
+      background: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .choice-btn.long-pressing {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .choice-btn.long-pressing::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: rgba(0, 0, 0, 0.2);
+      animation: fillButton 5s linear forwards;
+      z-index: 0;
+    }
+
+    @keyframes fillButton {
+      from {
+        width: 0;
+      }
+      to {
+        width: 100%;
+      }
+    }
+
+    .choice-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    #scan-btn {
+      background: none;
+      border: none;
+      color: #1d4ed8;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      cursor: pointer;
+      padding: 10px;
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    #scan-btn svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    #scan-btn:hover {
+      color: #1e40af;
+    }
+
+    .serial-input-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      direction: ltr;
+    }
+
+    .serial-input-box {
+      width: 45px;
+      height: 60px;
+      font-size: 30px;
+      text-align: center;
+      border: none;
+      border-bottom: 3px solid #333;
+      border-radius: 0;
+      outline: none;
+      background: transparent;
+      transition: border-color 0.3s;
+    }
+
+    .serial-input-box:focus {
+      border-bottom-color: #255cae;
+    }
+
+    .serial-input-box:disabled {
+      background-color: transparent;
+    }
+
+    .serial-input-box.filled {
+      border-bottom-color: transparent !important;
+    }
+
+    /* Image overlay animation */
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0.7;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Success popup styles */
+    .success-popup-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+    }
+
+    .success-popup-overlay.show {
+      display: flex;
+    }
+
+    .success-popup {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .success-icon i {
+      color: white;
+      font-size: 40px;
+    }
+
+    .success-message {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="phone-container">
+    <header>
+      <div class="white-overlay">
+        <div class="icon-block block1"></div>
+        <div class="icon-block block2"></div>
+        <div class="icon-block block3"></div>
+        <div class="icon-block block4"></div>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <div class="px-3 cursor-pointer fs-4" onclick="handleBackNavigation()">
+        <i class="fas fa-chevron-left"></i>
+        رجوع
+      </div>
+      <div class="header-title fs-3" id="headerTitle">استبدال الخزان/البطارية</div>
+
+      <!-- Step 1: Tank removal instruction -->
+      <div class="step step1 hidden">
+        <div class="step-content">
+          <div class="step-title fs-2">يرجى إزالة المضخة من القاعدة.</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step1">
+                <source src="assets/replace_battery/1.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="nextStep()">التالي</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Pump reset instruction -->
+      <div class="step step2 hidden">
+        <div class="step-content">
+          <div class="step-title fs-2">يرجى إعادة ضبط المضخة.</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step2">
+                <source src="assets/replace_battery/2.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="showConfirmDialog()">
+            إعادة ضبط المضخة
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Tank collection instruction & pump pairing-->
+      <div class="step step3 hidden">
+        <div class="step-content">
+          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+            لإدارة إعطاء الأنسولين</div>
+          <div class="step-title fs-4 pt-2" style="color:#333">قم بتجميع الخزان المملوء مع المضخة</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step3">
+                <source src="assets/replace_battery/3.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot dot-step1"></div>
+            <div class="dot dot-step2"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <p class="text-center" style="margin-top: 40px; margin-bottom: 0;">لا تقم بتثبيت المضخة علي القاعدة حتي اكتمال
+            عملية التهيئة</p>
+        </div>
+        <div class="button-container" style="padding: 0px 20px;">
+          <button class="btn btn-primary" onclick="showPumpPairingScreen()">التالي</button>
+        </div>
+      </div>
+      <!-- pump pairing screen-->
+      <div id="pumpPairingScreen" class="screen screenAutomode"
+      style="display: none; position: absolute; bottom: -100%; left: 0; width: 100%; height: 107vh; background: white; transition: bottom 0.5s ease; z-index: 1000;">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div class="header pb-3 pt-2 mt-0 bg-white" style="font-size: 19px">
+          <div class="position-absolute" style="right: 20px;" onclick="hidePumpPairingScreen()">
+            <i class="fa fa-chevron-left cursor-pointer" style="color:#333"></i>
+            رجوع
+          </div>
+          <div class="content">
+            <div class="headerpump fs-4" style="margin-top: 30px;"> إقران المضخة</div>
+            <div class="sub-header fs-4 mb-2" style="font-weight:600">الرجاء إدخال الرقم التسلسلي</div>
+            <img src="assets/pump-pairing.png" alt=""
+              style="width: 50%; background: white; padding: 0px; border-radius: 8px;">
+            <div class="serial-input-container mt-0">
+              <input type="text" class="serial-input-box virtual-keyboard-input filled" maxlength="1" id="serial1"
+                value="0" oninput="moveToNext(this, 'serial2')" onkeydown="handleFirstInput(event)">
+              <input type="text" class="serial-input-box virtual-keyboard-input filled" maxlength="1" id="serial2"
+                value="6" oninput="moveToNext(this, 'serial3')" onkeydown="moveToPrev(event, 'serial1')">
+              <input type="text" class="serial-input-box virtual-keyboard-input filled" maxlength="1" id="serial3"
+                value="2" oninput="moveToNext(this, 'serial4')" onkeydown="moveToPrev(event, 'serial2')">
+              <input type="text" class="serial-input-box virtual-keyboard-input filled" maxlength="1" id="serial4"
+                value="A" oninput="moveToNext(this, 'serial5')" onkeydown="moveToPrev(event, 'serial3')">
+              <input type="text" class="serial-input-box virtual-keyboard-input filled" maxlength="1" id="serial5"
+                value="0" oninput="moveToNext(this, 'serial6')" onkeydown="moveToPrev(event, 'serial4')">
+              <input type="text" class="serial-input-box virtual-keyboard-input filled" maxlength="1" id="serial6"
+                value="A" oninput="checkComplete()" onkeydown="handleLastInput(event, 'serial5')">
+            </div>
+            <button class="btn btn-primary mt-4" onclick="completePumpPairing()">التالي</button>
+            <button id="scan-btn" class="m-0 text-center" onclick="handleScanClick()" style="font-weight:500;">
+              <span>مسح ضوئي للاقتران</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M4 8V6a2 2 0 012-2h2M4 16v2a2 2 0 002 2h2m8-16h2a2 2 0 012 2v2m-4 12h2a2 2 0 002-2v-2" />
+                <line x1="1" y1="12" x2="23" y2="12" stroke-width="1.2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="step step8 hidden">
+        <div class="step-content">
+          <div class="header-title fs-3">استبدال الخزان/البطارية</div>
+          <div class="step-title fs-4" style="color:#333">قم بتجميع الخزان المملوء مع المضخة</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step3">
+                <source src="assets/replace_battery/3.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot dot-step1"></div>
+            <div class="dot dot-step2"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="button-container pt-4" style="padding: 0px 20px;">
+          <button class="btn btn-primary" onclick="nextStep()">التالي</button>
+        </div>
+      </div>
+
+      <div class="step step9 hidden">
+        <div class="step-content pb-0">
+          <div class="header-title fs-3">استبدال الخزان/البطارية</div>
+          <div class="step-title mb-0  pt-1" style="color:#333;font-size: 32.6px !important;text-align: start;padding-right: 16px;">يرجى التهيئة حتى تصل القطرة إلى طرف الإبرة</div>
+          
+            <div class="img-container" >
+              <img src="assets/replace_battery/1.png" alt=""style="width: 50%;">
+            </div>
+          <!-- "هتتغير ل" تأكد من وجود قطرات من السائل على طرف إبرة الخزان -->
+          <p class="text-center mb-0 mt-3">لا تقم بتثبيت المضخة علي القاعدة حتي اكتمال عملية التهيئة</p>
+          <div class="progress-dots">
+            <div class="dot dot-step1"></div>
+            <div class="dot dot-step2"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="choice-buttons py-0 b-0">
+          <button class="choice-btn" onclick="showPrimingConfirm()" onmousedown="startLongPress(event)" onmouseup="cancelLongPress(event)" onmouseleave="cancelLongPress(event)" ontouchstart="startLongPress(event)" ontouchend="cancelLongPress(event)" ontouchcancel="cancelLongPress(event)">
+            <span>تهيئة</span>
+          </button>
+          <button class="choice-btn secondary" id="nextBtn5" onclick="nextStep()" disabled> التالي</button>
+        </div>
+      </div>
+      <div class="step step7 hidden">
+        <div class="step-content">
+          <div class="header-title fs-3">استبدال الخزان/البطارية</div>
+
+          <div class="step-title fs-4">قم بتثبيت المضخة على القاعدة</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step5">
+                <source src="assets/replace_battery/1.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot dot-step1"></div>
+            <div class="dot active dot-step2 "></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="nextStep()">التالي</button>
+        </div>
+      </div>
+
+      <!-- Step 10: Unpair - Remove pump from base -->
+      <div class="step step10 hidden">
+        <div class="step-content">
+          <div class="header-title fs-3">إلغاء اقتران المضخة</div>
+          <div class="step-title fs-2">يرجى إزالة المضخة من القاعدة.</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step1">
+                <source src="assets/replace_battery/1.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="nextStep()">التالي</button>
+        </div>
+      </div>
+
+      <!-- Step 11: Unpair - Reset pump -->
+      <div class="step step11 hidden">
+        <div class="step-content">
+          <div class="header-title fs-3">إلغاء اقتران المضخة</div>
+          <div class="step-title fs-2">يرجى إعادة ضبط المضخة</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step2">
+                <source src="assets/replace_battery/2.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="showUnpairConfirmDialog()">إعادة ضبط المضخة</button>
+        </div>
+      </div>
+
+      <!-- Step 12: Unpair - Cancel control -->
+      <div class="step step12 hidden">
+        <div class="step-content">
+          <div class="header-title fs-3">إلغاء اقتران المضخة</div>
+          <div class="step-title fs-4">إلغاء تحكم جهاز مساعد السكري المحمول في المضخة A0260</div>
+          <div class="illustration">
+            <!-- Empty space for illustration -->
+          </div>
+          <div class="progress-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="showUnpairControlDialog()">التالي</button>
+        </div>
+      </div>
+
+      <div class="modal" id="loadingModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-3 pb-0">
+            <div class="modal-body rounded-3">
+              <div class="loader" style="width:70px;">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+                <div class="bar4"></div>
+                <div class="bar5"></div>
+                <div class="bar6"></div>
+                <div class="bar7"></div>
+                <div class="bar8"></div>
+                <div class="bar9"></div>
+                <div class="bar10"></div>
+                <div class="bar11"></div>
+                <div class="bar12"></div>
+              </div>
+              <div class="mt-4 fs-5 text-center">الإقتران...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal" id="loadingModal5" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-3 pb-0">
+            <div class="modal-body rounded-3">
+              <div class="loader" style="width:70px;">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+                <div class="bar4"></div>
+                <div class="bar5"></div>
+                <div class="bar6"></div>
+                <div class="bar7"></div>
+                <div class="bar8"></div>
+                <div class="bar9"></div>
+                <div class="bar10"></div>
+                <div class="bar11"></div>
+                <div class="bar12"></div>
+              </div>
+              <div class="mt-4 fs-5 text-center">إعادة ضبط المضخة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="successPopup" class="success-popup-overlay">
+        <div class="success-popup">
+          <div class="success-icon">
+            <i class="fas fa-check"></i>
+          </div>
+          <p class="success-message">مقترن</p>
+        </div>
+      </div>
+      <!-- Step 4: Ventilation instruction -->
+      <div class="step step4 hidden">
+        <div class="step-content pb-0">
+          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+            لإدارة إعطاء الأنسولين</div>
+          <div class="step-title fs-4 pt-2" style="color:#333">قم بتجميع الخزان المملوء مع المضخة</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step3">
+                <source src="assets/replace_battery/3.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <!-- "هتتغير ل" تأكد من وجود قطرات من السائل على طرف إبرة الخزان -->
+          <p class="text-center mb-0">لا تقم بتثبيت المضخة علي القاعدة حتي اكتمال عملية التهيئة</p>
+          <div class="progress-dots">
+            <div class="dot dot-step1"></div>
+            <div class="dot dot-step2"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="choice-buttons py-0">
+          <button class="choice-btn" onclick="showPrimingConfirm()" onmousedown="startLongPress(event)" onmouseup="cancelLongPress(event)" onmouseleave="cancelLongPress(event)" ontouchstart="startLongPress(event)" ontouchend="cancelLongPress(event)" ontouchcancel="cancelLongPress(event)">
+            <span>تهيئة</span>
+          </button>
+          <button class="choice-btn secondary" id="nextBtn4" onclick="nextStep()" disabled>
+            التالي
+          </button>
+        </div>
+      </div>
+      <div class="modal" id="loadingModal2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-3 pb-0">
+            <div class="modal-body rounded-3">
+              <div class="loader">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+                <div class="bar4"></div>
+                <div class="bar5"></div>
+                <div class="bar6"></div>
+                <div class="bar7"></div>
+                <div class="bar8"></div>
+                <div class="bar9"></div>
+                <div class="bar10"></div>
+                <div class="bar11"></div>
+                <div class="bar12"></div>
+              </div>
+              <div class="mt-4 fs-5">إتصال</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Step 5: Final installation -->
+      <div class="step step5 hidden">
+        <div class="step-content">
+          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+            لإدارة إعطاء الأنسولين</div>
+          <div class="step-title fs-4">قم بتثبيت المضخة على القاعدة</div>
+          <div class="illustration">
+            <div class="video-container">
+              <video muted loop preload="none" data-video="step5">
+                <source src="assets/replace_battery/1.webm" type="video/webm" />
+              </video>
+            </div>
+          </div>
+          <div class="progress-dots">
+            <div class="dot dot-step1"></div>
+            <div class="dot active dot-step2 "></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="nextStep()">التالي</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Cartridge priming -->
+      <div class="step step6 hidden">
+        <div class="step-content">
+          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+            لإدارة إعطاء الأنسولين</div>
+          <div class="step-title fs-4 mt-3">تهيئة الكانيولا؟</div>
+          <div class="illustration m-5">
+            <img src="assets/replace_battery/2.png" alt="" srcset="" />
+          </div>
+          <div class="progress-dots m-0">
+            <div class="dot active dot-step1"></div>
+            <div class="dot dot-step2"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+        <div class="choice-buttons p-3 pt-0">
+          <button class="choice-btn" onclick="completeProcess()">
+            إزالة الهواء من الكانيولا
+          </button>
+          <button class="choice-btn" onclick="skipStep()">تخطى</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Dialog Overlay -->
+    <div class="overlay" id="confirmOverlay">
+      <div class="modal-bottom">
+        <div class="modal-header">استبدال الخزان/البطارية</div>
+        <div class="modal-message text-secondary">
+          سوف يتم إعادة ضبط المضخة. هل تريد الاستمرار؟
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-no" onclick="hideConfirmDialog()">
+            لا
+          </button>
+          <button class="modal-btn modal-btn-yes" onclick="hideConfirmDialog(1)">
+            نعم
+          </button>
+        </div>
+      </div>
+    </div>
+     <!-- Confirmation Dialog Overlay -->
+     <div class="overlay" id="confirmOverlay11">
+      <div class="modal-bottom">
+        <div class="modal-header">إلغاء اقتران المضخة </div>
+        <div class="modal-message text-secondary">
+          سوف يتم إعادة ضبط المضخة. هل تريد الاستمرار؟
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-no" onclick="hideUnpairConfirmDialog(false)">
+            لا
+          </button>
+          <button class="modal-btn modal-btn-yes" onclick="hideUnpairConfirmDialog(true)">
+            نعم
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Confirmation Dialog Overlay -->
+    <div class="overlay" id="confirmOverlay12">
+      <div class="modal-bottom">
+        <div class="modal-header">إلغاء اقتران المضخة </div>
+        <div class="modal-message text-secondary">
+          هل تريد إلغاء تحكم مساعد السكري المحمول في المضخة A0A260 ?
+        </div>
+        <div class="modal-buttons">
+          <button class="modal-btn modal-btn-no" onclick="hideUnpairControlDialog(false)">
+            لا
+          </button>
+          <button class="modal-btn modal-btn-yes" onclick="hideUnpairControlDialog(true)">
+            نعم
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priming Confirmation Dialog Overlay -->
+    <div class="overlay centered" id="primingOverlay">
+      <div class="modal-centered">
+        <div class="">
+          <img src="assets/no.png" alt="" srcset="" style="width: 25%;" />
+        </div>
+        <div class="modal-title text-secondary fs-5">
+          تأكد من وجود قطرات من السائل على طرف إبرة الخزان
+        </div>
+        <div class="modal-subtitle fs-5 text-secondary">16:15 18-11-2024</div>
+        <button class="btn btn-primary p-3" onclick="hidePrimingDialog()">
+          نعم
+        </button>
+      </div>
+    </div>
+    <div class="overlay centered" id="unpairingOverlay">
+      <div class="modal-centered">
+        <div class="">
+          <img src="assets/no.png" alt="" srcset="" style="width: 25%;" />
+        </div>
+        <div class="modal-title text-secondary fs-5">
+        غير مقترن        
+        </div>
+        <div class="modal-subtitle fs-5 text-secondary">16:15 18-11-2024</div>
+        <button class="btn btn-primary p-3" onclick="hideUnpairingOverlay()">
+          نعم
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/keyboard.js"></script>
+  <script>
+    // Check if step parameter is in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const stepParam = urlParams.get('step');
+    let currentStep = stepParam ? parseInt(stepParam) : 1;
+    let totalSteps = 9;
+    let stepSequence = [1, 2, 3, 4, 5, 6]; // Default sequence
+    let currentStepIndex = 0;
+
+    // Handle back navigation based on source page
+    function handleBackNavigation() {
+      // Check if came from settings.html (step=3 parameter)
+      if (stepParam === '3') {
+        // From settings: go back directly to settings.html
+        window.location.href = 'settings.html';
+      } else {
+        // From suspend.html or pda-mode.html: navigate back and open menu
+        handlePdaModeNavigation();
+        localStorage.setItem('openMenuOnLoad', 'true');
+      }
+    }
+
+    function updateStatusTime() {
+      const statusTimeElement = document.querySelector(
+        ".status-left span:last-child"
+      );
+      if (statusTimeElement) {
+        // Update time based on step to match images
+        const times = {
+          1: "19:30 18/11",
+          2: "19:30 18/11",
+          3: "19:30 18/11",
+          4: "19:30 18/11",
+          5: "19:30 18/11",
+          6: "16:15 18/11",
+          7: "16:17 18/11",
+          8: "16:17 18/11",
+        };
+        statusTimeElement.textContent = times[currentStep] || "19:30 18/11";
+      }
+    }
+
+    function showPumpPairingScreen() {
+      const pumpScreen = document.getElementById('pumpPairingScreen');
+      if (pumpScreen) {
+        pumpScreen.style.display = 'block';
+        // Trigger animation after a small delay to ensure display is set
+        setTimeout(() => {
+          pumpScreen.style.bottom = '0';
+          // Focus on first input to open keyboard
+          setTimeout(() => {
+            const firstInput = document.getElementById('serial1');
+            if (firstInput) {
+              firstInput.focus();
+            }
+          }, 500);
+        }, 10);
+      }
+    }
+
+    function hidePumpPairingScreen() {
+      const pumpScreen = document.getElementById('pumpPairingScreen');
+      if (pumpScreen) {
+        pumpScreen.style.bottom = '-100%';
+        // Hide after animation completes
+        setTimeout(() => {
+          pumpScreen.style.display = 'none';
+        }, 500);
+      }
+    }
+
+    function handleScanClick() {
+      showVideo('assets/pumppair.mp4');
+
+      // انتظار وقت أطول قبل إزالة الفيديو وإظهار شاشة التحميل
+      setTimeout(() => {
+        // Remove image overlay first
+        const overlay = document.getElementById('image-overlay');
+        if (overlay) overlay.remove();
+
+        // Show loading modal
+        const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'), {
+          backdrop: false
+        });
+        loadingModal.show();
+
+        // After 2 seconds, hide modal and show success popup
+        setTimeout(() => {
+          loadingModal.hide();
+
+          // Save pairing status to localStorage
+          localStorage.setItem('pump-pairing', 'true');
+          localStorage.setItem('pump-serial', '062A0A');
+          
+          // Manually trigger the update if on same page
+          if (typeof applyPreparationStyles === 'function') {
+            applyPreparationStyles();
+          }
+          if (window.controlScreenInstance) {
+            window.controlScreenInstance.updatePumpPairingStatus();
+          }
+
+          setTimeout(() => {
+            // Show success popup
+            const successPopup = document.getElementById('successPopup');
+            successPopup.classList.add('show');
+
+            // Hide success popup after 1.5 seconds and go to next step
+            setTimeout(() => {
+              successPopup.classList.remove('show');
+
+              setTimeout(() => {
+                const pumpScreen = document.getElementById('pumpPairingScreen');
+                if (pumpScreen) {
+                  pumpScreen.style.bottom = '-100%';
+                  setTimeout(() => {
+                    pumpScreen.style.display = 'none';
+                    nextStep();
+                  }, 500);
+                }
+              }, 300);
+            }, 1500);
+          }, 300);
+        }, 2000);
+      }, 19000); // تغيير الوقت إلى 19 ثانية
+    }
+
+    function showImage(src) {
+      let container = document.querySelector('.phone-container');
+      let overlay = document.createElement('div');
+      overlay.id = 'image-overlay';
+      overlay.style.position = 'absolute';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.85)';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = 9999;
+      overlay.style.overflow = 'hidden';
+
+      let img = document.createElement('img');
+      img.src = src;
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.marginTop = '80px';
+      img.style.objectPosition = 'center -50px';
+      img.style.transform = 'translateY(100%)';
+      img.style.animation = 'slideUp 0.7s ease-out forwards';
+      overlay.style.background = 'linear-gradient(to bottom, transparent 80px, rgba(0,0,0,0.85) 50px)';
+      overlay.appendChild(img);
+      container.appendChild(overlay);
+
+      setTimeout(() => { overlay.remove(); }, 2500);
+    }
+
+    function showVideo(src) {
+      console.log('showVideo called with:', src);
+      let container = document.querySelector('.phone-container');
+      if (!container) {
+        console.error('Container not found!');
+        return;
+      }
+      let overlay = document.createElement('div');
+      overlay.id = 'image-overlay';
+      overlay.style.position = 'absolute';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.85)';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = 9999;
+      overlay.style.overflow = 'hidden';
+
+      let video = document.createElement('video');
+      video.src = src;
+      video.style.width = '100%';
+      video.style.height = 'calc(100%)';
+      video.style.objectFit = 'cover';
+      video.style.marginTop = '180px'; 
+      video.style.objectPosition = 'center -98px'; 
+      video.style.transform = 'translateY(100%)';
+      video.style.animation = 'slideUp 0.7s ease-out forwards';
+      video.autoplay = true;
+      video.muted = true; 
+      video.playsInline = true;
+      video.loop = true; 
+      overlay.style.background = 'linear-gradient(to bottom, transparent 80px, rgba(0,0,0,0.85) 70px)';
+
+      // إضافة معالجة أخطاء
+      video.addEventListener('error', (e) => {
+        console.error('Video error:', e);
+        console.error('Video src:', video.src);
+      });
+
+      video.addEventListener('loadeddata', () => {
+        console.log('Video loaded successfully');
+      });
+
+      overlay.appendChild(video);
+      container.appendChild(overlay);
+      
+      // محاولة تشغيل الفيديو يدوياً
+      video.play().catch(e => {
+        console.error('Failed to play video:', e);
+      });
+
+      video.addEventListener('ended', () => {
+        overlay.remove();
+      });
+      
+      setTimeout(() => { 
+        if (overlay.parentNode) {
+          overlay.remove();
+        }
+      }, 30000); 
+    }
+
+    function completePumpPairing() {
+      // Get serial number from all inputs
+      const serial1 = document.getElementById('serial1').value;
+      const serial2 = document.getElementById('serial2').value;
+      const serial3 = document.getElementById('serial3').value;
+      const serial4 = document.getElementById('serial4').value;
+      const serial5 = document.getElementById('serial5').value;
+      const serial6 = document.getElementById('serial6').value;
+      const serialNumber = serial1 + serial2 + serial3 + serial4 + serial5 + serial6;
+
+      // Show loading modal
+      const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'), {
+        backdrop: false
+      });
+      loadingModal.show();
+
+      // Simulate pairing process
+      setTimeout(() => {
+        loadingModal.hide();
+
+        // Save pairing status to localStorage
+        localStorage.setItem('pump-pairing', 'true');
+        localStorage.setItem('pump-serial', serialNumber);
+        
+        // Manually trigger the update if on same page
+        if (typeof applyPreparationStyles === 'function') {
+          applyPreparationStyles();
+        }
+        if (window.controlScreenInstance) {
+          window.controlScreenInstance.updatePumpPairingStatus();
+        }
+
+        setTimeout(() => {
+          // Show success popup
+          const successPopup = document.getElementById('successPopup');
+          successPopup.classList.add('show');
+
+          // Hide success popup after 1.5 seconds and go to next step
+          setTimeout(() => {
+            successPopup.classList.remove('show');
+
+            setTimeout(() => {
+              const pumpScreen = document.getElementById('pumpPairingScreen');
+              if (pumpScreen) {
+                pumpScreen.style.bottom = '-100%';
+                setTimeout(() => {
+                  pumpScreen.style.display = 'none';
+                  nextStep();
+                }, 500);
+              }
+            }, 300);
+          }, 1500);
+        }, 300);
+      }, 2000);
+    }
+
+    function moveToNext(current, nextId) {
+      // Ensure only one character
+      if (current.value.length > 1) {
+        current.value = current.value.charAt(0);
+      }
+
+      if (current.value.length === 1) {
+        current.classList.add('filled');
+        const nextInput = document.getElementById(nextId);
+        if (nextInput) {
+          nextInput.focus();
+        }
+      } else if (current.value.length === 0) {
+        current.classList.remove('filled');
+      }
+    }
+
+    function handleFirstInput(event) {
+      const input = event.target;
+      // Handle any key press to update filled state
+      setTimeout(() => {
+        if (input.value === '') {
+          input.classList.remove('filled');
+        } else {
+          input.classList.add('filled');
+        }
+      }, 0);
+    }
+
+    function handleLastInput(event, prevId) {
+      const input = event.target;
+      // Handle any key press to update filled state
+      setTimeout(() => {
+        if (input.value === '') {
+          input.classList.remove('filled');
+        } else {
+          input.classList.add('filled');
+        }
+      }, 0);
+
+      // Also handle moving to previous input
+      if (event.key === 'Backspace' && input.value === '') {
+        event.preventDefault();
+        input.classList.remove('filled');
+        const prevInput = document.getElementById(prevId);
+        if (prevInput) {
+          prevInput.focus();
+          prevInput.value = '';
+          prevInput.classList.remove('filled');
+        }
+      }
+    }
+
+    function moveToPrev(event, prevId) {
+      if (event.key === 'Backspace' && event.target.value === '') {
+        event.preventDefault();
+        event.target.classList.remove('filled');
+        const prevInput = document.getElementById(prevId);
+        if (prevInput) {
+          prevInput.focus();
+          prevInput.value = '';
+          prevInput.classList.remove('filled');
+        }
+      }
+    }
+
+    function checkComplete() {
+      // Optional: Auto-submit when all fields are filled
+      const serial1 = document.getElementById('serial1').value;
+      const serial2 = document.getElementById('serial2').value;
+      const serial3 = document.getElementById('serial3').value;
+      const serial4 = document.getElementById('serial4').value;
+      const serial5 = document.getElementById('serial5').value;
+      const serial6 = document.getElementById('serial6').value;
+
+      if (serial1 && serial2 && serial3 && serial4 && serial5 && serial6) {
+        // All fields filled - could auto-submit here if desired
+        // completePumpPairing();
+      }
+    }
+
+    function playCurrentStepVideo() {
+      // Handle both numeric steps (1-6) and string steps (step8, step9)
+      let selector;
+      if (typeof currentStep === 'string' && currentStep.startsWith('step')) {
+        selector = `.${currentStep}`;
+      } else {
+        selector = `.step${currentStep}`;
+      }
+      
+      const currentStepElement = document.querySelector(selector);
+      if (currentStepElement) {
+        const video = currentStepElement.querySelector('video[data-video]');
+        if (video) {
+          video.play().catch(e => console.log('Video play failed:', e));
+        }
+      }
+    }
+    function goToStep(stepClass) {
+      // Hide current step
+      const allSteps = document.querySelectorAll('[class*="step"]');
+      allSteps.forEach(step => {
+        if (step.classList.contains('step1') || step.classList.contains('step2') || 
+            step.classList.contains('step3') || step.classList.contains('step4') || 
+            step.classList.contains('step5') || step.classList.contains('step6') ||
+            step.classList.contains('step7') || step.classList.contains('step8') || 
+            step.classList.contains('step9') || step.classList.contains('step10') ||
+            step.classList.contains('step11') || step.classList.contains('step12')) {
+          step.classList.add('hidden');
+          const video = step.querySelector('video[data-video]');
+          if (video) {
+            video.pause();
+          }
+        }
+      });
+      
+      // Show target step
+      const targetStep = document.querySelector(`.${stepClass}`);
+      if (targetStep) {
+        targetStep.classList.remove('hidden');
+        const video = targetStep.querySelector('video[data-video]');
+        if (video) {
+          video.play().catch(e => console.log('Video play failed:', e));
+        }
+      }
+      
+      // Update current step reference
+      currentStep = stepClass;
+    }
+
+    function nextStep() {
+      // Close any open modals
+      const primingOverlay = document.getElementById("primingOverlay");
+      if (primingOverlay) {
+        primingOverlay.style.display = "none";
+      }
+      
+      const currentStepElement = document.querySelector(
+        `.step${currentStep}`
+      );
+      if (currentStepElement) {
+        currentStepElement.classList.add("hidden");
+        // Pause video when leaving step
+        const video = currentStepElement.querySelector('video[data-video]');
+        if (video) {
+          video.pause();
+        }
+      }
+
+      // Move to next step in sequence
+      if (currentStepIndex < stepSequence.length - 1) {
+        currentStepIndex++;
+        currentStep = stepSequence[currentStepIndex];
+        const nextStepElement = document.querySelector(`.step${currentStep}`);
+        if (nextStepElement) {
+          nextStepElement.classList.remove("hidden");
+          // Play video when entering step
+          playCurrentStepVideo();
+        }
+
+        // Hide header title when moving to step 3 or above (all modes)
+        const headerTitle = document.getElementById('headerTitle');
+        if (headerTitle) {
+          if (currentStep >= 3) {
+            headerTitle.style.display = 'none';
+          } else {
+            headerTitle.style.display = 'block';
+          }
+        }
+      }
+
+      // Update progress dots
+      updateProgressDots();
+
+      // Update status time
+      updateStatusTime();
+
+      // Save state to localStorage
+      localStorage.setItem("currentStep", currentStep);
+    }
+
+    function updateProgressDots() {
+      const currentStepElement = document.querySelector(
+        `.step${currentStep}`
+      );
+      if (currentStepElement) {
+        const dots = currentStepElement.querySelectorAll(".dot");
+        dots.forEach((dot, dotIndex) => {
+          dot.classList.remove("active");
+          // Set active dot based on current step index in sequence
+          if (dotIndex === currentStepIndex) {
+            dot.classList.add("active");
+          }
+        });
+      }
+    }
+
+    function showConfirmDialog() {
+      document.getElementById("confirmOverlay").style.display = "flex";
+    }
+
+    function hideConfirmDialog(n = 0) {
+      document.getElementById("confirmOverlay").style.display = "none";
+      if (n === 1) {
+        // Show loading modal first
+        const loadingModal5 = new bootstrap.Modal(document.getElementById('loadingModal5'), {
+          backdrop: false
+        });
+        loadingModal5.show();
+        
+        // After 2 seconds, hide modal and continue
+        setTimeout(() => {
+          loadingModal5.hide();
+          
+          setTimeout(() => {
+            // Continue to next step in sequence
+            nextStep();
+          }, 300);
+        }, 2000);
+      }
+    }
+
+    // Unpair functions for Step 11
+    function showUnpairConfirmDialog() {
+      document.getElementById("confirmOverlay11").style.display = "flex";
+    }
+
+    function hideUnpairConfirmDialog(proceed = false) {
+      document.getElementById("confirmOverlay11").style.display = "none";
+      if (proceed) {
+        // Show loading modal
+        const loadingModal5 = new bootstrap.Modal(document.getElementById('loadingModal5'), {
+          backdrop: false
+        });
+        loadingModal5.show();
+        
+        // After 2 seconds, hide modal and go to next step
+        setTimeout(() => {
+          loadingModal5.hide();
+          
+          setTimeout(() => {
+            nextStep();
+          }, 300);
+        }, 2000);
+      }
+    }
+
+    // Unpair functions for Step 12
+    function showUnpairControlDialog() {
+      document.getElementById("confirmOverlay12").style.display = "flex";
+    }
+
+    function hideUnpairControlDialog(proceed = false) {
+      document.getElementById("confirmOverlay12").style.display = "none";
+      if (proceed) {
+        // Show loading modal
+        const loadingModal2 = new bootstrap.Modal(document.getElementById('loadingModal2'), {
+          backdrop: false
+        });
+        loadingModal2.show();
+        
+        // After 2 seconds, show unpaired overlay
+        setTimeout(() => {
+          loadingModal2.hide();
+          
+          setTimeout(() => {
+            // Show unpaired overlay
+            document.getElementById("unpairingOverlay").style.display = "flex";
+          }, 300);
+        }, 2000);
+      }
+    }
+
+    function hideUnpairingOverlay() {
+      document.getElementById("unpairingOverlay").style.display = "none";
+      // Set pump-pairing to false
+      localStorage.setItem('pump-pairing', 'false');
+      // Redirect to settings
+      window.location.href = 'settings.html';
+    }
+
+    let primed = false;
+    let primingClicks = 0;
+    let primingInProgress = false;
+    let longPressTimer = null;
+    let longPressStarted = false;
+    
+    function showPrimingConfirm() {
+      // Prevent multiple clicks while processing
+      if (primingInProgress) {
+        return;
+      }
+      
+      primingClicks++;
+      
+      if (primingClicks === 1) {
+        // First click: Show loading modal
+        primingInProgress = true;
+        const loadingModal2 = new bootstrap.Modal(document.getElementById('loadingModal2'), {
+          backdrop: false
+        });
+        loadingModal2.show();
+        
+        // After 2 seconds, hide modal and change text
+        setTimeout(() => {
+          loadingModal2.hide();
+          
+          setTimeout(() => {
+            const warningTexts = document.querySelectorAll('.step4 .text-center.mb-0, .step9 .text-center.mb-0');
+            warningTexts.forEach(warningText => {
+              if (warningText) {
+                warningText.textContent = 'تأكد من وجود قطرات من السائل على طرف إبرة الخزان';
+                warningText.style.color = 'red';
+              }
+            });
+            primingInProgress = false;
+          }, 300);
+        }, 2000);
+        return;
+      }
+    }
+    
+    function startLongPress(event) {
+      if (primingClicks < 1 || primingInProgress || longPressStarted) {
+        return;
+      }
+      
+      longPressStarted = true;
+      primingInProgress = true;
+      
+      // Add visual feedback class
+      const button = event.currentTarget;
+      button.classList.add('long-pressing');
+      
+      // Start long press timer (5 seconds)
+      longPressTimer = setTimeout(() => {
+        // Long press completed
+        const warningTexts = document.querySelectorAll('.step4 .text-center.mb-0, .step9 .text-center.mb-0');
+        
+        // Hide warning text
+        warningTexts.forEach(warningText => {
+          if (warningText) {
+            warningText.style.display = 'none';
+          }
+        });
+        
+        // Remove visual feedback class
+        button.classList.remove('long-pressing');
+        
+        // Show confirmation modal
+        document.getElementById("primingOverlay").style.display = "flex";
+        
+        // Save to localStorage
+        localStorage.setItem('preparation', 'true');
+        
+        // Reset state
+        primingClicks = 0;
+        primingInProgress = false;
+        longPressStarted = false;
+      }, 5000);
+    }
+    
+    function cancelLongPress(event) {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+        longPressStarted = false;
+        primingInProgress = false;
+        
+        // Remove visual feedback class
+        const button = event.currentTarget;
+        button.classList.remove('long-pressing');
+      }
+    }
+
+    function hidePrimingDialog() {
+      document.getElementById("primingOverlay").style.display = "none";
+      // Enable the التالي button in both Step 4 and Step 9
+      const nextBtn4 = document.getElementById("nextBtn4");
+      const nextBtn5 = document.getElementById("nextBtn5");
+      if (nextBtn4) {
+        nextBtn4.disabled = false;
+        nextBtn4.classList.remove("secondary");
+      }
+      if (nextBtn5) {
+        nextBtn5.disabled = false;
+        nextBtn5.classList.remove("secondary");
+      }
+      // Reset priming state
+      primingClicks = 0;
+    }
+
+    function goBack() {
+      if (currentStep > 1) {
+        const currentStepElement = document.querySelector(
+          `.step${currentStep}`
+        );
+        if (currentStepElement) {
+          currentStepElement.classList.add("hidden");
+        }
+
+        currentStep--;
+        const prevStepElement = document.querySelector(`.step${currentStep}`);
+        if (prevStepElement) {
+          prevStepElement.classList.remove("hidden");
+        }
+
+        updateProgressDots();
+        updateStatusTime();
+        localStorage.setItem("currentStep", currentStep);
+      }
+    }
+
+    function completeProcess() {
+      // Show loading modal
+      const loadingModal2 = new bootstrap.Modal(document.getElementById('loadingModal2'), {
+        backdrop: false
+      });
+      loadingModal2.show();
+      
+      // After 2 seconds, hide modal and redirect to settings
+      setTimeout(() => {
+        loadingModal2.hide();
+        
+        setTimeout(() => {
+          // Redirect to settings page
+          window.location.href = 'settings.html';
+        }, 300);
+      }, 2000);
+    }
+
+    function skipStep() {
+      console.log('skipStep called');
+      // Show loading modal
+      const loadingModal2 = new bootstrap.Modal(document.getElementById('loadingModal2'), {
+        backdrop: false
+      });
+      loadingModal2.show();
+      
+      // After 2 seconds, hide modal and navigate
+      setTimeout(() => {
+        loadingModal2.hide();
+        
+        setTimeout(() => {
+          // If came from settings (step=3), go back to settings
+          if (stepParam === '3') {
+            console.log('Returning to settings.html');
+            window.location.href = 'settings.html';
+          } else {
+            console.log('Navigating to home page and opening menu');
+            // Go to home page and open menu
+            window.location.href = 'suspend.html?openMenu=true';
+          }
+        }, 300);
+      }, 2000);
+    }
+
+    function showStep(stepNumber) {
+      // Hide all steps and pause videos (including steps 1-12)
+      for (let i = 1; i <= 12; i++) {
+        const stepElement = document.querySelector(`.step${i}`);
+        if (stepElement) {
+          stepElement.classList.add("hidden");
+          const video = stepElement.querySelector('video[data-video]');
+          if (video) {
+            video.pause();
+          }
+        }
+      }
+
+      // Show target step
+      const targetStep = document.querySelector(`.step${stepNumber}`);
+      if (targetStep) {
+        targetStep.classList.remove("hidden");
+      }
+
+      currentStep = stepNumber;
+      updateProgressDots();
+      updateStatusTime();
+
+      // Play video for current step
+      playCurrentStepVideo();
+    }
+
+    // Initialize on page load
+    document.addEventListener("DOMContentLoaded", function () {
+      // Determine which step to show
+      let stepToShow = 1;
+      const isPumpPaired = localStorage.getItem("pump-pairing") === "true";
+      const continueFromStep = localStorage.getItem("continueFromStep");
+
+      // Set step sequence based on pump pairing status and URL parameter
+      if (stepParam === '3' && isPumpPaired) {
+        // If coming from settings (?step=3) and already paired: show unpair steps 10, 11, 12
+        stepSequence = [10, 11, 12];
+        totalSteps = 3;
+        stepToShow = 10;
+      } else if (isPumpPaired) {
+        // If pump is paired: show steps 1, 2, 8, 9, 7, 6
+        stepSequence = [1, 2, 8, 9, 7, 6];
+        totalSteps = 6;
+        stepToShow = 1;
+      } else if (stepParam === '3') {
+        // If coming from settings (?step=3) and not paired: show pairing steps 3, 4, 5, 6
+        stepSequence = [3, 4, 5, 6];
+        totalSteps = 4;
+        stepToShow = 3;
+      } else {
+        // Default sequence when not paired: 3, 4, 5, 6
+        stepSequence = [3, 4, 5, 6];
+        totalSteps = 4;
+        stepToShow = 3;
+      }
+
+      // Check if we need to continue from a specific step (after reset)
+      if (continueFromStep) {
+        stepToShow = parseInt(continueFromStep);
+        localStorage.removeItem("continueFromStep");
+      }
+      // Check if step is provided in URL (has priority over localStorage)
+      else if (stepParam && !stepParam === '3') {
+        stepToShow = parseInt(stepParam);
+        // Clear localStorage when URL parameter is present to avoid conflicts
+        localStorage.removeItem("currentStep");
+      } else if (!stepParam) {
+        // Always start from step 1 when opening from menu (no URL parameter)
+        stepToShow = stepSequence[0];
+        // Clear localStorage to ensure fresh start
+        localStorage.removeItem("currentStep");
+      }
+
+      // Find the index of stepToShow in the sequence
+      currentStepIndex = stepSequence.indexOf(stepToShow);
+      if (currentStepIndex === -1) {
+        currentStepIndex = 0;
+        stepToShow = stepSequence[0];
+      }
+
+      currentStep = stepToShow;
+      showStep(currentStep);
+
+      // Update progress dots based on sequence
+      if (isPumpPaired) {
+        // For paired pump: 6 steps (1, 2, 8, 9, 7, 6)
+        const step1Dots = document.querySelector('.step1 .progress-dots');
+        const step2Dots = document.querySelector('.step2 .progress-dots');
+        const step8Dots = document.querySelector('.step8 .progress-dots');
+        const step9Dots = document.querySelector('.step9 .progress-dots');
+        const step7Dots = document.querySelector('.step7 .progress-dots');
+        const step6Dots = document.querySelector('.step6 .progress-dots');
+        
+        if (step1Dots) {
+          step1Dots.innerHTML = `
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step2Dots) {
+          step2Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step8Dots) {
+          step8Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step9Dots) {
+          step9Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step7Dots) {
+          step7Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step6Dots) {
+          step6Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+          `;
+        }
+      } else {
+        // For unpaired pump: 4 steps (3, 4, 5, 6)
+        const step3Dots = document.querySelector('.step3 .progress-dots');
+        const step4Dots = document.querySelector('.step4 .progress-dots');
+        const step5Dots = document.querySelector('.step5 .progress-dots');
+        const step6Dots = document.querySelector('.step6 .progress-dots');
+        
+        if (step3Dots) {
+          step3Dots.innerHTML = `
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step4Dots) {
+          step4Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step5Dots) {
+          step5Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+            <div class="dot"></div>
+          `;
+        }
+        
+        if (step6Dots) {
+          step6Dots.innerHTML = `
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot active"></div>
+          `;
+        }
+      }
+      
+      // If coming from settings with step=3 (pump pairing only), hide first 2 dots
+      if (stepParam === '3' && currentStep === 3 && !isPumpPaired) {
+        const dotsToHide = document.querySelectorAll('.step3 .dot-step1, .step3 .dot-step2');
+        dotsToHide.forEach(dot => {
+          dot.style.display = 'none';
+        });
+      }
+      
+      // Always hide header title for step 3 and above (all modes)
+      const headerTitle = document.getElementById('headerTitle');
+      if (headerTitle && currentStep >= 3) {
+        headerTitle.style.display = 'none';
+      } else if (headerTitle && currentStep < 3) {
+        headerTitle.style.display = 'block';
+      }
+
+      updateProgressDots();
+      updateStatusTime();
+    });
+
+    // Handle input focus to show keyboard
+    document.addEventListener("focusin", function (e) {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+        // Show virtual keyboard
+        if (typeof showKeyboard === "function") {
+          showKeyboard();
+        }
+      }
+    });
+
+    // Save form data to localStorage when changed (except serial inputs)
+    document.addEventListener("input", function (e) {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+        // Skip serial input boxes
+        if (e.target.classList.contains('serial-input-box')) {
+          return;
+        }
+        localStorage.setItem(e.target.name || e.target.id, e.target.value);
+      }
+    });
+
+    // Restore form data from localStorage
+    window.addEventListener("load", function () {
+      const inputs = document.querySelectorAll("input, textarea");
+      inputs.forEach((input) => {
+        const key = input.name || input.id;
+        if (key) {
+          const savedValue = localStorage.getItem(key);
+          if (savedValue) {
+            input.value = savedValue;
+          }
+        }
+      });
+    });
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/control-screen.js"></script>
+</body>
+
+</html>

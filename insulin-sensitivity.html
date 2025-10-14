@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=480, initial-scale=1.0" />
+  <title>حاسبة ضخة الأنسولين</title>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <script src="js/keyboard.js"></script>
+  <style>
+    * {
+      user-select: none;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+
+
+    .phone-container {
+      background: #fafafa;
+      overflow-y: scroll;
+    }
+
+    .control-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      padding-left: 40px;
+      border-bottom: 1px solid #edeeef;
+      background: #fff;
+      min-height: 75px !important;
+      cursor: pointer;
+    }
+
+    .control-item-label {
+      font-size: 18px;
+      color: #444;
+    }
+
+    .control-item-view {
+      font-size: 18px;
+      color: #777;
+    }
+
+    .control-item-value.default-value {
+      color: #999 !important;
+    }
+
+    .control-item-value.selected-value {
+      color: #1b52a4 !important;
+    }
+
+    .control-item-view i.fa-chevron-left {
+      font-size: 14px;
+      padding-right: 10px;
+    }
+
+    .auto-switch {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    .switch-label {
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      position: relative;
+    }
+
+    .switch-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 24px;
+      background: #d1d1d6;
+      border-radius: 16px;
+      transition: background 0.2s;
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: -2px;
+      left: 21px;
+      width: 28px;
+      height: 28px;
+      background: #2056a8;
+      border-radius: 50%;
+      box-shadow: none;
+      transition: left 0.2s, background 0.2s;
+    }
+
+    .switch-input:checked+.switch-track {
+      background: #c7d9f0;
+    }
+
+    .switch-input:checked+.switch-track+.switch-thumb {
+      left: 21px;
+      background: #2056a8;
+    }
+
+    .switch-input:not(:checked)+.switch-track {
+      background: #d1d1d6;
+    }
+
+    .switch-input:not(:checked)+.switch-track+.switch-thumb {
+      left: 0;
+      background: #9e9e9e;
+    }
+
+    .btn.decrement,
+    .btn.increment {
+      background-color: #2e61ae;
+      color: white;
+      border-radius: 10px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .custom-ms-modal .fs-1 {
+      font-size: 40px !important;
+    }
+
+    .custom-ms-modal .btn.decrement,
+    .custom-ms-modal .btn.increment {
+      width: 60px;
+      font-size: 40px;
+      height: 60px;
+    }
+
+
+    .screen {
+      display: none;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .time-schedule-item {
+      background: white;
+      padding: 16px 20px;
+      border-bottom: 1px solid #edeeef;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Header styles */
+    .app-header {
+      font-size: 25px;
+    }
+
+    .back-button {
+      right: 20px;
+      color: #444;
+    }
+
+    /* Screen 5 specific styles */
+    .period-edit-header {
+      min-height: 44px;
+      padding-block: 15px !important;
+    }
+
+    .save-period-btn {
+      cursor: pointer;
+      font-size: 18px;
+      position: absolute;
+      left: 20px;
+    }
+
+    .back-period-btn {
+      cursor: pointer;
+      font-size: 18px;
+      position: absolute;
+      right: 20px;
+    }
+
+    .period-content {
+      background: #fafafa;
+      flex-grow: 1;
+      padding: 0;
+    }
+
+    .blood-sugar-screen {
+      padding: 0;
+      margin-top: 2px;
+    }
+
+    .blood-sugar-screen.mt-0 {
+      margin-top: 0;
+    }
+
+    .blood-sugar-screen.mt-2 {
+      margin-top: 2px;
+    }
+
+    .time-control-section {
+      font-family: sans-serif;
+      direction: ltr;
+    }
+
+    .time-control-wrapper {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .increment-btn,
+    .decrement-btn {
+      width: 45px;
+      height: 45px;
+      background-color: #2e61ae;
+      color: white;
+      border-radius: 10px;
+      font-size: 25px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .time-value-display {
+      font-size: 25px;
+      font-weight: 500;
+      position: relative;
+      margin-inline: 30px;
+      cursor: pointer;
+    }
+
+    .sensitivity-control-section {
+      font-family: sans-serif;
+    }
+
+    .sensitivity-title {
+      font-size: 20px;
+      width: 50%;
+      text-align: right;
+      margin-bottom: 0;
+    }
+
+    .sensitivity-input {
+      text-align: center;
+      height: 60px;
+      width: 110px;
+      font-size: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border: 2px solid #aaa;
+      border-radius: 10px;
+    }
+
+    .period-navigation {
+      margin-top: 16px;
+      padding: 20px;
+      background: #fff;
+      position: absolute;
+      width: 480px;
+      bottom: 0;
+    }
+
+    .period-nav-btn {
+      color: #3a3a3a;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <header class="mb-0">  <div class="white-overlay">
+      <div class="icon-block block1"></div>
+      <div class="icon-block block2"></div>
+      <div class="icon-block block3"></div>
+      <div class="icon-block block4"></div>
+    </div></header>
+
+    <!-- Screen 1: Main Settings -->
+    <div class="screen active" id="screen1">
+      <div class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white app-header">
+        <div>حاسبة ضخة الأنسولين</div>
+        <div class="position-absolute back-button" style="cursor: pointer;" onclick="window.location.href='settings.html'">
+          <i class="fa fa-chevron-left"></i>
+          رجوع
+        </div>
+      </div>
+      <div class="p-3 text-secondary">
+        قم بإنهاء الإعدادات قبل استخدام حاسبة ضخ الأنسولين
+      </div>
+
+      <div class="control-item" screen="screen3" onclick="sessionStorage.removeItem('insulin-sensitivity-referrer'); openSensitivityPickerModal()" style="cursor: pointer;">
+        <div class="control-item-label">معامل حساسية الأنسولين</div>
+        <div class="control-item-view" dir="ltr">
+          <i class="fa fa-chevron-left"></i>
+          <span class="control-item-value sensitivity_default_preview default-value" id="isf-value">غير محدد</span>
+        </div>
+      </div>
+
+      <div class="control-item" screen="screen6">
+        <div class="control-item-label">نسبة الكربوهيدرات إلى الأنسولين</div>
+        <div class="control-item-view">
+          <span class="control-item-value carb_ratio_preview default-value" id="icr-value">غير محدد</span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="openActiveTimePickerModal()" style="cursor: pointer;">
+        <div class="control-item-label">وقت الأنسولين النشط</div>
+        <div class="control-item-view">
+          <span class="control-item-value default-value" id="active_time">غير محدد</span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+
+      <div class="control-item">
+        <div class="control-item-label">تصحيح عكسي</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input type="checkbox" id="reverse_correction" class="switch-input" checked />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-item" screen="screen8">
+        <div class="control-item-label">نطاق سكر الدم المُستهدف</div>
+        <div class="control-item-view d-flex align-items-center" dir="ltr">
+          <i class="fa fa-chevron-left"></i>
+          <div>
+            <div>
+              <span class="control-item-value upper_glucose_limit_preview default-value">غير محدد</span>
+            </div>
+            <div>
+              <span class="control-item-value lower_glucose_limit_preview default-value">غير محدد</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-item" style=" position: absolute; width: 100%; bottom: 0; ">
+        <div class="control-item-label">حاسبة ضخة الانسولين</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input type="checkbox" id="pump_calculator" class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Screen 3: Insulin Sensitivity Factor Screen -->
+    <div class="screen" id="screen3">
+      <div class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white app-header">
+        <div>معامل حساسية الأنسولين</div>
+        <div class="position-absolute back-button" screen="screen1">
+          <i class="fa fa-chevron-right"></i>
+          رجوع
+        </div>
+      </div>
+
+      <div class="p-3 text-secondary">
+        يرجى ضبط معامل حساسية الأنسولين
+      </div>
+
+      <div class="control-item" onclick="openSensitivityPickerModal()" style="cursor: pointer;">
+        <div class="control-item-label">حساسية الأنسولين الافتراضية</div>
+        <div class="control-item-view" dir="ltr">
+          <i class="fa fa-chevron-left"></i><span class="control-item-value default-value" id="sensitivity_default">غير محدد</span>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden mt-3">
+        <div class="time-schedule-item">
+          <div class="text-end">
+            <div class="text-dark fs-6 mb-1" style=" direction: ltr; "><span class="startTimeValue_preview">12:00 AM</span> - <span class="endTimeValue_preview">02:00 PM</span></div>
+            <div class="fs-6"><span class="insulinSensitivityInput_preview">48</span> mg/dl/u</div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="edit-insulin-sensitivity-btn" screen="screen5"></div>
+            <div class="delete-insulin-sensitivity-btn" onclick="openDeleteItemModal('معامل حساسية الأنسولين', 'هل تريد مسح هذه القيمة؟', this.parentElement.parentElement.parentElement)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Not used in original, skip -->
+
+    <!-- Screen 5: Period Edit Screen -->
+    <div class="screen" id="screen5">
+      <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-white border-bottom period-edit-header">
+        <span id="savePeriodEdit" class="fw-normal save-period-btn">حفظ</span>
+        <h2 class="fs-5 mb-0 text-dark w-100 text-center">تحديث حساسية الأنسولين</h2>
+        <span id="backFromPeriodEdit" class="fw-normal back-period-btn" screen="screen3">
+          <i class="fa fa-chevron-left"></i>
+          رجوع
+        </span>
+      </div>
+
+      <div class="content period-content">
+        <!-- Start Time Section -->
+        <div class="p-3">إعدادات القاعدي المؤقت</div>
+        <div class="blood-sugar-screen mt-2">
+          <section class="d-flex flex-column align-items-center bg-white py-3 time-control-section">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3 time-control-wrapper">
+              <button id="incrementStartTime" class="btn increment-btn" target="startTimeValue">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="startTimeValue" class="time-value-display" trigger="true" start="01" end="12" start2="00" end2="59" values3='["قبل الظهر","بعد الظهر"]' separator=":" separator2=" " title="الوقت">
+                12:00 AM
+              </div>
+              <button id="decrementStartTime" class="btn decrement-btn" target="startTimeValue">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- End Time Section -->
+        <div class="blood-sugar-screen mt-0">
+          <section class="d-flex flex-column align-items-center bg-white py-3 time-control-section">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3 time-control-wrapper">
+              <button id="incrementEndTime" class="btn increment-btn" target="endTimeValue">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="endTimeValue" class="time-value-display" trigger="true" start="01" end="12" start2="00" end2="59" values3='["قبل الظهر","بعد الظهر"]' separator=":" separator2=" " title="الوقت">
+                02:00 AM
+              </div>
+              <button id="decrementEndTime" class="btn decrement-btn" target="endTimeValue">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Insulin Sensitivity Section -->
+        <div class="blood-sugar-screen mt-2 bg-white py-3">
+          <div class="sensitivity-title mb-3" style="text-align: right;">
+            معامل حساسية الانسولين
+          </div>
+          <section class="d-flex flex-column align-items-center sensitivity-control-section">
+
+            <div class="d-flex justify-content-center gap-3 mb-1 w-100 px-3 align-items-center">
+              <div class="insulin-sensitivity-input-wrapper align-items-center">
+                <div id="insulinSensitivityInput" value="100" readonly class="sensitivity-input" onclick="openSensitivityPickerModal()" style="cursor: pointer;">--</div>
+              </div>
+              <span class="insulin-sensitivity-unit">mg/dl/u</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="period-navigation">
+          <div class="d-flex justify-content-between w-100 px-3">
+            <button id="previousPeriodBtn" class="btn period-nav-btn">
+              الفترة السابقة
+            </button>
+            <button id="nextPeriodBtn" class="btn period-nav-btn">
+              الفترة التالية
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 6: Carb Ratio Settings -->
+    <div class="screen" id="screen6">
+      <div class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white app-header">
+        <div>نسبة الكربوهيدرات إلى الأنسولين</div>
+        <div class="position-absolute back-button" screen="screen1">
+          <i class="fa fa-chevron-right"></i>
+          رجوع
+        </div>
+      </div>
+
+      <div class="p-3 text-secondary">
+        يرجي ضبط معامل الكربوهيدرات
+      </div>
+
+      <div class="control-item" onclick="openCarbRatioPickerModal()" style="cursor: pointer;">
+        <div class="control-item-label">نسبة الكربوهيدرات الافتراضية</div>
+        <div class="control-item-view" dir="ltr">
+          <i class="fa fa-chevron-left"></i><span class="control-item-value default-value" id="carb_ratio">غير محدد</span>
+        </div>
+      </div>
+      <div class="bg-white overflow-hidden mt-3">
+        <div class="time-schedule-item">
+          <div class="text-end">
+            <div class="text-dark fs-6 mb-1" style=" direction: ltr; "><span class="carbStartTimeValue_preview">12:00 AM</span> - <span class="carbEndTimeValue_preview">02:00 PM</span></div>
+            <div class="fs-6"><span class="carbRatioInput_preview">100</span>جم/وحدة</div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="ms-5 edit-insulin-sensitivity-btn" screen="screen7"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Screen 7: Carb Ratio Period Edit Screen -->
+    <div class="screen" id="screen7">
+      <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-white border-bottom period-edit-header">
+        <span id="saveCarbPeriodEdit" class="fw-normal save-period-btn">حفظ</span>
+        <h2 class="fs-5 mb-0 text-dark w-100 text-center">تحديث نسبة الكربوهيدرات</h2>
+        <span id="backFromCarbPeriodEdit" class="fw-normal back-period-btn" screen="screen6">
+          <i class="fa fa-chevron-left"></i>
+          رجوع
+        </span>
+      </div>
+
+      <div class="content period-content">
+        <!-- Start Time Section -->
+        <div class="p-3">إعدادات القاعدي المؤقت</div>
+        <div class="blood-sugar-screen mt-2">
+          <section class="d-flex flex-column align-items-center bg-white py-3 time-control-section">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3 time-control-wrapper">
+              <button id="incrementCarbStartTime" class="btn increment-btn" target="carbStartTimeValue">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="carbStartTimeValue" class="time-value-display" trigger="true" start="01" end="12" start2="00" end2="59" values3='["قبل الظهر","بعد الظهر"]' separator=":" separator2=" " title="الوقت">
+                12:00 AM
+              </div>
+              <button id="decrementCarbStartTime" class="btn decrement-btn" target="carbStartTimeValue">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- End Time Section -->
+        <div class="blood-sugar-screen mt-0">
+          <section class="d-flex flex-column align-items-center bg-white py-3 time-control-section">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3 time-control-wrapper">
+              <button id="incrementCarbEndTime" class="btn increment-btn" target="carbEndTimeValue">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="carbEndTimeValue" class="time-value-display" trigger="true" start="01" end="12" start2="00" end2="59" values3='["قبل الظهر","بعد الظهر"]' separator=":" separator2=" " title="الوقت">
+                12:00 AM
+              </div>
+              <button id="decrementCarbEndTime" class="btn decrement-btn" target="carbEndTimeValue">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Carb Ratio Section -->
+        <div class="blood-sugar-screen mt-2 bg-white py-3">
+          <div class="sensitivity-title mb-3" style="text-align: right;">
+            نسبة الكربوهيدرات إلى الأنسولين
+          </div>
+          <section class="d-flex flex-column align-items-center sensitivity-control-section">
+            <div class="d-flex justify-content-center gap-3 mb-1 w-100 px-3 align-items-center">
+              <div class="insulin-sensitivity-input-wrapper align-items-center">
+                <div id="carbRatioInput" value="6" readonly class="sensitivity-input" trigger="true" start="0" end="10" start2="0" end2="9" separator="." title="نسبة الكربوهيدرات إلى الأنسولين (جم/وحدة)">6</div>
+              </div>
+              <span class="insulin-sensitivity-unit">جم/وحدة</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="period-navigation">
+          <div class="d-flex justify-content-between w-100 px-3">
+            <button id="previousCarbPeriodBtn" class="btn period-nav-btn">
+              الفترة السابقة
+            </button>
+            <button id="nextCarbPeriodBtn" class="btn period-nav-btn">
+              الفترة التالية
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 8: Blood Glucose Target Range -->
+    <div class="screen" id="screen8">
+      <div class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white app-header">
+        <div>نطاق سكر الدم المُستهدف</div>
+        <div class="position-absolute back-button" screen="screen1">
+          <i class="fa fa-chevron-right"></i>
+          رجوع
+        </div>
+      </div>
+
+      <div class="p-3 text-secondary">
+        يرجى تحديد نطاق سكر الدم المُستهدف
+      </div>
+
+      <div class="control-item" onclick="openModalMs('upper_glucose_limit_modal')">
+        <div class="control-item-label">الحد الأعلى لهدف الجلوكوز الافتراضي</div>
+        <div class="control-item-view" dir="ltr">
+          <i class="fa fa-chevron-left"></i><span class="control-item-value default-value" id="upper_glucose_limit_value">غير محدد</span>
+        </div>
+      </div>
+
+      <div class="control-item" onclick="openModalMs('lower_glucose_limit_modal')">
+        <div class="control-item-label">الحد الأدنى لهدف الجلوكوز الافتراضي</div>
+        <div class="control-item-view" dir="ltr">
+          <i class="fa fa-chevron-left"></i><span class="control-item-value default-value" id="lower_glucose_limit_value">غير محدد</span>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden mt-3">
+        <div class="time-schedule-item">
+          <div class="text-end">
+            <div class="text-dark fs-6 mb-1" style=" direction: ltr; "><span class="startTimeValueGlucose_preview">12:00 AM</span> - <span class="endTimeValueGlucose_preview">12:00 AM</span></div>
+            <div class="fs-6"><span class="lower_glucose_preview">--</span> mg/dl/u - <span class="upper_glucose_preview">--</span> mg/dl/u</div>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="edit-insulin-sensitivity-btn" screen="screen9"></div>
+            <div class="delete-insulin-sensitivity-btn" onclick="openDeleteItemModal('نطاق سكر الدم المُستهدف', 'هل تريد مسح هذه القيمة؟', this.parentElement.parentElement.parentElement)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 9: Edit Glucose Target Range Period -->
+    <div class="screen" id="screen9">
+      <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-white border-bottom period-edit-header">
+        <span id="saveGlucoseRangeEdit" class="fw-normal save-period-btn">حفظ</span>
+        <h2 class="fs-5 mb-0 text-dark w-100 text-center">تحديث نطاق هدف الجلوكوز</h2>
+        <span id="backFromGlucoseRangeEdit" class="fw-normal back-period-btn" screen="screen8">
+          <i class="fa fa-chevron-left"></i>
+          رجوع
+        </span>
+      </div>
+
+      <div class="content period-content">
+        <!-- Start Time Section -->
+        <div class="p-3">إعدادات القاعدي المؤقت</div>
+        <div class="blood-sugar-screen mt-2">
+          <section class="d-flex flex-column align-items-center bg-white py-3 time-control-section">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3 time-control-wrapper">
+              <button id="incrementStartTime" class="btn increment-btn" target="startTimeValueGlucose">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="startTimeValueGlucose" class="time-value-display" trigger="true" start="01" end="12" start2="00" end2="59" values3='["قبل الظهر","بعد الظهر"]' separator=":" separator2=" " title="الوقت">
+                12:00 AM
+              </div>
+              <button id="decrementStartTime" class="btn decrement-btn" target="startTimeValueGlucose">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- End Time Section -->
+        <div class="blood-sugar-screen mt-0">
+          <section class="d-flex flex-column align-items-center bg-white py-3 time-control-section">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3 time-control-wrapper">
+              <button id="incrementEndTime" class="btn increment-btn" target="endTimeValueGlucose">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="endTimeValueGlucose" class="time-value-display" trigger="true" start="01" end="12" start2="00" end2="59" values3='["قبل الظهر","بعد الظهر"]' separator=":" separator2=" " title="الوقت">
+                12:00 AM
+              </div>
+              <button id="decrementEndTime" class="btn decrement-btn" target="endTimeValueGlucose">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Upper Glucose Limit Section -->
+        <div class="blood-sugar-screen mt-2 bg-white py-3">
+          <div class="sensitivity-title mb-3 px-3 w-100" style="text-align: right;">
+            الحد الأعلى لنطاق سكر الدم المُستهدف
+          </div>
+          <section class="d-flex flex-column align-items-center sensitivity-control-section">
+            <div class="d-flex justify-content-center gap-3 mb-1 w-100 px-3 align-items-center">
+              <div class="insulin-sensitivity-input-wrapper align-items-center">
+                <div id="upper_glucose_value_preview" class="sensitivity-input upper_glucose_preview " onclick="openModalMs('upper_glucose_modal')">--</div>
+              </div>
+              <span class="insulin-sensitivity-unit">mg/dl/u</span>
+            </div>
+          </section>
+        </div>
+
+        <!-- Lower Glucose Limit Section -->
+        <div class="blood-sugar-screen mt-2 bg-white py-3">
+          <div class="sensitivity-title mb-3 px-3 w-100" style="text-align: right;">
+            الحد الأدنى لنطاق سكر الدم المُستهدف
+          </div>
+          <section class="d-flex flex-column align-items-center sensitivity-control-section">
+            <div class="d-flex justify-content-center gap-3 mb-1 w-100 px-3 align-items-center">
+              <div class="insulin-sensitivity-input-wrapper align-items-center">
+                <div id="lower_glucose_value_preview" class="sensitivity-input lower_glucose_preview" onclick="openModalMs('lower_glucose_modal')">--</div>
+              </div>
+              <span class="insulin-sensitivity-unit">mg/dl/u</span>
+            </div>
+          </section>
+        </div>
+        <div class="period-navigation">
+          <div class="d-flex justify-content-between w-100 px-3">
+            <button id="previousCarbPeriodBtn" class="btn period-nav-btn">
+              الفترة السابقة
+            </button>
+            <button id="nextCarbPeriodBtn" class="btn period-nav-btn">
+              الفترة التالية
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals for Screen 8 -->
+    <div class="ms-mobile-select custom-ms-modal" id="upper_glucose_limit_modal">
+      <div class="ms-gray-layer" onclick="closeModalMs('upper_glucose_limit_modal')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 300px">
+              <div class="d-flex justify-content-center align-items-center gap-5 my-4">
+                <button class="btn increment" target="upper_glucose_limit">
+                  <i class="fa fa-plus"></i>
+                </button>
+                <div id="upper_glucose_limit_value_preview" class="fs-1"></div>
+                <button class="btn decrement" target="upper_glucose_limit">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <div
+                id="upper_glucose_limit_ruler"
+                hasRuller="true"
+                minValue="2"
+                maxValue="8"
+                precision=".1"
+                currentValue="5"
+                borderColoring='[{"start":2,"end":3,"color":"#ee5e56"},{"start":3,"end":7,"color":"#33cc7a"},{"start":7,"end":8,"color":"#ee5e56"}]'></div>
+              <div class="text-secondary text-center">
+                <div class="mb-3">mg/dl/u</div>
+                حرك المسطرة لإدخال الحد الأعلى لهدف الجلوكوز
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div class="ms-cancel" onclick="closeModalMs('upper_glucose_limit_modal')">
+              إلغاء
+            </div>
+            <div class="ms-ensure" onclick="closeModalMs('upper_glucose_limit_modal')">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ms-mobile-select custom-ms-modal" id="lower_glucose_limit_modal">
+      <div class="ms-gray-layer" onclick="closeModalMs('lower_glucose_limit_modal')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 300px">
+              <div class="d-flex justify-content-center align-items-center gap-5 my-4">
+                <button class="btn increment" target="lower_glucose_limit">
+                  <i class="fa fa-plus"></i>
+                </button>
+                <div id="lower_glucose_limit_value_preview" class="fs-1"></div>
+                <button class="btn decrement" target="lower_glucose_limit">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <div
+                id="lower_glucose_limit_ruler"
+                hasRuller="true"
+                minValue="2"
+                maxValue="8"
+                precision=".1"
+                currentValue="5"
+                borderColoring='[{"start":2,"end":3,"color":"#ee5e56"},{"start":3,"end":7,"color":"#33cc7a"},{"start":7,"end":8,"color":"#ee5e56"}]'></div>
+              <div class="text-secondary text-center">
+                <div class="mb-3">mg/dl/u</div>
+                حرك المسطرة لإدخال الحد الأدنى لهدف الجلوكوز
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div class="ms-cancel" onclick="closeModalMs('lower_glucose_limit_modal')">
+              إلغاء
+            </div>
+            <div class="ms-ensure" onclick="closeModalMs('lower_glucose_limit_modal')">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals for Screen 9 -->
+    <div class="ms-mobile-select custom-ms-modal" id="upper_glucose_modal">
+      <div class="ms-gray-layer" onclick="closeModalMs('upper_glucose_modal')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 300px">
+              <div class="d-flex justify-content-center align-items-center gap-5 my-4">
+                <button class="btn increment" target="upper_glucose">
+                  <i class="fa fa-plus"></i>
+                </button>
+                <div id="upper_glucose_value" class="fs-1"></div>
+                <button class="btn decrement" target="upper_glucose">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <div
+                id="upper_glucose_ruler"
+                hasRuller="true"
+                minValue="2"
+                maxValue="8"
+                precision=".1"
+                currentValue="5"
+                borderColoring='[{"start":2,"end":3,"color":"#ee5e56"},{"start":3,"end":7,"color":"#33cc7a"},{"start":7,"end":8,"color":"#ee5e56"}]'></div>
+              <div class="text-secondary text-center">
+                <div class="mb-3">mg/dl/u</div>
+                حرك المسطرة لإدخال الحد الأعلى لهدف الجلوكوز
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div class="ms-cancel" onclick="closeModalMs('upper_glucose_modal')">
+              إلغاء
+            </div>
+            <div class="ms-ensure" onclick="closeModalMs('upper_glucose_modal')">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ms-mobile-select custom-ms-modal" id="lower_glucose_modal">
+      <div class="ms-gray-layer" onclick="closeModalMs('lower_glucose_modal')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 300px">
+              <div class="d-flex justify-content-center align-items-center gap-5 my-4">
+                <button class="btn increment" target="lower_glucose">
+                  <i class="fa fa-plus"></i>
+                </button>
+                <div id="lower_glucose_value" class="fs-1"></div>
+                <button class="btn decrement" target="lower_glucose">
+                  <i class="fa fa-minus"></i>
+                </button>
+              </div>
+              <div
+                id="lower_glucose_ruler"
+                hasRuller="true"
+                minValue="2"
+                maxValue="8"
+                precision=".1"
+                currentValue="5"
+                borderColoring='[{"start":2,"end":3,"color":"#ee5e56"},{"start":3,"end":7,"color":"#33cc7a"},{"start":7,"end":8,"color":"#ee5e56"}]'></div>
+              <div class="text-secondary text-center">
+                <div class="mb-3">mg/dl/u</div>
+                حرك المسطرة لإدخال الحد الأدنى لهدف الجلوكوز
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div class="ms-cancel" onclick="closeModalMs('lower_glucose_modal')">
+              إلغاء
+            </div>
+            <div class="ms-ensure" onclick="closeModalMs('lower_glucose_modal')">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sensitivity Picker Modal -->
+    <div id="sensitivityPickerModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title">معامل حساسية الأنسولين (mg/dl/u)</h3>
+        <div style="position: relative; height: 210px; margin-bottom: 20px;">
+          <div style="position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 40px; width: 100%; background-color: #1b52a4; pointer-events: none; z-index: 1;"></div>
+          <div class="picker-wheel" style="height: 210px; position: relative; overflow: hidden; z-index: 10;">
+            <div class="picker-list" id="sensitivityPickerList" style="position: absolute; width: 100%; top: 0;"></div>
+          </div>
+        </div>
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="closeSensitivityPickerModal()">إلغاء</button>
+          <button class="picker-btn" onclick="confirmSensitivitySelection()">تأكيد</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Time Picker Modal -->
+    <div id="activeTimePickerModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title">وقت الأنسولين النشط (ساعة)</h3>
+        <div style="position: relative; height: 210px; margin-bottom: 20px;">
+          <div style="position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 40px; width: 100%; background-color: #1b52a4; pointer-events: none; z-index: 1;"></div>
+          <div class="picker-wheel" style="height: 210px; position: relative; overflow: hidden; z-index: 10;">
+            <div class="picker-list" id="activeTimePickerList" style="position: absolute; width: 100%; top: 0;"></div>
+          </div>
+        </div>
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="closeActiveTimePickerModal()">إلغاء</button>
+          <button class="picker-btn" onclick="confirmActiveTimeSelection()">تأكيد</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carb Ratio Picker Modal -->
+    <div id="carbRatioPickerModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title p-3">نسبة الكربوهيدرات إلى الأنسولين (جم/وحدة)</h3>
+        <div style="position: relative; height: 280px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; direction: ltr;">
+          <!-- Selection indicator bar -->
+          <div style="position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 40px; width: 100%; background-color: #1b52a4; pointer-events: none; z-index: 5;"></div>
+          
+          <!-- Integer part (1-200) -->
+          <div class="picker-wheel" style="height: 185px; position: relative; overflow: hidden; z-index: 10; width: 40%;">
+            <div class="picker-list" id="carbRatioIntegerList" style="position: absolute; width: 100%; top: 0;"></div>
+          </div>
+          
+          <!-- Decimal point -->
+          <div style="font-size: 32px; font-weight: bold; color: white; z-index: 15; position: relative; margin-bottom: 15px;">.</div>
+          
+          <!-- Decimal part (0-9) -->
+          <div class="picker-wheel" style="height: 185px; position: relative; overflow: hidden; z-index: 10; width: 40%;">
+            <div class="picker-list" id="carbRatioDecimalList" style="position: absolute; width: 100%; top: 0;"></div>
+          </div>
+        </div>
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="closeCarbRatioPickerModal()" style="font-size: 20px; padding: 15px;">إلغاء</button>
+          <button class="picker-btn" onclick="confirmCarbRatioSelection()" style="font-size: 20px; padding: 15px;">تأكيد</button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="ms-mobile-select custom-ms-modal"
+      id="deleteItem">
+      <div
+        class="ms-gray-layer"
+        onclick="closeModalMs('deleteItem')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 170px">
+
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div
+              class="ms-cancel"
+              onclick="closeModalMs('deleteItem')">
+              إلغاء
+            </div>
+            <div
+              class="ms-ensure"
+              onclick="deleteItem('deleteItem')">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="successPopup" class="success-popup-overlay">
+      <div class="success-popup">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <p class="success-message">تم الحفظ</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+<script>
+  let delete_title = '';
+  let delete_sub_title = '';
+  let delete_element = null;
+  function openDeleteItemModal(title, sub_title, element) {
+    delete_title = title;
+    delete_sub_title = sub_title;
+    delete_element = element;
+    document.getElementById('deleteItem').querySelector('.ms-wheels').innerHTML = `
+      <div style="padding: 20px; text-align: center;">
+        <h3 class="my-4">${delete_title}</h3>
+        <p class="text-secondary">${delete_sub_title}</p>
+      </div>
+    `;
+    openModalMs('deleteItem');
+  }
+  function deleteItem() {
+    if (delete_element) {
+      delete_element.remove();
+      closeModalMs('deleteItem');
+      delete_title = '';
+      delete_sub_title = '';
+      delete_element = null;
+    }
+  }
+  // Switch state management
+  window.onload = function () {
+    document.querySelectorAll(".auto-switch input").forEach(function (input) {
+      input.addEventListener("change", function () {
+        localStorage.setItem(input.id, input.checked);
+        if (document.getElementById(input.id + "_item")) {
+          document.getElementById(input.id + "_item").style.display =
+            input.checked ? "flex" : "none";
+        }
+      });
+    });
+    document.querySelectorAll('.save-period-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        showSuccessPopup();
+      });
+    });
+  };
+  function showSuccessPopup() {
+    document.getElementById("successPopup").classList.add("active");
+    setTimeout(() => {
+      hideSuccessPopup();
+    }, 2000);
+  }
+
+  function hideSuccessPopup() {
+    document.getElementById("successPopup").classList.remove("active");
+  }
+
+  function loadSwitchStates() {
+    document.querySelectorAll(".auto-switch input").forEach(function (input) {
+      const state = localStorage.getItem(input.id);
+      // Set default to false if not set
+      if (state === null) {
+        localStorage.setItem(input.id, "false");
+        input.checked = false;
+      } else {
+        input.checked = state === "true";
+      }
+      
+      if (document.getElementById(input.id + "_item")) {
+        document.getElementById(input.id + "_item").style.display =
+          input.checked ? "flex" : "none";
+      }
+    });
+  }
+  loadSwitchStates();
+  
+  // Handle hash navigation BEFORE any other scripts load
+  if (window.location.hash === '#screen3') {
+    // Hide screen1 immediately to prevent flash
+    const style = document.createElement('style');
+    style.id = 'temp-hide-screen1';
+    style.textContent = `
+    #screen1.active { display: none !important; }
+    #screen3 { display: block !important; }
+    body { background: white; }
+  `;    document.head.appendChild(style);
+  }
+</script>
+
+<script src="js/control-screen.js"></script>
+
+<script>
+  // Load sensitivity_default from localStorage
+  (function() {
+    const loadSensitivityDefault = function() {
+      const savedValue = localStorage.getItem('sensitivity_default');
+      const isfValueElement = document.getElementById('isf-value');
+      
+      if (savedValue && isfValueElement) {
+        isfValueElement.textContent = savedValue;
+      }
+    };
+    
+    // Execute immediately if DOM is ready, otherwise wait
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSensitivityDefault);
+    } else {
+      loadSensitivityDefault();
+    }
+  })();
+
+  // Handle navigation from automatic-mode.html with hash
+  (function() {
+    if (window.location.hash === '#screen3') {
+      const switchToScreen3 = function() {
+        // Remove all active classes
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        
+        // Activate screen3
+        const screen3 = document.getElementById('screen3');
+        if (screen3) {
+          screen3.classList.add('active');
+        }
+        
+        // Remove temporary style
+        const tempStyle = document.getElementById('temp-hide-screen1');
+        if (tempStyle) {
+          tempStyle.remove();
+        }
+      };
+      
+      // Execute immediately if DOM is ready, otherwise wait
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', switchToScreen3);
+      } else {
+        switchToScreen3();
+      }
+    }
+  })();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js" defer></script>
+<script src="js/m-select.js" defer></script>
+<script src="js/ruler.js" defer></script>
+
+<script>
+// Clear old default values on first load (one-time cleanup)
+if (!localStorage.getItem('glucose_limits_v2_cleared')) {
+  localStorage.removeItem('upper_glucose_limit');
+  localStorage.removeItem('lower_glucose_limit');
+  localStorage.removeItem('upper_glucose_limit_value');
+  localStorage.removeItem('lower_glucose_limit_value');
+  localStorage.removeItem('upper_glucose');
+  localStorage.removeItem('lower_glucose');
+  localStorage.removeItem('upper_glucose_value');
+  localStorage.removeItem('lower_glucose_value');
+  localStorage.setItem('glucose_limits_v2_cleared', 'true');
+}
+
+// Override closeModalMs to update glucose values with styling
+// Wait for m-select.js to load
+window.addEventListener('load', function() {
+const originalCloseModalMs = window.closeModalMs;
+window.closeModalMs = function(modalId) {
+  // Update upper glucose limit
+  if (modalId === 'upper_glucose_limit_modal') {
+    const previewValue = document.getElementById('upper_glucose_limit_value_preview');
+    const mainValue = document.getElementById('upper_glucose_limit_value');
+    const screenPreviews = document.querySelectorAll('.upper_glucose_limit_preview');
+    
+    if (previewValue && mainValue && previewValue.textContent) {
+      mainValue.textContent = previewValue.textContent + ' mg/dl/u';
+      mainValue.classList.remove('default-value');
+      mainValue.classList.add('selected-value');
+      mainValue.style.color = '#1b52a4';
+      
+      screenPreviews.forEach(preview => {
+        preview.textContent = previewValue.textContent + ' mg/dl/u';
+        preview.classList.remove('default-value');
+        preview.classList.add('selected-value');
+        preview.style.color = '#1b52a4';
+      });
+      
+      localStorage.setItem('upper_glucose_limit', previewValue.textContent);
+    }
+  }
+  
+  // Update lower glucose limit
+  if (modalId === 'lower_glucose_limit_modal') {
+    const previewValue = document.getElementById('lower_glucose_limit_value_preview');
+    const mainValue = document.getElementById('lower_glucose_limit_value');
+    const screenPreviews = document.querySelectorAll('.lower_glucose_limit_preview');
+    
+    if (previewValue && mainValue && previewValue.textContent) {
+      mainValue.textContent = previewValue.textContent + ' mg/dl/u';
+      mainValue.classList.remove('default-value');
+      mainValue.classList.add('selected-value');
+      mainValue.style.color = '#1b52a4';
+      
+      screenPreviews.forEach(preview => {
+        preview.textContent = previewValue.textContent + ' mg/dl/u';
+        preview.classList.remove('default-value');
+        preview.classList.add('selected-value');
+        preview.style.color = '#1b52a4';
+      });
+      
+      localStorage.setItem('lower_glucose_limit', previewValue.textContent);
+    }
+  }
+  
+  // Update upper glucose (screen 9)
+  if (modalId === 'upper_glucose_modal') {
+    const previewValue = document.getElementById('upper_glucose_value');
+    const screenPreviews = document.querySelectorAll('.upper_glucose_preview');
+    
+    if (previewValue && previewValue.textContent) {
+      screenPreviews.forEach(preview => {
+        preview.textContent = previewValue.textContent;
+        preview.style.color = '#1b52a4';
+      });
+      localStorage.setItem('upper_glucose', previewValue.textContent);
+    }
+  }
+  
+  // Update lower glucose (screen 9)
+  if (modalId === 'lower_glucose_modal') {
+    const previewValue = document.getElementById('lower_glucose_value');
+    const screenPreviews = document.querySelectorAll('.lower_glucose_preview');
+    
+    if (previewValue && previewValue.textContent) {
+      screenPreviews.forEach(preview => {
+        preview.textContent = previewValue.textContent;
+        preview.style.color = '#1b52a4';
+      });
+      localStorage.setItem('lower_glucose', previewValue.textContent);
+    }
+  }
+  
+  // Call original function if it exists
+  if (originalCloseModalMs) {
+    originalCloseModalMs(modalId);
+  }
+};
+}); // End of window.addEventListener('load')
+
+// Consolidated DOMContentLoaded - prevent duplicate execution
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.__insulinSensitivityInit) return;
+  window.__insulinSensitivityInit = true;
+  
+  // Load saved glucose values
+  const upperLimit = localStorage.getItem('upper_glucose_limit');
+  if (upperLimit) {
+    const element = document.getElementById('upper_glucose_limit_value');
+    if (element) {
+      element.textContent = upperLimit + ' mg/dl/u';
+      element.classList.remove('default-value');
+      element.classList.add('selected-value');
+      element.style.color = '#1b52a4';
+    }
+    
+    const screenPreviews = document.querySelectorAll('.upper_glucose_limit_preview');
+    screenPreviews.forEach(preview => {
+      preview.textContent = upperLimit + ' mg/dl/u';
+      preview.classList.remove('default-value');
+      preview.classList.add('selected-value');
+      preview.style.color = '#1b52a4';
+    });
+  }
+  
+  const lowerLimit = localStorage.getItem('lower_glucose_limit');
+  if (lowerLimit) {
+    const element = document.getElementById('lower_glucose_limit_value');
+    if (element) {
+      element.textContent = lowerLimit + ' mg/dl/u';
+      element.classList.remove('default-value');
+      element.classList.add('selected-value');
+      element.style.color = '#1b52a4';
+    }
+    
+    const screenPreviews = document.querySelectorAll('.lower_glucose_limit_preview');
+    screenPreviews.forEach(preview => {
+      preview.textContent = lowerLimit + ' mg/dl/u';
+      preview.classList.remove('default-value');
+      preview.classList.add('selected-value');
+      preview.style.color = '#1b52a4';
+    });
+  }
+  
+  // Load saved sensitivity value
+  const saved = localStorage.getItem('sensitivity_default');
+  if (saved) {
+    selectedSensitivity = parseInt(saved);
+    const element = document.getElementById('sensitivity_default');
+    if (element) {
+      element.textContent = saved + ' mg/dl/u';
+      element.classList.remove('default-value');
+      element.classList.add('selected-value');
+    }
+    
+    const previewElement = document.getElementById('isf-value');
+    if (previewElement) {
+      previewElement.textContent = saved + ' mg/dl/u';
+      previewElement.classList.remove('default-value');
+      previewElement.classList.add('selected-value');
+    }
+  }
+  
+  // Load saved active time value
+  const savedActiveTime = localStorage.getItem('active_time');
+  if (savedActiveTime) {
+    selectedActiveTime = parseFloat(savedActiveTime);
+    const element = document.getElementById('active_time');
+    if (element) {
+      element.textContent = savedActiveTime + ' ساعة';
+      element.classList.remove('default-value');
+      element.classList.add('selected-value');
+    }
+  }
+  
+  // Load saved carb ratio value
+  const savedCarbRatio = localStorage.getItem('carb_ratio');
+  if (savedCarbRatio) {
+    const parts = savedCarbRatio.split('.');
+    selectedCarbRatioInteger = parseInt(parts[0]) || 1;
+    selectedCarbRatioDecimal = parseInt(parts[1]) || 0;
+    const element = document.getElementById('carb_ratio');
+    if (element) {
+      element.textContent = savedCarbRatio + ' جم/وحدة';
+      element.classList.remove('default-value');
+      element.classList.add('selected-value');
+    }
+    
+    const previewElement = document.getElementById('icr-value');
+    if (previewElement) {
+      previewElement.textContent = savedCarbRatio + ' جم/وحدة';
+      previewElement.classList.remove('default-value');
+      previewElement.classList.add('selected-value');
+    }
+  }
+});
+</script>
+
+<script>
+// Sensitivity Picker - Smooth scrolling like basal-temp-1.html
+let selectedSensitivity = 48;
+const sensitivityValues = [];
+for (let i = 1; i <= 200; i++) {
+  sensitivityValues.push(i);
+}
+
+window.openSensitivityPickerModal = function() {
+  console.log('Opening sensitivity picker modal');
+  const modal = document.getElementById('sensitivityPickerModal');
+  if (modal) {
+    modal.classList.add('active');
+    initSensitivityPicker();
+    
+    // Add click outside to close functionality
+    setTimeout(() => {
+      modal.addEventListener('click', handleSensitivityModalOutsideClick);
+    }, 100);
+  } else {
+    console.error('Modal not found!');
+  }
+}
+
+function handleSensitivityModalOutsideClick(e) {
+  const modal = e.currentTarget;
+  const modalContent = modal.querySelector('.picker-container');
+  
+  // Check if click is outside the modal content
+  if (modalContent && !modalContent.contains(e.target)) {
+    // Auto-save the current selected value when closing
+    const element = document.getElementById('sensitivity_default');
+    element.textContent = selectedSensitivity + ' mg/dl/u';
+    element.classList.remove('default-value');
+    element.classList.add('selected-value');
+    
+    const previewElement = document.getElementById('isf-value');
+    if (previewElement) {
+      previewElement.textContent = selectedSensitivity + ' mg/dl/u';
+      previewElement.classList.remove('default-value');
+      previewElement.classList.add('selected-value');
+    }
+    
+    // Update the insulinSensitivityInput element in screen5
+    const inputElement = document.getElementById('insulinSensitivityInput');
+    if (inputElement) {
+      inputElement.textContent = selectedSensitivity;
+    }
+    
+    // Update the preview element
+    const inputPreview = document.querySelector('.insulinSensitivityInput_preview');
+    if (inputPreview) {
+      inputPreview.textContent = selectedSensitivity;
+    }
+    
+    localStorage.setItem('sensitivity_default', selectedSensitivity);
+    closeSensitivityPickerModal();
+  }
+}
+
+function closeSensitivityPickerModal() {
+  const modal = document.getElementById('sensitivityPickerModal');
+  modal.classList.remove('active');
+  // Remove the click outside listener
+  modal.removeEventListener('click', handleSensitivityModalOutsideClick);
+}
+
+function confirmSensitivitySelection() {
+  const element = document.getElementById('sensitivity_default');
+  element.textContent = selectedSensitivity + ' mg/dl/u';
+  element.classList.remove('default-value');
+  element.classList.add('selected-value');
+  
+  const previewElement = document.getElementById('isf-value');
+  if (previewElement) {
+    previewElement.textContent = selectedSensitivity + ' mg/dl/u';
+    previewElement.classList.remove('default-value');
+    previewElement.classList.add('selected-value');
+  }
+  
+  // Update the insulinSensitivityInput element in screen5
+  const inputElement = document.getElementById('insulinSensitivityInput');
+  if (inputElement) {
+    inputElement.textContent = selectedSensitivity;
+  }
+  
+  // Update the preview element
+  const inputPreview = document.querySelector('.insulinSensitivityInput_preview');
+  if (inputPreview) {
+    inputPreview.textContent = selectedSensitivity;
+  }
+  
+  localStorage.setItem('sensitivity_default', selectedSensitivity);
+  
+  // Check if we came from automatic-mode.html
+  const referrer = sessionStorage.getItem('insulin-sensitivity-referrer');
+  if (referrer === 'automatic-mode') {
+    // Clear the referrer flag
+    sessionStorage.removeItem('insulin-sensitivity-referrer');
+    // Navigate back to automatic-mode.html#screen1
+    window.location.href = 'automatic-mode.html#screen1';
+  } else {
+    // Just close the modal if we're already on insulin-sensitivity page
+    closeSensitivityPickerModal();
+  }
+}
+
+function initSensitivityPicker() {
+  const picker = document.getElementById('sensitivityPickerList');
+  const itemHeight = 40;
+  const totalItems = sensitivityValues.length * 20;
+  
+  picker.innerHTML = "";
+  for (let i = 0; i < totalItems; i++) {
+    const item = document.createElement("div");
+    item.className = "picker-item";
+    item.style.cssText = "height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;";
+    item.textContent = sensitivityValues[i % sensitivityValues.length];
+    item.dataset.value = sensitivityValues[i % sensitivityValues.length];
+    picker.appendChild(item);
+  }
+  
+  const selectedIndex = sensitivityValues.indexOf(selectedSensitivity);
+  const centerIndex = sensitivityValues.length * 10 + selectedIndex;
+  const topPosition = -(centerIndex * itemHeight) + 105 - itemHeight / 2;
+  picker.style.top = topPosition + "px";
+  
+  updatePickerSelection();
+  setupPickerInteraction();
+}
+
+function setupPickerInteraction() {
+  const picker = document.getElementById('sensitivityPickerList');
+  const itemHeight = 40;
+  let startY = 0;
+  let startTop = 0;
+  let isDragging = false;
+
+  picker.addEventListener("mousedown", startDrag);
+  picker.addEventListener("touchstart", startDrag);
+
+  function startDrag(e) {
+    isDragging = true;
+    startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    startTop = parseInt(picker.style.top) || 0;
+    picker.style.transition = "none";
+    e.preventDefault();
+  }
+
+  function keepInfiniteLoop() {
+    const currentTop = parseInt(picker.style.top) || 0;
+    const totalHeight = sensitivityValues.length * itemHeight;
+    const loopHeight = totalHeight * 10;
+    if (currentTop <= -loopHeight) {
+      picker.style.top = (currentTop + loopHeight) + "px";
+    } else if (currentTop >= loopHeight) {
+      picker.style.top = (currentTop - loopHeight) + "px";
+    }
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    const deltaY = currentY - startY;
+    const newTop = startTop + deltaY;
+    picker.style.top = newTop + "px";
+    keepInfiniteLoop();
+    updatePickerSelection();
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    keepInfiniteLoop();
+    snapToNearestItem();
+  }
+
+  function snapToNearestItem() {
+    picker.style.transition = "top 0.2s ease-out";
+    const currentTop = parseInt(picker.style.top) || 0;
+    const centerY = 105;
+    let selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+    
+    const totalItems = picker.querySelectorAll(".picker-item").length;
+    selectedIndex = ((selectedIndex % totalItems) + totalItems) % totalItems;
+    
+    const snappedTop = -(selectedIndex * itemHeight) + centerY - itemHeight / 2;
+    picker.style.top = snappedTop + "px";
+    
+    setTimeout(() => {
+      updatePickerSelection();
+      picker.style.transition = "none";
+    }, 200);
+  }
+
+  // Add wheel event support for smooth scrolling
+  picker.addEventListener("wheel", function(e) {
+    e.preventDefault();
+    
+    const wheelDelta = e.deltaY || 0;
+    const currentTop = parseInt(picker.style.top) || 0;
+    const moveAmount = wheelDelta * 0.5; // Smooth incremental movement
+    
+    picker.style.transition = "none";
+    picker.style.top = (currentTop - moveAmount) + "px";
+    keepInfiniteLoop();
+    updatePickerSelection();
+    
+    // Auto-snap after wheel stops
+    clearTimeout(picker._wheelTimeout);
+    picker._wheelTimeout = setTimeout(function() {
+      snapToNearestItem();
+    }, 150);
+  }, { passive: false });
+
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("touchmove", drag, { passive: false });
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
+}
+
+function updatePickerSelection() {
+  const picker = document.getElementById('sensitivityPickerList');
+  const items = picker.querySelectorAll('.picker-item');
+  const currentTop = parseInt(picker.style.top) || 0;
+  const centerY = 105;
+  const itemHeight = 40;
+  
+  items.forEach((item, index) => {
+    const itemTop = index * itemHeight + currentTop;
+    const distance = Math.abs(itemTop - centerY + itemHeight / 2);
+    
+    if (distance < itemHeight / 2) {
+      item.style.color = 'white';
+      item.style.fontSize = '24px';
+      item.style.fontWeight = 'bold';
+      selectedSensitivity = parseInt(item.dataset.value);
+    } else {
+      item.style.color = '#999';
+      item.style.fontSize = '20px';
+      item.style.fontWeight = 'normal';
+    }
+  });
+}
+
+// Active Time Picker - Smooth scrolling
+let selectedActiveTime = 5.5;
+const activeTimeValues = [];
+for (let i = 2.0; i <= 8.0; i += 0.5) {
+  activeTimeValues.push(i.toFixed(1));
+}
+
+window.openActiveTimePickerModal = function() {
+  console.log('Opening active time picker modal');
+  const modal = document.getElementById('activeTimePickerModal');
+  if (modal) {
+    modal.classList.add('active');
+    initActiveTimePicker();
+    
+    // Add click outside to close functionality
+    setTimeout(() => {
+      modal.addEventListener('click', handleActiveTimeModalOutsideClick);
+    }, 100);
+  } else {
+    console.error('Active time modal not found!');
+  }
+}
+
+function handleActiveTimeModalOutsideClick(e) {
+  const modal = e.currentTarget;
+  const modalContent = modal.querySelector('.picker-container');
+  
+  // Check if click is outside the modal content
+  if (modalContent && !modalContent.contains(e.target)) {
+    // Auto-save the current selected value when closing
+    const element = document.getElementById('active_time');
+    element.textContent = selectedActiveTime + ' ساعة';
+    element.classList.remove('default-value');
+    element.classList.add('selected-value');
+    localStorage.setItem('active_time', selectedActiveTime);
+    closeActiveTimePickerModal();
+  }
+}
+
+function closeActiveTimePickerModal() {
+  const modal = document.getElementById('activeTimePickerModal');
+  modal.classList.remove('active');
+  
+  // Remove the click outside listener
+  modal.removeEventListener('click', handleActiveTimeModalOutsideClick);
+}
+
+function confirmActiveTimeSelection() {
+  const element = document.getElementById('active_time');
+  element.textContent = 'ساعة ' + selectedActiveTime;
+  element.classList.remove('default-value');
+  element.classList.add('selected-value');
+  localStorage.setItem('active_time', selectedActiveTime);
+  closeActiveTimePickerModal();
+}
+
+function initActiveTimePicker() {
+  const picker = document.getElementById('activeTimePickerList');
+  const itemHeight = 40;
+  const totalItems = activeTimeValues.length * 20;
+  
+  picker.innerHTML = "";
+  for (let i = 0; i < totalItems; i++) {
+    const item = document.createElement("div");
+    item.className = "picker-item";
+    item.style.cssText = "height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;";
+    item.textContent = activeTimeValues[i % activeTimeValues.length];
+    item.dataset.value = activeTimeValues[i % activeTimeValues.length];
+    picker.appendChild(item);
+  }
+  
+  const selectedIndex = activeTimeValues.indexOf(selectedActiveTime.toFixed(1));
+  const centerIndex = activeTimeValues.length * 10 + selectedIndex;
+  const topPosition = -(centerIndex * itemHeight) + 105 - itemHeight / 2;
+  picker.style.top = topPosition + "px";
+  
+  updateActiveTimePickerSelection();
+  setupActiveTimePickerInteraction();
+}
+
+function setupActiveTimePickerInteraction() {
+  const picker = document.getElementById('activeTimePickerList');
+  const itemHeight = 40;
+  let startY = 0;
+  let startTop = 0;
+  let isDragging = false;
+
+  picker.addEventListener("mousedown", startDrag);
+  picker.addEventListener("touchstart", startDrag);
+
+  function startDrag(e) {
+    isDragging = true;
+    startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    startTop = parseInt(picker.style.top) || 0;
+    picker.style.transition = "none";
+    e.preventDefault();
+  }
+
+  function keepInfiniteLoop() {
+    const currentTop = parseInt(picker.style.top) || 0;
+    const totalHeight = activeTimeValues.length * itemHeight;
+    const loopHeight = totalHeight * 10;
+    if (currentTop <= -loopHeight) {
+      picker.style.top = (currentTop + loopHeight) + "px";
+    } else if (currentTop >= loopHeight) {
+      picker.style.top = (currentTop - loopHeight) + "px";
+    }
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    const deltaY = currentY - startY;
+    const newTop = startTop + deltaY;
+    picker.style.top = newTop + "px";
+    keepInfiniteLoop();
+    updateActiveTimePickerSelection();
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    keepInfiniteLoop();
+    snapToNearestActiveTimeItem();
+  }
+
+  function snapToNearestActiveTimeItem() {
+    picker.style.transition = "top 0.2s ease-out";
+    const currentTop = parseInt(picker.style.top) || 0;
+    const centerY = 105;
+    let selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+    
+    const totalItems = picker.querySelectorAll(".picker-item").length;
+    selectedIndex = ((selectedIndex % totalItems) + totalItems) % totalItems;
+    
+    const snappedTop = -(selectedIndex * itemHeight) + centerY - itemHeight / 2;
+    picker.style.top = snappedTop + "px";
+    
+    setTimeout(() => {
+      updateActiveTimePickerSelection();
+      picker.style.transition = "none";
+    }, 200);
+  }
+
+  // Add wheel event support for smooth scrolling
+  picker.addEventListener("wheel", function(e) {
+    e.preventDefault();
+    
+    const wheelDelta = e.deltaY || 0;
+    const currentTop = parseInt(picker.style.top) || 0;
+    const moveAmount = wheelDelta * 0.5;
+    
+    picker.style.transition = "none";
+    picker.style.top = (currentTop - moveAmount) + "px";
+    keepInfiniteLoop();
+    updateActiveTimePickerSelection();
+    
+    clearTimeout(picker._wheelTimeout);
+    picker._wheelTimeout = setTimeout(function() {
+      snapToNearestActiveTimeItem();
+    }, 150);
+  }, { passive: false });
+
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("touchmove", drag, { passive: false });
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
+}
+
+function updateActiveTimePickerSelection() {
+  const picker = document.getElementById('activeTimePickerList');
+  const items = picker.querySelectorAll('.picker-item');
+  const currentTop = parseInt(picker.style.top) || 0;
+  const centerY = 105;
+  const itemHeight = 40;
+  
+  items.forEach((item, index) => {
+    const itemTop = index * itemHeight + currentTop;
+    const distance = Math.abs(itemTop - centerY + itemHeight / 2);
+    
+    if (distance < itemHeight / 2) {
+      item.style.color = 'white';
+      item.style.fontSize = '24px';
+      item.style.fontWeight = 'bold';
+      selectedActiveTime = parseFloat(item.dataset.value);
+    } else {
+      item.style.color = '#999';
+      item.style.fontSize = '20px';
+      item.style.fontWeight = 'normal';
+    }
+  });
+}
+
+// Active time value is now loaded in the consolidated DOMContentLoaded above
+
+// Carb Ratio Picker - Two separate wheels
+let selectedCarbRatioInteger = 1;
+let selectedCarbRatioDecimal = 0;
+const carbRatioIntegerValues = [];
+const carbRatioDecimalValues = [];
+
+// Integer values from 1 to 200
+for (let i = 1; i <= 200; i++) {
+  carbRatioIntegerValues.push(i);
+}
+
+// Decimal values from 0 to 9
+for (let i = 0; i <= 9; i++) {
+  carbRatioDecimalValues.push(i);
+}
+
+window.openCarbRatioPickerModal = function() {
+  console.log('Opening carb ratio picker modal');
+  const modal = document.getElementById('carbRatioPickerModal');
+  if (modal) {
+    modal.classList.add('active');
+    initCarbRatioPicker();
+    
+    // Add click outside to close functionality
+    setTimeout(() => {
+      modal.addEventListener('click', handleCarbRatioModalOutsideClick);
+    }, 100);
+  } else {
+    console.error('Carb ratio modal not found!');
+  }
+}
+
+function handleCarbRatioModalOutsideClick(e) {
+  const modal = e.currentTarget;
+  const modalContent = modal.querySelector('.picker-container');
+  
+  // Check if click is outside the modal content
+  if (modalContent && !modalContent.contains(e.target)) {
+    // Auto-save the current selected value when closing
+    const finalValue = selectedCarbRatioInteger + '.' + selectedCarbRatioDecimal;
+    const element = document.getElementById('carb_ratio');
+    element.textContent = finalValue + ' جم/وحدة';
+    element.classList.remove('default-value');
+    element.classList.add('selected-value');
+    
+    const previewElement = document.getElementById('icr-value');
+    if (previewElement) {
+      previewElement.textContent = finalValue + ' جم/وحدة';
+      previewElement.classList.remove('default-value');
+      previewElement.classList.add('selected-value');
+    }
+    
+    localStorage.setItem('carb_ratio', finalValue);
+    closeCarbRatioPickerModal();
+  }
+}
+
+function closeCarbRatioPickerModal() {
+  const modal = document.getElementById('carbRatioPickerModal');
+  modal.classList.remove('active');
+  
+  // Remove the click outside listener
+  modal.removeEventListener('click', handleCarbRatioModalOutsideClick);
+}
+
+function confirmCarbRatioSelection() {
+  const finalValue = selectedCarbRatioInteger + '.' + selectedCarbRatioDecimal;
+  const element = document.getElementById('carb_ratio');
+  element.textContent = 'جم/وحدة ' + finalValue;
+  element.classList.remove('default-value');
+  element.classList.add('selected-value');
+  
+  const previewElement = document.getElementById('icr-value');
+  if (previewElement) {
+    previewElement.textContent = 'جم/وحدة ' + finalValue;
+    previewElement.classList.remove('default-value');
+    previewElement.classList.add('selected-value');
+  }
+  
+  localStorage.setItem('carb_ratio', finalValue);
+  closeCarbRatioPickerModal();
+}
+
+function initCarbRatioPicker() {
+  // Load saved value
+  const savedCarbRatio = localStorage.getItem('carb_ratio');
+  if (savedCarbRatio) {
+    const parts = savedCarbRatio.split('.');
+    selectedCarbRatioInteger = parseInt(parts[0]) || 1;
+    selectedCarbRatioDecimal = parseInt(parts[1]) || 0;
+  }
+  
+  initCarbRatioIntegerPicker();
+  initCarbRatioDecimalPicker();
+}
+
+function initCarbRatioIntegerPicker() {
+  const picker = document.getElementById('carbRatioIntegerList');
+  const itemHeight = 40;
+  const totalItems = carbRatioIntegerValues.length * 20;
+  
+  picker.innerHTML = "";
+  for (let i = 0; i < totalItems; i++) {
+    const item = document.createElement("div");
+    item.className = "picker-item";
+    item.style.cssText = "height: 40px; line-height: 40px; text-align: center; font-size: 24px; color: #999;";
+    item.textContent = carbRatioIntegerValues[i % carbRatioIntegerValues.length];
+    item.dataset.value = carbRatioIntegerValues[i % carbRatioIntegerValues.length];
+    picker.appendChild(item);
+  }
+  
+  const selectedIndex = carbRatioIntegerValues.indexOf(selectedCarbRatioInteger);
+  const centerIndex = carbRatioIntegerValues.length * 10 + selectedIndex;
+  const topPosition = -(centerIndex * itemHeight) + 85;
+  picker.style.top = topPosition + "px";
+  
+  updateCarbRatioIntegerSelection();
+  setupCarbRatioIntegerPickerInteraction();
+}
+
+function initCarbRatioDecimalPicker() {
+  const picker = document.getElementById('carbRatioDecimalList');
+  const itemHeight = 40;
+  const totalItems = carbRatioDecimalValues.length * 20;
+  
+  picker.innerHTML = "";
+  for (let i = 0; i < totalItems; i++) {
+    const item = document.createElement("div");
+    item.className = "picker-item";
+    item.style.cssText = "height: 40px; line-height: 40px; text-align: center; font-size: 24px; color: #999;";
+    item.textContent = carbRatioDecimalValues[i % carbRatioDecimalValues.length];
+    item.dataset.value = carbRatioDecimalValues[i % carbRatioDecimalValues.length];
+    picker.appendChild(item);
+  }
+  
+  const selectedIndex = carbRatioDecimalValues.indexOf(selectedCarbRatioDecimal);
+  const centerIndex = carbRatioDecimalValues.length * 10 + selectedIndex;
+  const topPosition = -(centerIndex * itemHeight) + 85;
+  picker.style.top = topPosition + "px";
+  
+  updateCarbRatioDecimalSelection();
+  setupCarbRatioDecimalPickerInteraction();
+}
+
+function setupCarbRatioIntegerPickerInteraction() {
+  const picker = document.getElementById('carbRatioIntegerList');
+  const itemHeight = 40;
+  let startY = 0;
+  let startTop = 0;
+  let isDragging = false;
+
+  picker.addEventListener("mousedown", startDrag);
+  picker.addEventListener("touchstart", startDrag);
+
+  function startDrag(e) {
+    isDragging = true;
+    startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    startTop = parseInt(picker.style.top) || 0;
+    picker.style.transition = "none";
+    e.preventDefault();
+  }
+
+  function keepInfiniteLoop() {
+    const currentTop = parseInt(picker.style.top) || 0;
+    const totalHeight = carbRatioIntegerValues.length * itemHeight;
+    const loopHeight = totalHeight * 10;
+    if (currentTop <= -loopHeight) {
+      picker.style.top = (currentTop + loopHeight) + "px";
+    } else if (currentTop >= loopHeight) {
+      picker.style.top = (currentTop - loopHeight) + "px";
+    }
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    const deltaY = currentY - startY;
+    const newTop = startTop + deltaY;
+    picker.style.top = newTop + "px";
+    keepInfiniteLoop();
+    updateCarbRatioIntegerSelection();
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    keepInfiniteLoop();
+    snapToNearestIntegerItem();
+  }
+
+  function snapToNearestIntegerItem() {
+    picker.style.transition = "top 0.2s ease-out";
+    const currentTop = parseInt(picker.style.top) || 0;
+    const centerY = 85;
+    let selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+    
+    const totalItems = picker.querySelectorAll(".picker-item").length;
+    selectedIndex = ((selectedIndex % totalItems) + totalItems) % totalItems;
+    
+    const snappedTop = -(selectedIndex * itemHeight) + centerY;
+    picker.style.top = snappedTop + "px";
+    
+    setTimeout(() => {
+      updateCarbRatioIntegerSelection();
+      picker.style.transition = "none";
+    }, 200);
+  }
+
+  // Add wheel event support
+  picker.addEventListener("wheel", function(e) {
+    e.preventDefault();
+    const wheelDelta = e.deltaY || 0;
+    const currentTop = parseInt(picker.style.top) || 0;
+    const moveAmount = wheelDelta * 0.5;
+    picker.style.transition = "none";
+    picker.style.top = (currentTop - moveAmount) + "px";
+    keepInfiniteLoop();
+    updateCarbRatioIntegerSelection();
+    clearTimeout(picker._wheelTimeout);
+    picker._wheelTimeout = setTimeout(function() {
+      snapToNearestCarbRatioIntegerItem();
+    }, 150);
+  }, { passive: false });
+
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("touchmove", drag, { passive: false });
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
+}
+
+function setupCarbRatioDecimalPickerInteraction() {
+  const picker = document.getElementById('carbRatioDecimalList');
+  const itemHeight = 40;
+  let startY = 0;
+  let startTop = 0;
+  let isDragging = false;
+
+  picker.addEventListener("mousedown", startDrag);
+  picker.addEventListener("touchstart", startDrag);
+
+  function startDrag(e) {
+    isDragging = true;
+    startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    startTop = parseInt(picker.style.top) || 0;
+    picker.style.transition = "none";
+    e.preventDefault();
+  }
+
+  function keepInfiniteLoop() {
+    const currentTop = parseInt(picker.style.top) || 0;
+    const totalHeight = carbRatioDecimalValues.length * itemHeight;
+    const loopHeight = totalHeight * 10;
+    if (currentTop <= -loopHeight) {
+      picker.style.top = (currentTop + loopHeight) + "px";
+    } else if (currentTop >= loopHeight) {
+      picker.style.top = (currentTop - loopHeight) + "px";
+    }
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+    const deltaY = currentY - startY;
+    const newTop = startTop + deltaY;
+    picker.style.top = newTop + "px";
+    keepInfiniteLoop();
+    updateCarbRatioDecimalSelection();
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    keepInfiniteLoop();
+    snapToNearestDecimalItem();
+  }
+
+  function snapToNearestDecimalItem() {
+    picker.style.transition = "top 0.2s ease-out";
+    const currentTop = parseInt(picker.style.top) || 0;
+    const centerY = 85;
+    let selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+    
+    const totalItems = picker.querySelectorAll(".picker-item").length;
+    selectedIndex = ((selectedIndex % totalItems) + totalItems) % totalItems;
+    
+    const snappedTop = -(selectedIndex * itemHeight) + centerY;
+    picker.style.top = snappedTop + "px";
+    
+    setTimeout(() => {
+      updateCarbRatioDecimalSelection();
+      picker.style.transition = "none";
+    }, 200);
+  }
+
+  // Add wheel event support
+  picker.addEventListener("wheel", function(e) {
+    e.preventDefault();
+    const wheelDelta = e.deltaY || 0;
+    const currentTop = parseInt(picker.style.top) || 0;
+    const moveAmount = wheelDelta * 0.5;
+    picker.style.transition = "none";
+    picker.style.top = (currentTop - moveAmount) + "px";
+    keepInfiniteLoop();
+    updateCarbRatioDecimalSelection();
+    clearTimeout(picker._wheelTimeout);
+    picker._wheelTimeout = setTimeout(function() {
+      snapToNearestDecimalItem();
+    }, 150);
+  }, { passive: false });
+
+  document.addEventListener("mousemove", drag);
+  document.addEventListener("touchmove", drag, { passive: false });
+  document.addEventListener("mouseup", endDrag);
+  document.addEventListener("touchend", endDrag);
+}
+
+function updateCarbRatioIntegerSelection() {
+  const picker = document.getElementById('carbRatioIntegerList');
+  const items = picker.querySelectorAll('.picker-item');
+  const currentTop = parseInt(picker.style.top) || 0;
+  const centerY = 85;
+  const itemHeight = 40;
+  
+  items.forEach((item, index) => {
+    const itemTop = index * itemHeight + currentTop;
+    const distance = Math.abs(itemTop - centerY);
+    
+    if (distance < itemHeight / 2) {
+      item.style.color = 'white';
+      item.style.fontSize = '28px';
+      item.style.fontWeight = 'bold';
+      selectedCarbRatioInteger = parseInt(item.dataset.value);
+    } else {
+      item.style.color = '#999';
+      item.style.fontSize = '24px';
+      item.style.fontWeight = 'normal';
+    }
+  });
+}
+
+function updateCarbRatioDecimalSelection() {
+  const picker = document.getElementById('carbRatioDecimalList');
+  const items = picker.querySelectorAll('.picker-item');
+  const currentTop = parseInt(picker.style.top) || 0;
+  const centerY = 85;
+  const itemHeight = 40;
+  
+  items.forEach((item, index) => {
+    const itemTop = index * itemHeight + currentTop;
+    const distance = Math.abs(itemTop - centerY);
+    
+    if (distance < itemHeight / 2) {
+      item.style.color = 'white';
+      item.style.fontSize = '28px';
+      item.style.fontWeight = 'bold';
+      selectedCarbRatioDecimal = parseInt(item.dataset.value);
+    } else {
+      item.style.color = '#999';
+      item.style.fontSize = '24px';
+      item.style.fontWeight = 'normal';
+    }
+  });
+}
+
+// Carb ratio value is now loaded in the consolidated DOMContentLoaded above
+</script>
+
+</html>

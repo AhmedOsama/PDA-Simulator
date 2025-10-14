@@ -1,0 +1,113 @@
+#keyboard-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--keyboard-bg);
+  -webkit-transition: transform 0.3s ease-in-out;
+  -moz-transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  transform: translateY(100%);
+  flex-shrink: 0;
+}
+
+#keyboard-container.visible {
+  -webkit-transform: translateY(0);
+  -moz-transform: translateY(0);
+  transform: translateY(0);
+}
+
+#hide-keyboard-btn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 30px;
+  cursor: pointer;
+  background: #cfd2d8;
+  padding-right: 16px;
+}
+.keyboard-key.special{
+  border-radius: 5px;
+  margin: 4px;
+}
+.keyboard-hide-arrow {
+  width: 35px;
+  height: 18px;
+  margin-top: 6px;
+  background: #6b7280;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  margin-left: auto;
+}
+
+#keyboard {
+  background-color: #cfd2d8;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0px 1px 0px;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 1px;
+}
+.keyboard-row.last{
+  background-color: #ffffff;
+}
+.keyboard-key {
+  flex: 1;
+  height: 4.4rem;
+  border-radius: 2px;
+  border: 0.5px solid #e3e3e3;
+  background-color: #ffffff;
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: 500;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  -webkit-transition: background-color 0.1s ease-in-out;
+  -moz-transition: background-color 0.1s ease-in-out;
+  transition: background-color 0.1s ease-in-out;
+  min-width: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.keyboard-key:active {
+  background-color: #b0b5bd;
+}
+
+.keyboard-key.special {
+  background-color: #e3e3e3;
+  flex-grow: 1.5;
+  height: 3.9rem;
+
+}
+
+.keyboard-key.special:active {
+  background-color: #8e96a4;
+}
+
+.virtual-keyboard-input.has-cursor::after {
+  content: "";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 2px;
+  height: 1.75rem;
+  background-color: white;
+  -webkit-animation: blink 1s step-end infinite;
+  -moz-animation: blink 1s step-end infinite;
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+}

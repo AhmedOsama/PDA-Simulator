@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Pancares - تسجيل الدخول</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style/keyboard.css">
+    <link rel="stylesheet" href="style/app.css">
+    <style>
+        .header-section {
+            display: block;
+            height: unset;
+            padding: 18px 20px
+        }
+        
+.form-label {
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #374151;
+  font-size: 22px;
+  text-align: right;
+}
+    </style>
+</head>
+
+<body>
+    <div class="phone-container">
+        <div class="main-content">
+            <header class="flex-shrink-0 bg-white text-black">
+                <div class="white-overlay">
+                    <div class="icon-block block1"></div>
+                    <div class="icon-block block2"></div>
+                    <div class="icon-block block3"></div>
+                    <div class="icon-block block4"></div>
+                </div>
+            </header>
+
+            <div class="header-section text-center">
+                <div class="welcome-text pt-3">
+                    مرحباً بك في برنامج إيكويل لإدارة إعطاء الأنسولين
+                </div>
+                <div class="app-title">نظام Pancares</div>
+            </div>
+
+            <div class="form-section px-0">
+                <!-- Username field with label above -->
+                <div class="mb-4 px-3">
+                    <div class="form-label text-end mb-2">حساب Pancares</div>
+                    <div class="position-relative input-container">
+                        <input type="text" id="username-input" class="form-control virtual-keyboard-input"
+                            placeholder="أدخل الحساب" />
+                        <svg class="input-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"
+                                stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                                d="M18 16H6C4.89543 16 4 16.8954 4 18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18C20 16.8954 19.1046 16 18 16Z"
+                                stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Password field with label above -->
+                <div class="mb-4 px-3">
+                    <div class="form-label text-end mb-2">كلمة السر</div>
+                    <div class="position-relative input-container">
+                        <input type="password" id="password-input" class="form-control virtual-keyboard-input"
+                            placeholder="أدخل كلمة المرور" />
+                        <svg width="32" class="input-icon" height="32" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 11V7a5 5 0 0 0-8.54-3.54" stroke="#9ca3af" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"
+                                stroke="#9ca3af" stroke-width="1.5" stroke-linejoin="round" />
+                            <path d="M12 17a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" stroke="#9ca3af" stroke-width="1.5" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- إضافة id للزر -->
+                <div class="px-3">
+                    <button id="login-button" class="btn login-btn mb-4" onclick="login()">
+                        تسجيل الدخول
+                    </button>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 mb-4 px-3 justify-content-center">
+                    <div class="custom-checkbox rounded-circle" onclick="toggleCheckbox(this)"></div>
+                    <span class="checkbox-text m-0">
+                        لقد قرأت ووافقت على
+                        <a href="#" class="privacy-link"
+                            onclick="event.preventDefault(); alert('سيتم فتح صفحة سياسة الخصوصية هنا');">سياسة
+                            الخصوصية</a>
+                    </span>
+                </div>
+                <div class="text-end p-2 bg-secondary" style="background-color: #e0e6eb !important;position: absolute;bottom: 0;width: 100%;padding: 1rem !important;">
+                    <a href="javascript:void(0)" onclick="handlePdaModeNavigation(); localStorage.setItem('openMenuOnLoad', 'true');" class="cancel-link">إلغاء</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/keyboard.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // === الكود الجديد لتغيير لون الزر ===
+            const usernameInput = document.getElementById("username-input");
+            const passwordInput = document.getElementById("password-input");
+            const loginButton = document.getElementById("login-button");
+
+            // وظيفة للتحقق من حالة الحقول وتحديث الزر
+            function updateButtonState() {
+                if (
+                    usernameInput.value.length > 0 ||
+                    passwordInput.value.length > 0
+                ) {
+                    loginButton.classList.add("active"); // إضافة الفئة لتغيير اللون إلى الأزرق
+                } else {
+                    loginButton.classList.remove("active"); // إزالة الفئة للعودة إلى الرمادي
+                }
+            }
+
+            // إضافة مستمع لحدث الإدخال لكل حقل
+            usernameInput.addEventListener("input", updateButtonState);
+            passwordInput.addEventListener("input", updateButtonState);
+        });
+
+        function toggleCheckbox(element) {
+            element.classList.toggle("checked");
+        }
+
+        function login() {
+            const usernameInput = document.getElementById("username-input");
+            const passwordInput = document.getElementById("password-input");
+            const isChecked = document
+                .querySelector(".custom-checkbox")
+                .classList.contains("checked");
+
+            if (!usernameInput.value || !passwordInput.value) {
+                alert("يرجى إدخال الحساب وكلمة المرور");
+                return;
+            }
+
+            if (!isChecked) {
+                alert("يرجى الموافقة على سياسة الخصوصية");
+                return;
+            }
+
+            alert("تم تسجيل الدخول بنجاح!");
+
+            usernameInput.value = "";
+            passwordInput.value = "";
+            document.querySelector(".custom-checkbox").classList.remove("checked");
+            document.getElementById("login-button").classList.remove("active");
+        }
+    </script>
+</body>
+  <script src="js/control-screen.js"></script>
+
+</html>

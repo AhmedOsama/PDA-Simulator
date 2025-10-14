@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=480, initial-scale=1.0" />
+  <title>سجلات نسبة السكر في الدم 2</title>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <style>
+    .screen.active {
+      display: flex;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px 20px 30px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: normal;
+      color: #333;
+      margin: 0;
+    }
+
+    .content {
+      background: #fafafa;
+      flex-grow: 1;
+      padding: 0;
+    }
+
+    .blood-sugar-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      margin: 30px 0;
+    }
+
+    .meal {
+      display: block;
+      font-size: 20px;
+      color: #333;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .meal.val {
+      font-size: 16px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .blood-sugar-button {
+      width: 60px;
+      height: 60px;
+      background-color: #1b52a4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 40px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .blood-sugar-value {
+      color: #4ade80;
+      font-size: 50px;
+      font-weight: 500;
+      position: relative;
+      margin: 0 30px;
+    }
+
+    .blood-sugar-value::after {
+      content: "";
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 10px solid #4ade80;
+    }
+
+    .ruler-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .question-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .food-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 40px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: white;
+    }
+
+    .question-buttons {
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      align-items: baseline;
+      margin-top: 200px;
+      margin-inline: 50px;
+    }
+
+    .question-button {
+      flex: 1;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #1b52a4;
+      color: white;
+    }
+
+    .carb-input-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .carb-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .carb-input-field {
+      border: 2px solid #1b52a4;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 24px;
+      text-align: center;
+      background: white;
+      width: 200px;
+      display: block;
+    }
+
+    .carb-unit {
+      font-size: 18px;
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .summary-screen {
+      padding: 20px;
+    }
+
+    .summary-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+    }
+
+    .summary-dose {
+      text-align: center;
+    }
+
+    .summary-dose-number {
+      font-size: 48px;
+      color: #1b52a4;
+      margin-bottom: 10px;
+    }
+
+    .summary-dose-unit {
+      font-size: 20px;
+      color: #1b52a4;
+    }
+
+    .summary-details {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .summary-detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-detail-item:first-child {
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .summary-detail-label {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .summary-detail-value {
+      font-size: 24px;
+      color: #666;
+    }
+
+    .summary-button {
+      background: #1b52a4;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      width: 80%;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+      margin-top: 58px;
+    }
+
+    .insulin-input-screen {
+      padding: 20px;
+    }
+
+    .insulin-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+
+    .insulin-input-sections {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .insulin-input-section {
+      text-align: center;
+      flex: 1;
+    }
+
+    .insulin-input-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .insulin-input-field {
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 20px;
+      text-align: center;
+      background: white;
+      width: 80px;
+      margin: 0 auto;
+    }
+
+    .insulin-input-field:focus {
+      border-color: #1b52a4;
+      outline: none;
+    }
+
+    .insulin-total {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .insulin-duration {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .insulin-duration-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .insulin-duration-field {
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 20px;
+      text-align: center;
+      background: white;
+      width: 100px;
+      margin: 0 auto;
+    }
+
+    .insulin-duration-unit {
+      font-size: 16px;
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .screen {
+      background-color: #fff;
+    }
+
+    .main-footer {
+      padding: 20px;
+    }
+
+    .nav-button {
+      background: none;
+      border: none;
+      color: #1b52a4;
+      font-size: 17px;
+      cursor: pointer;
+      padding: 0;
+      font-weight: 400;
+    }
+
+    .nav-button:disabled {
+      color: #c7c7cc;
+      cursor: not-allowed;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .note i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid #737373;
+      color: #737373;
+      font-style: normal;
+      text-align: center;
+      line-height: 18px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .food-categories {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      padding: 0 10px;
+    }
+
+    .food-category {
+      text-align: center;
+      opacity: 0.4;
+    }
+
+    .food-category span {
+      display: block;
+      font-size: 12px;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    .food-category-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 5px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .bottom-tabs {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 60px;
+      background: white;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .bottom-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .bottom-tab.active {
+      color: #1b52a4;
+    }
+
+    .bottom-tab i {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .extended-dose-tabs {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 30px;
+    }
+
+    .extended-dose-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .extended-dose-tab.active {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .header {
+      margin-top: 10px;
+    }
+
+    .btn.decrement,
+    .btn.increment {
+      background-color: #2e61ae;
+      color: white;
+      border-radius: 10px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 60px;
+      font-size: 1.5rem;
+      height: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <!-- Status Bar -->
+    <header>
+      <div class="white-overlay">
+        <div class="icon-block block1"></div>
+        <div class="icon-block block2"></div>
+        <div class="icon-block block3"></div>
+        <div class="icon-block block4"></div>
+      </div>
+    </header>
+
+    <!-- Screen 1: Blood Sugar Input -->
+    <div id="screen1" class="screen active mt-3">
+      <div
+        class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-0 mt-0"
+        style="font-size: 20px">
+        <div>سجلات نسبة السكر في الدم</div>
+        <div class="position-absolute"
+          onclick="handlePdaModeNavigation(); localStorage.setItem('openMenuOnLoad', 'true');"
+          style="right: 20px">
+          <i class="fa fa-chevron-left"></i>
+          رجوع
+        </div>
+      </div>
+      <div class="content">
+        <div class="blood-sugar-screen p-0">
+          <section
+            class="d-flex flex-column align-items-center mt-4"
+            style="font-family: sans-serif; direction: ltr">
+            <div
+              class="d-flex flex-column align-items-center w-100"
+              style="font-family: 'Roboto', sans-serif">
+
+              <div
+                class="position-relative w-100"
+                style="overflow: hidden">
+                <div class="d-flex justify-content-center align-items-center gap-5 my-4"><button class="btn decrement" target="ruler-container">
+                    <i class="fa fa-minus"></i>
+                  </button>
+                  <div id="ruler-container_value_preview" class="fs-1"></div>
+                  <div id="ruler-container_value" class="fs-1 d-none"></div><button class="btn increment" target="ruler-container">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+                <div
+                  id="ruler-container_ruler"
+                  class="bg-white"
+                  hasRuller="true"
+                  minValue="0"
+                  maxValue="35"
+                  precision=".1"
+                  borderColoring='[{"start":0,"end":4.4,"color":"#ee5e56"},{"start":4.4,"end":35,"color":"#33cc7a"}]'></div>
+              </div>
+          </section>
+        </div>
+        <div
+          style="
+              text-align: center;
+              padding-top: 15px;
+              color: #666;
+              font-size: 16px;
+              background: #fff;
+            ">
+          mmol/l
+        </div>
+
+        <div
+          style="
+              text-align: center;
+              padding-block: 20px;
+              color: #666;
+              font-size: 20px;
+              background: #fff;
+            ">
+          حرك المسطرة لإدخال قيمة سكر الدم
+        </div>
+        <div class="main-footer mt-4">
+          <button
+            class="btn-primary m-auto d-block text-center"
+            trigger="true"
+            onclick="openModalMs('bloodrecords')"
+            style="width: 95%">
+            سِجِلّ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Factory Reset Modal -->
+    <div
+      class="ms-mobile-select custom-ms-modal"
+      id="bloodrecords">
+      <div
+        class="ms-gray-layer"
+        onclick="closeModalMs('bloodrecords')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 200px">
+              <div class="text-center my-4 fs-3">سجلات نسبة السكر في الدم</div>
+              <div class="text-center my-4 fs-4" style="color: #666;">
+                تسجيل قيمة سكر الدم؟
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div
+              class="ms-cancel fs-4"
+              onclick="closeModalMs('bloodrecords')">
+              لا
+            </div>
+            <div
+              class="ms-ensure fs-4"
+              onclick="closeModalMs('bloodrecords'); saveToLocalStorage()">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="successPopup" class="success-popup-overlay">
+      <div class="success-popup">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <p class="success-message">تم الحفظ</p>
+      </div>
+    </div>
+  </div>
+  <script src="js/m-select.js"></script>
+</body>
+<script src="js/control-screen.js"></script>
+,
+<script src="js/ruler.js"></script>
+
+</html>

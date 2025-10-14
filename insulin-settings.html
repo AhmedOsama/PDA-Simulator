@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=480, initial-scale=1.0" />
+  <title>إعدادات التذكير و التنبية</title>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <script src="js/keyboard.js"></script>
+  <style>
+    * {
+      user-select: none;
+    }
+
+
+
+    .phone-container {
+      background: #fafafa;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      position: relative;
+      height: 740px;
+      max-width: 480px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .phone-container .content-wrapper {
+      flex: 1;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      padding-bottom: 150px;
+    }
+
+    .phone-container .content-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      flex-direction: column;
+    }
+
+    .screen.active {
+      display: flex !important;
+    }
+
+    .control-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      padding-left: 40px;
+      border-bottom: 1px solid #edeeef;
+      background: #fff;
+      min-height: 75px !important;
+    }
+
+    .control-item-label {
+      font-size: 18px;
+      color: #444;
+    }
+
+    .control-item-view {
+      font-size: 18px;
+      color: #777;
+    }
+
+    .control-item-view i.fa-chevron-left {
+      font-size: 14px;
+      padding-right: 10px;
+    }
+
+    .auto-switch {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    .switch-label {
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      position: relative;
+    }
+
+    .switch-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 24px;
+      background: #d1d1d6;
+      border-radius: 16px;
+      transition: background 0.2s;
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: -2px;
+      left: 21px;
+      width: 28px;
+      height: 28px;
+      background: #2056a8;
+      border-radius: 50%;
+      box-shadow: none;
+      transition: left 0.2s, background 0.2s;
+    }
+
+    .switch-input:checked+.switch-track {
+      background: #c7d9f0;
+    }
+
+    .switch-input:checked+.switch-track+.switch-thumb {
+      left: 21px;
+      background: #2056a8;
+    }
+
+    .switch-input:not(:checked)+.switch-track {
+      background: #d1d1d6;
+    }
+
+    .switch-input:not(:checked)+.switch-track+.switch-thumb {
+      left: 0;
+      background: #9e9e9e;
+    }
+
+    .btn.decrement,
+    .btn.increment {
+      width: 60px;
+      height: 60px;
+      background-color: #2e61ae;
+      color: white;
+      border-radius: 10px;
+      font-size: 40px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+
+    /* Password input styles */
+    .password-input-container {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .password-input {
+      text-align: center;
+    }
+
+    .password-toggle {
+      color: #666;
+      font-size: 18px;
+    }
+
+    .password-toggle:hover {
+      color: #2e61ae;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <div class="screen active" id="screen1">
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>إعدادات اعطاء الانسولين</div>
+          <div class="position-absolute" style="right: 20px" onclick="location.href='settings.html'">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">إعدادات القاعدي</div>
+      <div class="control-item" screen="screen2">
+        <div class="control-item-label">مقدار تدرج القاعدي</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            id="basal_rate_increment">
+            0.05
+          </span>
+          وحدة/ساعة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">اقصي معدل قاعدي</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            trigger="true"
+            title="اقصي معدل قاعدي (و/س)"
+            id="max_basal_rate"
+            start="0" end="9" start2="0" end2="9" separator=".">
+            6 </span>
+          و/س
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">معدل الضخ</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            trigger="true"
+            title="معدل الضخ (وحدة/ساعة)"
+            id="pump_basal_rate"
+            start="0" end="1" start2="0" end2="975" step2="25" separator=".">
+            6 </span>
+          و/س
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">القاعدي المؤقت</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input
+                type="checkbox"
+                id="temp_basal_switch"
+                class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="control-item" id="temp_basal_switch_item" screen="screen3">
+        <div class="control-item-label">وحدة القاعدي المؤقت</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            id="temp_basal_unit">
+            و/س
+          </span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="p-3 text-secondary">إعدادات الضخ</div>
+      <div class="control-item" screen="screen4">
+        <div class="control-item-label">معدل الضخ</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            id="pump_rate">
+            1.5
+          </span>
+          وحدة/دقيقة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen5">
+        <div class="control-item-label">مقدار تدرج جرعة الضخ</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            id="pump_increment_rate">
+            0.1
+          </span>
+          وحدة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen6">
+        <div class="control-item-label">أقصى جرعة ضخ</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            id="max_bolus_dose"
+            trigger="true"
+            title="أقصى جرعة ضخ (وحدة)"
+            start="0" end="100">
+            30
+          </span>
+          وحدة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">جرعة ضخ مديدة</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input
+                type="checkbox"
+                id="extended_bolus_switch"
+                class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="control-item" id="extended_bolus_switch_item" screen="screen6">
+        <div class="control-item-label">وحدة الضخ المديد</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="extended_bolus_unit">U</span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">ضخ سريع</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input
+                type="checkbox"
+                id="quick_bolus_switch"
+                class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="control-item" screen="screen7" id="quick_bolus_switch_item">
+        <div class="control-item-label">مقدار تدرج جرعة الضخ السريع</div>
+        <div class="control-item-view">
+          <span
+            class="control-item-value"
+            id="quick_pump_increment_rate">
+            0.1
+          </span>
+          وحدة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">الحد الأقصى الآمن للانسولين النشط</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input
+                type="checkbox"
+                id="max_safe_insulin_switch"
+                trigger="true"
+                title="تعيين كلمة المرور"
+                modal-target="password_modal"
+                class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 text-secondary">الإعدادات الأخري</div>
+      <div class="control-item">
+        <div class="control-item-label">حد إنذار انخفاض كمية الانسولين</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="insulin_low_threshold"
+
+            trigger="true"
+            title="حد إنذار انخفاض كمية الانسولين (وحدة)"
+            start="10" end="50" step="5">10</span>
+          وحدة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">التعليق التلقائي للحقن</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input
+                type="checkbox"
+                id="auto_suspend_duration"
+                class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="control-item" id="auto_suspend_duration_item">
+        <div class="control-item-label">مدة تفعيل توقف الحقن تلقايا</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="auto_suspend_duration"
+            trigger="true"
+            title="مدة تفعيل توقف الحقن تلقايا (ساعة)"
+            start="0" end="24" step="1" values2='[0,5]' separator=".">12</span>ساعة
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="screen2" class="screen" >
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>مقدار تدرج القاعدي</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">يرجي ضبط مقدار تدرج القاعدي (وحدة/ساعة)</div>
+      <div class="control-item" selectable selectable-target="basal_rate_increment">
+        <div class="control-item-view">
+          0.025
+        </div>
+      </div>
+      <div class="control-item" selected selectable selectable-target="basal_rate_increment">
+        <div class="control-item-view">
+          0.05
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="basal_rate_increment">
+        <div class="control-item-view">
+          0.1
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="screen3" class="screen" >
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>وحدة القاعدي المؤقت</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">وحدة القاعدي المؤقت</div>
+      <div class="control-item" selectable selectable-target="temp_basal_unit" selected>
+        <div class="control-item-view">
+          و/س
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="temp_basal_unit">
+        <div class="control-item-view">
+          %
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="screen4" class="screen" >
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>معدل الضخ</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">يرجي ضبط معدل الضخ (و/د)</div>
+      <div class="control-item" selectable selectable-target="pump_rate" selected>
+        <div class="control-item-view">
+          1.5
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="pump_rate">
+        <div class="control-item-view">
+          3
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="screen5" class="screen" >
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>مقدار تدرج جرعة الضخ</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">يرجي ضبط تدرج جرعة الضخ (وحدة)</div>
+      <div class="control-item" selectable selectable-target="pump_increment_rate">
+        <div class="control-item-view">
+          0.025
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="pump_increment_rate">
+        <div class="control-item-view">
+          0.05
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="pump_increment_rate" selected>
+        <div class="control-item-view">
+          0.1
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="pump_increment_rate">
+        <div class="control-item-view">
+          0.5
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="pump_increment_rate">
+        <div class="control-item-view">
+          1
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="screen6" class="screen" >
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>وحدة الضخ المديد</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">وحدة الضخ المديد</div>
+      <div class="control-item" selectable selectable-target="extended_bolus_unit" selected>
+        <div class="control-item-view">
+          U
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="extended_bolus_unit">
+        <div class="control-item-view">
+          %
+        </div>
+      </div>
+      </div>
+    </div>
+    <div id="screen7" class="screen" >
+      <div style="position: relative; z-index: 9999">
+        <header class="mb-0">  <div class="white-overlay">
+          <div class="icon-block block1"></div>
+          <div class="icon-block block2"></div>
+          <div class="icon-block block3"></div>
+          <div class="icon-block block4"></div>
+        </div></header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>مقدار تدرج جرعة الضخ السريع</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="content-wrapper">
+      <div class="p-3 text-secondary">يرجي ضبط تدرج جرعة الضخ السريع (وحدة)</div>
+      <div class="control-item" selectable selectable-target="quick_pump_increment_rate">
+        <div class="control-item-view">
+          0.025
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="quick_pump_increment_rate">
+        <div class="control-item-view">
+          0.05
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="quick_pump_increment_rate" selected>
+        <div class="control-item-view">
+          0.1
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="quick_pump_increment_rate">
+        <div class="control-item-view">
+          0.5
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="quick_pump_increment_rate">
+        <div class="control-item-view">
+          1
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="modal" id="loadingModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 pb-0">
+          <div class="modal-body rounded-3">
+            <!-- From Uiverse.io by david-mohseni -->
+            <div class="loader">
+              <div class="bar1"></div>
+              <div class="bar2"></div>
+              <div class="bar3"></div>
+              <div class="bar4"></div>
+              <div class="bar5"></div>
+              <div class="bar6"></div>
+              <div class="bar7"></div>
+              <div class="bar8"></div>
+              <div class="bar9"></div>
+              <div class="bar10"></div>
+              <div class="bar11"></div>
+              <div class="bar12"></div>
+            </div>
+            <div class="mt-4 fs-5">إتصال</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="successPopup" class="success-popup-overlay">
+      <div class="success-popup">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <p class="success-message">نجاح</p>
+      </div>
+    </div>
+    <!-- Password Modal -->
+    <div
+      class="ms-mobile-select custom-ms-modal"
+      id="password_modal">
+      <div
+        class="ms-gray-layer"
+        onclick="closeModalMs('password_modal')"></div>
+      <div class="ms-content">
+        <div class="ms-panel">
+          <div class="ms-fix-width">
+            <div class="ms-wheels" style="height: 200px">
+              <div class="text-center my-4 fs-5">تعيين كلمة المرور</div>
+              <div class="password-input-container">
+                <div class="form-group position-relative">
+                  <input
+                    type="password"
+                    class="form-control password-input"
+                    id="password_input"
+                    placeholder="كلمة السر"
+                    style="padding-left: 50px; border: 2px solid #007bff; border-radius: 8px; height: 50px; font-size: 16px;">
+                  <span class="password-toggle position-absolute"
+                    style="left: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;"
+                    onclick="togglePassword()">
+                    <i class="fa fa-eye" id="password_eye_icon"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ms-footer-bar">
+          <div class="ms-fix-width">
+            <div
+              class="ms-cancel"
+              onclick="closeModalMs('password_modal')">
+              إلغاء
+            </div>
+            <div
+              class="ms-ensure"
+              onclick="closeModalMs('password_modal')">
+              نعم
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+  <script src="js/control-screen.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="js/m-select.js"></script>
+<script src="js/ruler.js"></script>
+
+</html>

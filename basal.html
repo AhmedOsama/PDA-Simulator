@@ -1,0 +1,3152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>01_القاعدة المؤقت</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <script src="js/keyboard.js"></script>
+
+  <style>
+
+    .screen.active {
+      display: flex;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px 20px 30px;
+    }
+
+    header {
+      min-height: 50px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: normal;
+      color: #333;
+      margin: 0;
+    }
+
+    .content {
+      background: #fafafa;
+      flex-grow: 1;
+      padding: 0;
+    }
+
+    .blood-sugar-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      margin: 30px 0;
+    }
+
+    .meal {
+      display: block;
+      font-size: 20px;
+      color: #333;
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .meal.val {
+      font-size: 16px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    .blood-sugar-button {
+      width: 60px;
+      height: 60px;
+      background-color: #1b52a4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 40px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .blood-sugar-value {
+      color: #4ade80;
+      font-size: 50px;
+      font-weight: 500;
+      position: relative;
+      margin: 0 30px;
+    }
+
+    .blood-sugar-value::after {
+      content: "";
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 10px solid #4ade80;
+    }
+
+    .ruler-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .ruler {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      height: 90px;
+      overflow: hidden;
+    }
+
+    .ruler-track {
+      display: flex;
+      position: absolute;
+      top: 0;
+      height: 4px;
+      align-items: flex-start;
+    }
+
+    .ruler-ticks {
+      display: flex;
+      position: absolute;
+      top: 4px;
+      height: 40px;
+    }
+
+    .ruler-pointer {
+      position: absolute;
+      top: 20px;
+      width: 4px;
+      height: 40px;
+      background-color: #4ade80;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      border-radius: 5px;
+    }
+
+    .question-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .question-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .food-icon {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 40px;
+      background: #4ade80;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 60px;
+      color: white;
+    }
+
+    .question-buttons {
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      align-items: baseline;
+      margin-top: 200px;
+      margin-inline: 50px;
+    }
+
+    .question-button {
+      flex: 1;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #1b52a4;
+      color: white;
+    }
+
+    .carb-input-screen {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .carb-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .carb-input-field {
+      border: 2px solid #1b52a4;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 24px;
+      text-align: center;
+      background: white;
+      width: 200px;
+      display: block;
+    }
+
+    .text-primary-dark {
+      color: #1b52a4 !important;
+    }
+
+    .carb-unit {
+      font-size: 18px;
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .summary-screen {
+      padding: 20px;
+    }
+
+    .summary-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+    }
+
+    .summary-dose {
+      text-align: center;
+    }
+
+    .summary-dose-number {
+      font-size: 48px;
+      color: #1b52a4;
+      margin-bottom: 10px;
+    }
+
+    .summary-dose-unit {
+      font-size: 20px;
+      color: #1b52a4;
+    }
+
+    .summary-details {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .summary-detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-detail-item:first-child {
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .summary-detail-label {
+      font-size: 24px;
+      color: #333;
+    }
+
+    .summary-detail-value {
+      font-size: 24px;
+      color: #666;
+    }
+
+    .summary-button {
+      background: #1b52a4;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      width: 80%;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+      margin-top: 58px;
+    }
+
+    .insulin-input-screen {
+      padding: 20px;
+    }
+
+    .insulin-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.4;
+    }
+
+    .insulin-input-sections {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .insulin-input-section {
+      text-align: center;
+      flex: 1;
+    }
+
+    .insulin-input-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .insulin-input-field {
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 20px;
+      text-align: center;
+      background: white;
+      width: 80px;
+      margin: 0 auto;
+    }
+
+    .insulin-input-field:focus {
+      border-color: #1b52a4;
+      outline: none;
+    }
+
+    .insulin-total {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .insulin-duration {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .insulin-duration-label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .insulin-duration-field {
+      border: 2px solid #e5e5e5;
+      border-radius: 12px;
+      padding: 15px 20px;
+      font-size: 20px;
+      text-align: center;
+      background: white;
+      width: 100px;
+      margin: 0 auto;
+    }
+
+    .insulin-duration-unit {
+      font-size: 16px;
+      color: #666;
+      margin-right: 10px;
+    }
+
+    .screen {
+      background-color: #fff;
+    }
+
+    .main-footer {
+      padding: 20px;
+    }
+
+    .nav-button {
+      background: none;
+      border: none;
+      color: #1b52a4;
+      font-size: 17px;
+      cursor: pointer;
+      padding: 0;
+      font-weight: 400;
+    }
+
+    .nav-button:disabled {
+      color: #c7c7cc;
+      cursor: not-allowed;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-top: 20px;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .note i {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid #737373;
+      color: #737373;
+      font-style: normal;
+      text-align: center;
+      line-height: 18px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .food-categories {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      padding: 0 10px;
+    }
+
+    .food-category {
+      text-align: center;
+      opacity: 0.4;
+    }
+
+    .food-category span {
+      display: block;
+      font-size: 12px;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    .food-category-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 5px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .bottom-tabs {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 60px;
+      background: white;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .bottom-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .bottom-tab.active {
+      color: #1b52a4;
+    }
+
+    .bottom-tab i {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .extended-dose-tabs {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 30px;
+    }
+
+    .extended-dose-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .extended-dose-tab.active {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .header {
+      margin-top: 10px;
+    }
+
+    .basal-duration-container {
+      direction: rtl;
+      width: 100%;
+    }
+
+    .basal-duration-title {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .basal-duration-input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .basal-duration-unit {
+      white-space: nowrap;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .basal-duration-input {
+      border: 2px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 18px;
+      text-align: center;
+      background: white;
+      width: 80px;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 480px;
+      height: 740px;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 1000;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .picker-container {
+      background: white;
+      padding: 20px 0;
+      padding-bottom: 0;
+      width: 100%;
+    }
+
+    .picker-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .dual-picker-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 300px;
+      margin-bottom: 20px;
+      position: relative;
+      direction: ltr;
+    }
+
+    .picker-wheel {
+      margin-bottom: 0;
+      height: 210px;
+      width: 80px;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+      z-index: 44;
+      /* Add gradient mask for fade effect on top/bottom */
+      -webkit-mask-image: linear-gradient(to bottom,
+          transparent 0%,
+          black 20%,
+          black 80%,
+          transparent 100%);
+      mask-image: linear-gradient(to bottom,
+          transparent 0%,
+          black 20%,
+          black 80%,
+          transparent 100%);
+    }
+
+    .picker-dot {
+      font-size: 24px;
+      color: white;
+      margin: 0 20px;
+      align-self: center;
+      z-index: 15;
+      position: relative;
+    }
+
+    /* Full width blue selection indicator that spans across both pickers */
+    .dual-picker-container::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      height: 40px;
+      width: 100%;
+      background-color: #1b52a4;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Time picker specific styles for three wheels */
+    #timePickerModal .dual-picker-container {
+      gap: 10px;
+    }
+
+    #timePickerModal .picker-wheel {
+      width: 60px;
+    }
+
+    #timePickerModal .picker-wheel:last-child {
+      width: 50px;
+      /* Smaller width for AM/PM */
+    }
+
+    #timePickerModal .picker-dot {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin: 0 5px;
+      align-self: center;
+      z-index: 15;
+      position: relative;
+    }
+
+    .picker-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      width: 100%;
+      transition: top 0.2s ease-out;
+      z-index: 10;
+    }
+
+
+    .picker-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #8e8e93;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+      position: relative;
+      z-index: 10;
+    }
+
+    .picker-item.selected {
+      color: white;
+      background: transparent;
+      font-weight: 500;
+      z-index: 10;
+      white-space: nowrap;
+    }
+
+    /* Remove individual picker selection indicators */
+    .picker-selection-indicator {
+      display: none;
+    }
+
+    .picker-buttons {
+      border-top: 1px solid #ddd;
+      display: flex;
+    }
+
+    .picker-btn {
+      flex: 1;
+      padding: 15px;
+      background: white;
+      border: none;
+      font-size: 18px;
+      color: #1b52a4;
+      cursor: pointer;
+    }
+
+    .picker-btn:first {
+      border-left: 1px solid #ddd;
+    }
+
+    .picker-btn:hover {
+      background: #f0f0f0;
+    }
+
+    .border-left-1 {
+      border-left: 1px solid #ddd;
+    }
+
+    .tab-item {
+      padding: 15px;
+      font-size: 20px;
+    }
+
+    .tab-item.text-primary {
+      --bs-text-opacity: 1;
+      color: #1b52a4 !important;
+      position: relative !important;
+    }
+
+    span.tab-underline {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+    }
+
+    #hour-ticks span {
+      position: relative;
+      top: 10px;
+      font-size: 14px;
+    }
+
+    #hour-ticks span:before {
+      content: " ";
+      background: #000;
+      width: 1px;
+      height: 8px;
+      position: absolute;
+      right: 10px;
+      top: -10px;
+      opacity: 0.3;
+    }
+
+    /* Settings Screen Styles */
+    .settings-screen {
+      background: #efeff4;
+      min-height: calc(100vh - 44px);
+      padding: 5px 0;
+    }
+
+    .settings-card {
+      background: #fff;
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .settings-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .settings-label {
+      color: #333;
+      font-size: 20px;
+    }
+
+    .settings-value {
+      color: #333;
+      font-size: 20px;
+    }
+
+    .profile-name-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      text-align: right;
+      padding: 0;
+      width: auto;
+      min-width: 100px;
+    }
+
+    .profile-name-input:focus {
+      background: transparent;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+
+    .settings-detail {
+      color: #a7a7a7;
+      font-size: 20px;
+    }
+
+    .chevron-icon {
+      color: #a7a7a7;
+      font-size: 12px;
+    }
+
+    .periods-card {
+      background: #fff;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .periods-header {
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .periods-list {
+      padding: 0;
+    }
+
+    .period-item {
+      background: white;
+      border-bottom: 1px solid #ddd;
+      padding: 16px;
+    }
+
+    .period-time {
+      font-weight: 500;
+      color: #1b52a4;
+      margin-bottom: 4px;
+    }
+
+    .period-value {
+      color: #000;
+      font-size: 14px;
+    }
+
+    .period-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .bottom-buttons {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      background: none;
+      border: 1px solid #007bff;
+      color: #007bff;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    .btn-save {
+      flex: 1;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+
+    /* Single Picker Styles for Periods Modal */
+    #periodsModal .picker-wheel {
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+      height: 315px;
+      overflow: hidden;
+      mask-image: linear-gradient(to bottom,
+          transparent 0%,
+          black 45%,
+          black 58%,
+          transparent 100%);
+    }
+
+    #periodsModal .picker-list {
+      height: 120px;
+      overflow-y: hidden;
+      padding: 0px 0;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      display: block;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+    }
+
+    #periodsModal .picker-selection-indicator {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      height: 40px;
+      background-color: #1b52a4;
+      pointer-events: none;
+      z-index: 2;
+      display: block;
+    }
+
+    #periodsModal {
+      overflow-x: hidden;
+    }
+
+    #periodsPicker {
+      overflow-x: hidden;
+    }
+
+    #periodsModal .picker-item {
+      height: 40px;
+      text-align: center;
+      font-size: 16px;
+      color: #a0a0a0;
+      position: relative;
+      z-index: 1;
+      transform: rotateX(1deg) scaleX(1.6) translateZ(-30px);
+      transform-origin: center;
+    }
+
+    #periodsModal .picker-item.selected {
+      color: white;
+      font-weight: 500;
+      font-size: 20px;
+      transform: scaleX(1.6);
+    }
+
+
+    #timePickerModal .picker-wheel:has(#ampmPicker) {
+      width: 106px;
+    }
+
+    div#basalSettingsScreen {
+      height: 610px;
+      overflow-y: scroll;
+    }
+
+    div#basalSettingsScreen::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Make Period Table scrollable on main screens */
+    .period-table {
+      height: 100%;
+      max-height: 275px;
+      overflow-y: auto;
+    }
+
+    .period-table::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .period-table::-webkit-scrollbar-thumb {
+      background: #cfcfcf;
+      border-radius: 6px;
+    }
+
+    .period-table::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .period-table-header {
+      padding-top: 10px;
+      position: sticky;
+      background: #fff;
+      z-index: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <div class="modal" id="loadingModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 pb-0">
+          <div class="modal-body rounded-3">
+            <!-- From Uiverse.io by david-mohseni -->
+            <div class="loader">
+              <div class="bar1"></div>
+              <div class="bar2"></div>
+              <div class="bar3"></div>
+              <div class="bar4"></div>
+              <div class="bar5"></div>
+              <div class="bar6"></div>
+              <div class="bar7"></div>
+              <div class="bar8"></div>
+              <div class="bar9"></div>
+              <div class="bar10"></div>
+              <div class="bar11"></div>
+              <div class="bar12"></div>
+            </div>
+            <div class="mt-4 fs-5">إتصال</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <header class="d-block">
+      <div class="white-overlay">
+        <div class="icon-block block1"></div>
+        <div class="icon-block block2"></div>
+        <div class="icon-block block3"></div>
+        <div class="icon-block block4"></div>
+      </div>
+    </header>
+    <!-- Basal Insulin Screen -->
+    <div id="basalScreen" class="screen active">
+      <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-white border-bottom" style="
+            padding-block: 15px !important;
+          ">
+        <span onclick="handlePdaModeNavigation(); localStorage.setItem('openMenuOnLoad', 'true');" class="fw-normal"
+          style="cursor: pointer; font-size: 18px; position: absolute">
+          <i class="fa fa-chevron-right"></i>
+          رجوع</span>
+        <h2 class="fs-4 mb-0 text-dark w-100 text-center ">
+          القاعدي
+        </h2>
+        <span id="addProfileButton" style="
+              width: 32px;
+              height: 30px;
+              display: flex;
+              border-radius: 50%;
+              border: 2px solid;
+              justify-content: center;
+              align-items: center;
+              color: #1b52a4;
+              font-size: 19px;
+              cursor: pointer;
+            ">
+          <i class="far fa-plus"></i>
+        </span>
+      </div>
+
+      <!-- Content -->
+      <div style="
+            background: #fafafb;
+            min-height: calc(100vh - 44px);
+            padding: 0;
+          ">
+        <div class="d-flex align-items-center w-100 justify-content-between p-0" style="
+              overflow-x: auto;
+              white-space: nowrap;
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            ">
+          <div class="d-flex align-items-center justify-content-around p-0 w-100" style="
+                flex-shrink: 0;
+                overflow-x: auto;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+                font-family:Arial, Helvetica, sans-serif;
+              ">
+            <span id="tab-basal1" class="me-3 text-black tab-item" style="cursor: pointer; user-select: none;">
+              القاعدي 1</span>
+            <span id="tab-basal2" class="me-3 text-black tab-item" style="cursor: pointer; user-select: none">
+              القاعدي 2</span>
+            <span id="tab-basal3" class="me-3 text-black tab-item" style="cursor: pointer; user-select: none">
+              القاعدي 3
+            </span>
+
+          </div>
+        </div>
+
+        <style>
+          /* Hide scrollbars */
+          div[style*="overflow-x: auto"]::-webkit-scrollbar {
+            display: none;
+          }
+        </style>
+
+        <!-- Tab Content Container -->
+        <div id="tab-content">
+          <!-- Basal 1 Content -->
+          <div id="content-basal1" class="tab-content" style="display: none">
+            <div class="bg-white px-3 p-1 pt-4">
+              <div class="text-center mb-4">
+                <div class="d-flex justify-content-center align-items-center">
+                  <span class="badge text-bg-secondary rounded-pill ms-3 mb-3 py-2"
+                    style="font-size: 11px; margin-right: -1rem" data-role="activeBadge">غير نشط</span>
+
+                  <h3 class="mb-1" style="font-size: 33px; color: #000; line-height: 1">0 وحدة/</h3>
+                  <div class="h5">يوم</div>
+                </div>
+              </div>
+              <!-- Hour Ticks -->
+              <div class="pb-3">
+                <div class="position-relative" style="height: 80px; background-color: #d9e9f6;">
+                  <div>
+                    <img id="chartImage" src="assets/basal-default-chart.jpg" alt="Basal Chart"
+                      style="width: 100%; height: 100%; object-fit: contain;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div style="height: 1px; background: #e9ecef; margin: 0 16px"></div>
+            <!-- Period Table -->
+            <div class="p-3 mt-1  bg-white period-table" style="padding-top: 0 !important;">
+              <div class="period-table-header d-flex justify-content-around mb-3 " >
+                <div class="me-4" style="font-size: 20px; font-weight: 500">الفترات</div>
+                <div class="ms-4" style="font-size: 20px; font-weight: 500">القاعدي (وحدة/ساعة)</div>
+              </div>
+            
+              <div class="d-flex justify-content-between align-items-center">
+                <div style="font-size: 19px; color: #666">00:00 - 24:00</div>
+                <div style="font-size: 24px; color: #666; margin-left: 40px">0</div>
+              </div>
+            
+            </div>
+          </div>
+
+          <!-- Basal 2 Content -->
+          <div id="content-basal2" class="tab-content" style="display: none">
+            <div class="bg-white px-3 p-4">
+              <div class="text-center mb-4">
+                <div class="d-flex justify-content-center align-items-center">
+                  <span class="badge text-bg-secondary rounded-pill ms-3 mb-3 py-2"
+                    style="font-size: 11px; margin-right: -1rem" data-role="activeBadge">غير نشط</span>
+
+                  <h3 class="mb-1" style="font-size: 33px; color: #000; line-height: 1">0 وحدة/</h3>
+                  <div class="h5">يوم</div>
+                </div>
+              </div>
+              <!-- Hour Ticks -->
+              <div class="pb-3">
+                <div class="position-relative" style="height: 80px; background-color: #d9e9f6;">
+                  <div>
+                    <img id="chartImage" src="assets/basal-default-chart.jpg" alt="Basal Chart"
+                      style="width: 100%; height: 100%; object-fit: contain;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div style="height: 1px; background: #e9ecef; margin: 0 16px"></div>
+            <!-- Period Table -->
+            <div class="p-3 mt-1  bg-white period-table" style="padding-top: 0 !important;">
+              <div class="period-table-header d-flex justify-content-around mb-3 ">
+                <div class="me-4" style="font-size: 20px; font-weight: 500">الفترات</div>
+                <div class="ms-4" style="font-size: 20px; font-weight: 500">القاعدي (وحدة/ساعة)</div>
+              </div>
+            
+              <div class="d-flex justify-content-between align-items-center">
+                <div style="font-size: 19px; color: #666">00:00 - 24:00</div>
+                <div style="font-size: 24px; color: #666; margin-left: 40px">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basal 3 Content  -->
+          <div id="content-basal3" class="tab-content" style="display: block">
+            <div class="bg-white px-3 p-4">
+              <div class="text-center mb-4">
+                <div class="d-flex justify-content-center align-items-center">
+                  <span class="badge text-bg-secondary rounded-pill ms-3 mb-3 py-2"
+                    style="font-size: 11px; margin-right: -1rem" data-role="activeBadge">غير نشط</span>
+
+                  <h3 class="mb-1" style="font-size: 33px; color: #000; line-height: 1">
+                    0 وحدة/
+                  </h3>
+                  <div class="h5">يوم</div>
+                </div>
+              </div>
+
+              <!-- Hour Ticks -->
+              <div class="pb-3">
+                <div class="position-relative" style="height: 80px; background-color: #d9e9f6;">
+                  <div>
+                    <img id="chartImage" src="assets/basal-default-chart.jpg" alt="Basal Chart"
+                      style="width: 100%; height: 100%; object-fit: contain;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- Divider -->
+            <div style="height: 1px; background: #e9ecef; margin: 0 16px"></div>
+
+            <!-- Period Table -->
+            <div class="p-3 mt-1  bg-white period-table" style="padding-top: 0 !important;">
+              <!-- Header Row -->
+              <div class="period-table-header d-flex justify-content-around mb-3 ">
+                <div class="me-4" style="font-size: 20px; font-weight: 500">
+                  الفترات
+                </div>
+                <div class="ms-4" style="font-size: 20px; font-weight: 500">
+                  القاعدي (و/س)
+                </div>
+              </div>
+              <!-- Data Row Example -->
+              <div class="d-flex justify-content-between align-items-center">
+                <div style="font-size: 19px; color: #666">00:00 - 24:00</div>
+                <div style="font-size: 24px; color: #666; margin-left: 40px">0</div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+        <!-- Bottom Action -->
+        <div class="mt-4 d-flex justify-content-between align-items-center" style="
+              padding: 20px;
+              background: #fff;
+              position: absolute;
+              width: 480px;
+              bottom: 0;
+            ">
+          <button id="activateBasalBtn" style="
+                display: none;
+                background: none;
+                border: none;
+                color: #1b52a4;
+                font-size: 22px;
+                font-weight: 400;
+                cursor: pointer;
+                padding: 0;
+                transition: color 0.3s, opacity 0.3s;
+              ">
+            تفعيل <span id="activateBasalText"></span>
+          </button>
+          <a href="#" id="settingsLink" class="text-primary" style="
+                color: #1b52a4 !important;
+                font-size: 20px;
+                text-decoration: none;
+                margin-right: auto;
+              ">تغيير الإعدادات</a>
+        </div>
+      </div>
+
+      <!-- Confirmation Modal -->
+      <div id="confirmationModal" class="modal-overlay" style="display: none">
+        <div style="background: #fff; width: 100%; padding: 32px 0 0 0">
+          <div style="
+                text-align: center;
+                font-size: 22px;
+                color: #333;
+                font-weight: 500;
+                margin-bottom: 16px;
+              ">
+            القاعدي
+          </div>
+          <div style="
+                text-align: center;
+                font-size: 20px;
+                color: #666;
+                margin-bottom: 32px;
+              ">
+            تأكيد
+            <span id="modalBasalText" style="color: var(--bs-primary); text-decoration: none">القاعدي2</span>
+            ?
+          </div>
+          <div style="border-top: 1px solid #e5e5e5; display: flex">
+            <button id="modalNoBtn" style="
+                  flex: 1;
+                  border: none;
+                  background: #fff;
+                  color: #1b52a4;
+                  font-size: 20px;
+                  font-weight: 400;
+                  padding: 18px 0;
+                  border-left: 1px solid #e5e5e5;
+                ">
+              لا
+            </button>
+            <button id="modalYesBtn" style="
+                  flex: 1;
+                  border: none;
+                  background: #fff;
+                  color: #1b52a4;
+                  font-size: 20px;
+                  font-weight: 500;
+                  padding: 18px 0;
+                ">
+              نعم
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Basal Settings Screen -->
+    <div id="basalSettingsScreen" class="screen" style="display: none">
+      <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-white border-bottom" style="
+            min-height: 44px;
+            padding-block: 15px !important;
+          ">
+        <span id="backToBasal" class="fw-normal" style="
+              cursor: pointer;
+              z-index: 4444444;
+              font-size: 18px;
+              white-space: nowrap;
+            ">
+          <i class="fa fa-chevron-right fs-5"></i>
+          رجوع</span>
+        <h2 class="fs-5 mb-0 text-dark w-100 text-center" style="margin-right: -70px">
+          إعدادات القاعدي
+        </h2>
+      </div>
+
+      <div id="backConfirmationModal" class="modal-overlay" style="display: none; position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+             background-color: rgba(0,0,0,0.5); z-index: 9999999; 
+             display: flex; justify-content: center; align-items: flex-end;">
+
+        <div class="modal-content-ov" style="background-color: white;  
+               text-align: center; width: 100%; max-width: 480px; 
+               margin: 0 auto;">
+
+          <div class="d-flex modal-header" style="font-size: 25px; justify-content: center; font-weight: bold; 
+                 margin-bottom: 10px; color: #646464; text-align:center;padding: 20px; ">
+            إعدادات القاعدي
+          </div>
+
+          <div class="modal-body" style="font-size: 25px; justify-content: center; margin-bottom: 15px; 
+                 color: #7f7f7f; line-height: 1.4; text-align:center;padding: 20px; ">
+            هل تريد إلغاء برنامج الإنسولين الذي تقوم بتحريره؟
+          </div>
+
+          <div style="height: 1px; background-color: #ddd; "></div>
+
+          <div class="modal-footer-ov" style="display: flex; text-align:center;">
+            <button id="backModalNo" style="background: none; border: none; font-size: 22px; font-weight: 400; 
+                           color: #1b52a4; padding: 20px; flex: 1; cursor: pointer;">
+              لا
+            </button>
+
+            <div style="width: 1px; background-color: #ddd; align-self: stretch;"></div>
+
+            <button id="backModalYes" style="background: none; border: none; font-size: 22px; font-weight: 400; 
+                           color: #1b52a4; padding: 20px; flex: 1; cursor: pointer;">
+              نعم
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+
+
+      <div class="settings-screen">
+        <!-- Profile Name Section -->
+        <div class="settings-card">
+          <div class="settings-row justify-content-start">
+            <span class="settings-label ms-3">الاسم</span>
+            <input type="text" id="profileName" class="settings-value profile-name-input virtual-keyboard-input me-4"
+              value="القاعدي 3" />
+          </div>
+        </div>
+
+        <!-- Daily Insulin Volume Section -->
+        <div class="settings-card">
+          <div class="settings-row" onclick="openDailyVolumePicker()">
+            <span class="settings-label">حجم إعطاء الأنسولين اليومي</span>
+            <span class="settings-detail">
+              <span id="dailyVolume">0</span>وحدة
+              <i class="fa fa-chevron-left chevron-icon"></i>
+            </span>
+          </div>
+        </div>
+        <div class="settings-card">
+          <div class="settings-row" onclick="openPeriodsPicker()">
+            <span class="settings-label">الفترات</span>
+            <span class="settings-detail">
+              <span id="periodsValue">مخصص</span>
+              <i class="fa fa-chevron-left chevron-icon"></i>
+            </span>
+          </div>
+        </div>
+        <div class="p-3 d-flex align-items-center justify-content-between">
+          <span>فترة</span>
+          <!-- <button id="addPeriodBtn" class="btn"
+            style="background: #1b52a4; color: #fff; border-radius: 8px; padding: 6px 12px; font-size: 14px;">إضافة
+            فترة</button> -->
+        </div>
+        <!-- Periods Section -->
+        <div class="periods-card">
+          <!-- Periods List -->
+          <div class="periods-list" id="periodsList">
+            <!-- Dynamic periods will be generated here -->
+          </div>
+        </div>
+
+        <!-- Bottom Buttons -->
+        <div class="bottom-buttons">
+          <div id="cancelSettings" class="text-primary-dark">إلغاء</div>
+          <div id="saveSettings" class="me-auto text-primary-dark">حفظ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Daily Volume Picker Modal -->
+    <div id="dailyVolumeModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title">حجم إعطاء الأنسولين اليومي</h3>
+        <div class="dual-picker-container">
+          <div class="picker-wheel">
+            <div class="picker-list" id="firstPicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+          <div class="picker-dot">•</div>
+          <div class="picker-wheel">
+            <div class="picker-list" id="secondPicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+        </div>
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="hideDailyVolumeModal()">
+            إلغاء
+          </button>
+          <button class="picker-btn" onclick="confirmDailyVolumeSelection()">
+            تأكيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Periods Picker Modal -->
+    <div id="periodsModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title">الفترات</h3>
+        <div class="picker-wheel">
+          <div class="picker-selection-indicator"></div>
+          <div class="picker-list" id="periodsPicker">
+            <!-- Items will be populated dynamically -->
+          </div>
+        </div>
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="hidePeriodsModal()">
+            إلغاء
+          </button>
+          <button class="picker-btn" onclick="confirmPeriodsSelection()">
+            تأكيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Period Edit Screen -->
+    <div id="periodEditScreen" class="screen" style="display: none">
+      <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-white border-bottom" style="
+            min-height: 44px;
+            padding-block: 15px !important;
+          ">
+        <span id="savePeriodEdit" class="fw-normal" style="
+              cursor: pointer;
+              font-size: 18px;
+              position: absolute;
+              left: 20px;
+            ">
+          حفظ</span>
+        <h2 class="fs-5 mb-0 text-dark w-100 text-center">إعدادات القاعدي</h2>
+        <span id="backFromPeriodEdit" class="fw-normal" style="
+              cursor: pointer;
+              font-size: 18px;
+              position: absolute;
+              right: 20px;
+            ">
+          <i class="fa fa-chevron-right"></i>
+          رجوع</span>
+      </div>
+      <div class="content" style="background: #fafafa; flex-grow: 1; padding: 0">
+        <!-- Start Time Section -->
+        <div class="p-3">إعدادات القاعدي المؤقت</div>
+        <div class="blood-sugar-screen p-0 mt-2">
+          <section class="d-flex flex-column align-items-center bg-white py-3" style=" direction: ltr">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3"
+              style="font-family: 'Roboto', sans-serif">
+              <button id="incrementStartTime" class="btn" style="
+                    width: 45px;
+                    height: 45px;
+                    background-color: #2e61ae;
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 25px;
+                    line-height: 1;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  ">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="startTimeValue" style="
+                    font-size: 25px;
+                    font-weight: 500;
+                    position: relative;
+                    margin-inline: 30px;
+                  " onclick="showTimePickerModal('start')">
+                12:00 AM
+              </div>
+              <button id="decrementStartTime" class="btn" style="
+                    width: 45px;
+                    height: 45px;
+                    background-color: #2e61ae;
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 25px;
+                    line-height: 1;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  ">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- End Time Section -->
+        <div class="blood-sugar-screen p-0 mt-0">
+          <section class="d-flex flex-column align-items-center bg-white py-3" style=" direction: ltr">
+            <div class="d-flex align-items-center justify-content-between gap-3 mb-1 w-100 px-3"
+              style="font-family: 'Roboto', sans-serif">
+              <button id="incrementEndTime" class="btn" style="
+                    width: 45px;
+                    height: 45px;
+                    background-color: #2e61ae;
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 25px;
+                    line-height: 1;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  ">
+                <i class="fa fa-plus"></i>
+              </button>
+              <div id="endTimeValue" style="
+                    font-size: 25px;
+                    font-weight: 500;
+                    position: relative;
+                    margin-inline: 30px;
+                  " onclick="showTimePickerModal('end')">
+                12:00 AM
+              </div>
+              <button id="decrementEndTime" class="btn" style="
+                    width: 45px;
+                    height: 45px;
+                    background-color: #2e61ae;
+                    color: white;
+                    border-radius: 10px;
+                    font-size: 25px;
+                    line-height: 1;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  ">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- Basal Rate Section -->
+        <div class="blood-sugar-screen p-0 mt-2">
+          <section class="d-flex flex-column align-items-center bg-white py-3">
+            <div class="d-flex justify-content-between gap-3 mb-1 w-100 px-3 align-items-center">
+              <div class="basal-duration-title mb-0" style="font-size: 20px; width: 50%; text-align: right">
+                القاعدي لهذة الفترة
+              </div>
+              <div class="basal-duration-input-wrapper align-items-center">
+                <input type="text" id="basalRateInput" value="0" readonly class="basal-duration-input" style="
+                      text-align: center;
+                      height: 80px;
+                      width: 140px;
+                      font-size: 25px;
+                      cursor: pointer;
+                    " />
+              </div>
+              <span class="basal-duration-unit">وحدة/ساعة</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center" style="
+              padding: 20px;
+              background: #fff;
+              position: absolute;
+              width: 480px;
+              bottom: 0;
+            ">
+          <div class="d-flex justify-content-between w-100 px-3">
+            <button id="previousPeriodBtn" class="btn" style="
+                  color: #3a3a3a;
+                  border: none;
+                  border-radius: 8px;
+                  padding: 12px 20px;
+                  font-size: 16px;
+                  cursor: pointer;
+                ">
+              الفترة السابقة
+            </button>
+            <button id="nextPeriodBtn" class="btn" style="
+                  color: #3a3a3a;
+                  border: none;
+                  border-radius: 8px;
+                  padding: 12px 20px;
+                  font-size: 16px;
+                  cursor: pointer;
+                ">
+              الفترة التالية
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Basal Rate Picker Modal -->
+    <div id="basalRatePickerModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title">تعيين القاعدي المؤقت</h3>
+        <div class="dual-picker-container">
+          <div class="picker-wheel">
+            <div class="picker-list" id="basalFirstPicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+          <div class="picker-dot">•</div>
+          <div class="picker-wheel">
+            <div class="picker-list" id="basalSecondPicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+        </div>
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="hideBasalRateModal()">
+            إلغاء
+          </button>
+          <button class="picker-btn" onclick="confirmBasalRateSelection()">
+            تأكيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Time Picker Modal -->
+    <div id="timePickerModal" class="modal-overlay">
+      <div class="picker-container">
+        <h3 class="picker-title" id="timePickerTitle">تحديد الوقت</h3>
+        <div class="dual-picker-container" style="direction: ltr">
+          <div class="picker-wheel">
+            <div class="picker-list" id="hourPicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+          <div class="picker-dot">:</div>
+          <div class="picker-wheel">
+            <div class="picker-list" id="minutePicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+          <div class="picker-wheel">
+            <div class="picker-list" id="ampmPicker">
+              <!-- Items will be populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <div class="picker-buttons">
+          <button class="picker-btn border-left-1" onclick="hideTimePickerModal()">
+            إلغاء
+          </button>
+          <button class="picker-btn" onclick="confirmTimeSelection()">
+            تأكيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div id="successPopup" class="success-popup-overlay">
+      <div class="success-popup">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <p class="success-message">تم الحفظ</p>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+    crossorigin="anonymous"></script>
+  <script src="js/control-screen.js"></script>
+
+  <script>
+    function removeAmPm(str) {
+      if (!str) return "";
+      return str.replace(/\s*(AM|PM)\b/gi, "").replace(/\s+/g, " ").trim();
+    }
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-item").forEach((tab) => {
+        tab.classList.remove("text-primary", "active-tab");
+        tab.classList.add("text-black");
+        const underline = tab.querySelector(".tab-underline");
+        if (underline) underline.remove();
+      });
+      document.querySelectorAll(".tab-content").forEach((content) => {
+        content.style.display = "none";
+      });
+      const contentId = "content-" + tabId.replace("tab-", "");
+      const contentElement = document.getElementById(contentId);
+      if (contentElement) contentElement.style.display = "block";
+      const selectedTab = document.getElementById(tabId);
+      if (selectedTab) {
+        selectedTab.classList.remove("text-black");
+        selectedTab.classList.add("text-primary", "active-tab");
+        const underline = document.createElement("span");
+        underline.className = "tab-underline";
+        underline.style.cssText =
+          "display: block; height: 3px; background-color: #1b52a4; margin-top: 2px; width: 100%; margin-left: auto; margin-right: auto;";
+        selectedTab.appendChild(underline);
+        const profileId = selectedTab.id;
+        const profileData = getProfileData(profileId);
+      }
+    }
+    function showBackConfirmationModal() {
+      document.getElementById("backConfirmationModal").style.display = "flex";
+    }
+    function hideBackConfirmationModal() {
+      document.getElementById("backConfirmationModal").style.display = "none";
+    }
+    function closeSettingsScreenWithConfirmation() {
+      hideBackConfirmationModal();
+      closeSettingsScreen();
+    }
+    function loadSavedProfilesFromStorage() {
+      const savedProfileKeys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("profile_tab-")) savedProfileKeys.push(key);
+      }
+
+      savedProfileKeys.sort((a, b) => {
+        const aNum = parseInt(a.match(/basal(\d+)/)?.[1] || "0");
+        const bNum = parseInt(b.match(/basal(\d+)/)?.[1] || "0");
+        return aNum - bNum;
+      });
+
+      savedProfileKeys.forEach((key) => {
+        const profileId = key.replace("profile_", "");
+        const profileData = getProfileData(profileId);
+        if (!document.getElementById(profileId)) {
+          createProfileTabAndContent(profileId, profileData);
+        }
+      });
+      refreshAllCharts();
+    }
+
+    function createProfileTabAndContent(profileId, profileData) {
+      const contentId = profileId.replace("tab-", "");
+      const tabContainer = document.querySelector('.d-flex[style*="overflow-x: auto"]');
+
+      const newTab = document.createElement("span");
+      newTab.id = profileId;
+      newTab.className = "me-3 text-black tab-item";
+      newTab.style.cssText = "cursor: pointer; user-select: none";
+      newTab.textContent = profileData.name || "الأنسولين القاعدي";
+      newTab.addEventListener("click", function () {
+        switchTab(this.id);
+        updateActivateButton();
+      });
+
+      const schoolTab = document.getElementById("tab-school");
+      if (schoolTab && schoolTab.parentNode === tabContainer) tabContainer.insertBefore(newTab, schoolTab);
+      else tabContainer.appendChild(newTab);
+
+      const tabContentContainer = document.getElementById("tab-content");
+      const newContent = document.createElement("div");
+      newContent.id = "content-" + profileId.replace("tab-", "");
+      newContent.className = "tab-content";
+      newContent.style.display = "none";
+
+      const templateContent = document.getElementById("content-basal1");
+      if (templateContent) newContent.innerHTML = templateContent.innerHTML;
+
+      const dynCanvas = newContent.querySelector("canvas");
+      if (dynCanvas) {
+        dynCanvas.id = profileId.replace("tab-", "basalChart");
+      }
+
+      const dynImg = newContent.querySelector('img#chartImage');
+      if (dynImg) {
+        const shortId = profileId.replace('tab-', '');
+        dynImg.id = `chartImage-${shortId}`;
+        dynImg.classList.add('chartImage');
+        dynImg.dataset.profile = profileId;
+
+        if (profileData.chartImage) {
+          dynImg.src = profileData.chartImage;
+        }
+      }
+
+      const schoolContent = document.getElementById("content-school");
+      if (schoolContent && schoolContent.parentNode === tabContentContainer) tabContentContainer.insertBefore(newContent, schoolContent);
+      else tabContentContainer.appendChild(newContent);
+
+      updateChartImage(profileData.periodsConfig, profileId);
+
+      updateMainScreenData(profileId, profileData);
+      setProfileBadgeActive(profileId, false);
+    }
+
+    function updateChartImage(periodsConfig, profileId) {
+      if (!profileId) {
+        const currentActiveTab = document.querySelector('.tab-item.active-tab');
+        if (!currentActiveTab) return;
+        profileId = currentActiveTab.id;
+      }
+
+      const contentId = profileId.replace('tab-', 'content-');
+      const contentEl = document.getElementById(contentId);
+      if (!contentEl) return;
+
+      const img = contentEl.querySelector('.chartImage') || contentEl.querySelector('img');
+      if (!img) return;
+
+      const profileData = getProfileData(profileId);
+
+      if (profileData.chartImage) {
+        img.src = profileData.chartImage;
+        return;
+      }
+
+      let src = "assets/basal-default-chart.jpg";
+      const cfg = periodsConfig || profileData.periodsConfig || "";
+      if (cfg === "مخصص") src = "assets/basal-chart.png";
+      else if (cfg === "٦ فترات") src = "assets/basal-6periods-chart.jpg";
+      else if (cfg === "٢٤ فترة") src = "assets/basal-24periods-chart.jpg";
+
+      img.src = src;
+      profileData.chartImage = src;
+
+      try {
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+      } catch (e) { }
+    }
+
+    function refreshAllProfilesData() {
+      const allProfileIds = getAllProfileIds();
+      allProfileIds.forEach((profileId) => {
+        const profileData = getProfileData(profileId);
+        updateMainScreenData(profileId, profileData);
+        updateTabName(profileId, profileData.name);
+      });
+    }
+    function getAllProfileIds() {
+      const profileTabs = document.querySelectorAll('.tab-item[id^="tab-"]');
+      return Array.from(profileTabs).map(tab => tab.id);
+    }
+    function addNewProfile() {
+      const existingProfiles = getAllProfileIds();
+      const basalProfiles = existingProfiles.filter((id) => id.startsWith("tab-basal"));
+      let nextNumber = 1;
+      while (basalProfiles.includes(`tab-basal${nextNumber}`)) nextNumber++;
+      const newProfileId = `tab-basal${nextNumber}`;
+      const newContentId = `content-basal${nextNumber}`;
+      const newProfileName = ` القاعدي ${nextNumber}`;
+      const tabContainer = document.querySelector('.d-flex[style*="overflow-x: auto"]');
+      const newTab = document.createElement("span");
+      newTab.id = newProfileId;
+      newTab.className = "me-3 text-black tab-item";
+      newTab.style.cssText = "cursor: pointer; user-select: none";
+      newTab.textContent = newProfileName;
+      newTab.addEventListener("click", function () {
+        switchTab(this.id);
+        updateActivateButton();
+      });
+      const schoolTab = document.getElementById("tab-school");
+      if (schoolTab && schoolTab.parentNode === tabContainer) tabContainer.insertBefore(newTab, schoolTab);
+      else tabContainer.appendChild(newTab);
+      const tabContentContainer = document.getElementById("tab-content");
+      const newContent = document.createElement("div");
+      newContent.id = newContentId;
+      newContent.className = "tab-content";
+      newContent.style.display = "none";
+      const templateContent = document.getElementById("content-basal1");
+      if (templateContent) newContent.innerHTML = templateContent.innerHTML;
+      const dynCanvas = newContent.querySelector("canvas");
+      if (dynCanvas) {
+        dynCanvas.id = newProfileId.replace("tab-", "basalChart");
+      }
+      const volumeElement = newContent.querySelector("h3");
+      if (volumeElement) volumeElement.innerHTML = "24 وحدة/";
+      const dynImg = newContent.querySelector('img#chartImage');
+      if (dynImg) {
+        const shortId = newProfileId.replace('tab-', '');
+        dynImg.id = `chartImage-${shortId}`;
+        dynImg.classList.add('chartImage');
+        dynImg.dataset.profile = newProfileId;
+      }
+      const schoolContent = document.getElementById("content-school");
+      if (schoolContent && schoolContent.parentNode === tabContentContainer) tabContentContainer.insertBefore(newContent, schoolContent);
+      else tabContentContainer.appendChild(newContent);
+      const defaultProfileData = {
+        name: newProfileName,
+        dailyVolume: "0",
+        basalRate: "1",
+        periods: [
+          { time: "12:00- 04:00 ", rate: "1.0" },
+          { time: "04:00 - 08:00", rate: "1.2" },
+          { time: "08:00 - 12:00", rate: "1.4" },
+          { time: "12:00 - 04:00", rate: "1.1" },
+          { time: "04:00 - 08:00", rate: "0.9" },
+          { time: "08:00 - 12:00", rate: "0.8" }
+        ],
+        periodsConfig: "مخصص",
+      };
+      localStorage.setItem(`profile_${newProfileId}`, JSON.stringify(defaultProfileData));
+      updateMainScreenData(newProfileId, defaultProfileData);
+      refreshAllProfilesData();
+      switchTab(newProfileId);
+      updateActivateButton();
+      setProfileBadgeActive(newProfileId, false);
+      setTimeout(() => {
+        openSettingsScreen();
+        loadSettingsData();
+      }, 500);
+    }
+    function updateTabName(profileId, newName) {
+      const tabElement = document.getElementById(profileId);
+      if (tabElement) {
+        const underline = tabElement.querySelector(".tab-underline");
+        tabElement.textContent = newName;
+        if (underline) tabElement.appendChild(underline);
+      }
+    }
+    function openSettingsScreen() {
+      document.getElementById("basalScreen").style.display = "none";
+      document.getElementById("basalSettingsScreen").style.display = "block";
+      loadSettingsData();
+    }
+    function closeSettingsScreen() {
+      document.getElementById("basalSettingsScreen").style.display = "none";
+      document.getElementById("basalScreen").style.display = "block";
+    }
+    function refreshAllCharts() {
+      const allProfileIds = getAllProfileIds();
+      allProfileIds.forEach((profileId) => {
+        const profileData = getProfileData(profileId);
+        updateChartImage(profileData.periodsConfig, profileId);
+      });
+    }
+
+    function loadSettingsData() {
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (!currentActiveTab) return;
+      const profileId = currentActiveTab.id;
+      const profileData = getProfileData(profileId);
+      document.getElementById("profileName").value = profileData.name || "";
+      if (!profileData.periodsConfig || profileData.periodsConfig === "افتراضي") {
+        document.getElementById("dailyVolume").textContent = "0";
+        document.getElementById("periodsValue").textContent = "افتراضي";
+      } else if (profileData.periodsConfig === "مخصص") {
+        document.getElementById("dailyVolume").textContent = "10.2";
+
+        document.getElementById("periodsValue").textContent = "مخصص";
+      } else if (profileData.periodsConfig === "٦ فترات") {
+        document.getElementById("dailyVolume").textContent = "10.275";
+        document.getElementById("periodsValue").textContent = "٦ فترات";
+      } else if (profileData.periodsConfig === "٢٤ فترة") {
+        document.getElementById("dailyVolume").textContent = "10.325";
+        document.getElementById("periodsValue").textContent = "٢٤ فترة";
+      } else {
+        document.getElementById("dailyVolume").textContent = profileData.dailyVolume || "0";
+        document.getElementById("periodsValue").textContent = profileData.periodsConfig || "مخصص";
+      }
+      generatePeriodItems(profileData.periods || []);
+      const addBtn = document.getElementById("addPeriodBtn");
+      if (addBtn) {
+        addBtn.onclick = function () {
+          const currentActiveTab = document.querySelector(".tab-item.active-tab");
+          if (!currentActiveTab) return;
+          const profileId = currentActiveTab.id;
+          const profileData = getProfileData(profileId);
+          profileData.periods = profileData.periods || [];
+          profileData.periods.push({ time: "12:00 - 12:00", rate: "1" });
+          localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+          generatePeriodItems(profileData.periods);
+          updateMainScreenData(profileId, profileData);
+        };
+      }
+    }
+    function generatePeriodItems(periods) {
+      const periodsList = document.getElementById("periodsList");
+      periodsList.innerHTML = "";
+      periods.forEach((period, index) => {
+        const displayTime = removeAmPm(period.time || "12:00 - 12:00");
+        const periodItem = document.createElement("div");
+        periodItem.className = "period-item";
+        periodItem.innerHTML = `
+                <div style="font-size: 17px; color: #000; display:inline-flex; align-items:center; gap:15px; direction: rtl;">
+                  <span>فترة${index + 1}</span>
+                  <span>:</span>
+                </div>
+                <div class="mt-2 d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="period-time" style="font-size: 20px;">${displayTime}</div>
+                    <div class="period-value"style="font-size: 18px;">القاعدي: ${period.rate || "1"} و/س</div>
+                  </div>
+                  <div class="period-actions">
+                    <button class="edit-insulin-sensitivity-btn border-0 bg-transparent ms-3" title="تعديل" onclick="editPeriod(${index})"></button>
+                    <button class="delete-insulin-sensitivity-btn border-0 bg-transparent ms-3" title="حذف" onclick="deletePeriod(${index})"></button>
+
+                  </div>
+                </div>
+              `;
+        periodsList.appendChild(periodItem);
+      });
+    }
+    function getProfileData(profileId) {
+      const defaultData = {
+        "tab-basal1": {
+          name: " القاعدي 1", dailyVolume: "0", basalRate: "0", periods: [
+            { time: "00:00 - 24:00", rate: "0" },
+          ]
+        },
+        "tab-basal2": {
+          name: " القاعدي 2", dailyVolume: "0", basalRate: "0", periods: [
+          { time: "00:00 - 24:00", rate: "0" },
+          ]
+        },
+        "tab-basal3": {
+          name: " القاعدي 3", dailyVolume: "0", basalRate: "0", periods: [
+          { time: "00:00 - 24:00", rate: "0" },
+          ]
+        },
+      };
+      const savedData = localStorage.getItem(`profile_${profileId}`);
+      const parsed = savedData ? JSON.parse(savedData) : null;
+      if (parsed && Array.isArray(parsed.periods)) {
+        return parsed;
+      }
+
+      return defaultData[profileId] || { name: "الأنسولين القاعدي", dailyVolume: "0", basalRate: "0", periods: [{ time: "12:00 - 12:00", rate: "1" }], periodsConfig: "افتراضي" };
+    }
+    function saveSettingsData() {
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (!currentActiveTab) return;
+
+      const profileId = currentActiveTab.id;
+      const periodItems = document.querySelectorAll(".period-item");
+
+      const periods = Array.from(periodItems).map(item => {
+        const time = item.querySelector(".period-time")?.textContent || "";
+        const rateMatch = item.querySelector(".period-value")?.textContent.match(/القاعدي:\s*([\d.]+)\s*و\/س/);
+        return { time: removeAmPm(time), rate: rateMatch ? rateMatch[1] : "0" };
+      });
+
+      const profileData = {
+        name: document.getElementById("profileName").value,
+        dailyVolume: document.getElementById("dailyVolume").textContent,
+        basalRate: periods.length > 0 ? periods[0].rate : "0",
+        periods: periods,
+        periodsConfig: document.getElementById("periodsValue").textContent
+      };
+
+      localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+      updateChartImage(profileData.periodsConfig, profileId);
+
+      updateMainScreenData(profileId, profileData);
+      refreshAllProfilesData();
+      refreshAllCharts();
+
+      const payload = {
+        profileId: profileId,
+        name: profileData.name,
+        periodsConfig: profileData.periodsConfig || "افتراضي"
+      };
+      const isActive = localStorage.getItem("buttonsActive") === "true";
+      if (isActive) {
+        localStorage.setItem('suspendChartData', JSON.stringify(payload));
+      }
+
+    }
+
+    const firstValues = Array.from({ length: 145 }, (_, i) => i);
+    const secondValues = Array.from({ length: 16 }, (_, i) => 600 + i * 25);
+    let selectedFirstValue = 0;
+    let selectedSecondValue = 600;
+    function openDailyVolumePicker() {
+      document.getElementById("dailyVolumeModal").classList.add("active");
+      selectedFirstValue = 10;
+      selectedSecondValue = 10;
+      document.getElementById("dailyVolume").textContent = "10";
+      initDualDailyVolumePicker();
+      updatePickerPosition("firstPicker", firstValues, selectedFirstValue);
+      updatePickerPosition("secondPicker", secondValues, selectedSecondValue);
+    }
+    function hideDailyVolumeModal() {
+      document.getElementById("dailyVolumeModal").classList.remove("active");
+    }
+    function initDualDailyVolumePicker() {
+      initSinglePicker("firstPicker", firstValues, selectedFirstValue);
+      initSinglePicker("secondPicker", secondValues, selectedSecondValue);
+    }
+    function initSinglePicker(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      const totalItems = values.length * 3;
+      picker.innerHTML = "";
+      for (let i = 0; i < totalItems; i++) {
+        const item = document.createElement("div");
+        item.className = "picker-item";
+        item.textContent = values[i % values.length];
+        item.dataset.value = values[i % values.length];
+        picker.appendChild(item);
+      }
+      const selectedIndex = values.indexOf(selectedValue);
+      const centerIndex = values.length + selectedIndex;
+      const topPosition = -(centerIndex * itemHeight) + 210 / 2 - itemHeight / 2;
+      picker.style.top = topPosition + "px";
+      updateSinglePickerSelection(pickerId, values);
+      setupSinglePickerInteraction(pickerId, values);
+    }
+    function setupSinglePickerInteraction(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      let startY = 0;
+      let startTop = 0;
+      let isDragging = false;
+      if (picker.boundDrag) {
+        document.removeEventListener("mousemove", picker.boundDrag);
+        document.removeEventListener("touchmove", picker.boundDrag);
+      }
+      if (picker.boundEndDrag) {
+        document.removeEventListener("mouseup", picker.boundEndDrag);
+        document.removeEventListener("touchend", picker.boundEndDrag);
+      }
+      picker.addEventListener("mousedown", startDrag);
+      picker.addEventListener("touchstart", startDrag);
+      function startDrag(e) {
+        isDragging = true;
+        startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+        startTop = parseInt(picker.style.top) || 0;
+        picker.style.transition = "none";
+        e.preventDefault();
+      }
+      function drag(e) {
+        if (!isDragging) return;
+        const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+        const deltaY = currentY - startY;
+        const newTop = startTop + deltaY;
+        picker.style.top = newTop + "px";
+        updateSinglePickerSelection(pickerId, values);
+      }
+      function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        snapToNearestItem();
+      }
+      function snapToNearestItem() {
+        picker.style.transition = "top 0.2s ease-out";
+        const currentTop = parseInt(picker.style.top) || 0;
+        const centerY = 105;
+        const selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+        const snappedTop = -(selectedIndex * itemHeight) + centerY - itemHeight / 2;
+        picker.style.top = snappedTop + "px";
+        setTimeout(() => {
+          updateSinglePickerSelection(pickerId, values);
+          picker.style.transition = "none";
+        }, 200);
+      }
+      const boundDrag = drag;
+      const boundEndDrag = endDrag;
+      picker.boundDrag = boundDrag;
+      picker.boundEndDrag = boundEndDrag;
+      document.addEventListener("mousemove", boundDrag);
+      document.addEventListener("touchmove", boundDrag);
+      document.addEventListener("mouseup", boundEndDrag);
+      document.addEventListener("touchend", boundEndDrag);
+    }
+    function updateSinglePickerSelection(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const items = picker.querySelectorAll(".picker-item");
+      const currentTop = parseInt(picker.style.top) || 0;
+      const centerY = 105;
+      const selectedIndex = Math.round((centerY - currentTop) / 40);
+      items.forEach((item, index) => {
+        item.classList.remove("selected");
+        if (index + 1 === selectedIndex) {
+          item.classList.add("selected");
+          const value = parseInt(item.dataset.value);
+          if (pickerId === "firstPicker") {
+            selectedFirstValue = value;
+          } else if (pickerId === "secondPicker") {
+            selectedSecondValue = value;
+          }
+        }
+      });
+    }
+    function updatePickerPosition(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const valueIndex = values.indexOf(selectedValue);
+      if (valueIndex !== -1) {
+        const centerIndex = values.length + valueIndex;
+        const topPosition = -(centerIndex * 40) + 105 - 20;
+        picker.style.top = topPosition + "px";
+        updateSinglePickerSelection(pickerId, values);
+      }
+    }
+    function confirmDailyVolumeSelection() {
+      const combinedValue = "10.2";
+      document.getElementById("dailyVolume").textContent = combinedValue;
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (currentActiveTab) {
+        const profileId = currentActiveTab.id;
+        const profileData = getProfileData(profileId);
+        profileData.dailyVolume = combinedValue;
+        profileData.periods = [{ time: "24:00 - 00:00", rate: "0.425" }];
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+        updateChartImage(profileData.periodsConfig, profileId);
+        generatePeriodItems(profileData.periods);
+      }
+      hideDailyVolumeModal();
+    }
+    const periodsValues = ["٢٤ فترة", "مخصص", "٦ فترات"];
+    let selectedPeriodsValue = "مخصص";
+    function openPeriodsPicker() {
+      document.getElementById("periodsModal").classList.add("active");
+      const currentValue = document.getElementById("periodsValue").textContent;
+      selectedPeriodsValue = periodsValues.includes(currentValue) ? currentValue : "مخصص";
+      initPeriodsPicker();
+    }
+    function hidePeriodsModal() {
+      document.getElementById("periodsModal").classList.remove("active");
+    }
+    function initPeriodsPicker() {
+      const picker = document.getElementById("periodsPicker");
+      const itemHeight = 40;
+      const infiniteValues = [];
+      for (let i = 0; i < 10; i++) infiniteValues.push(...periodsValues);
+      picker.innerHTML = "";
+      infiniteValues.forEach((value, index) => {
+        const item = document.createElement("div");
+        item.className = "picker-item";
+        item.textContent = value;
+        item.dataset.value = value;
+        item.dataset.index = index;
+        picker.appendChild(item);
+      });
+      const targetIndex = periodsValues.indexOf(selectedPeriodsValue);
+      const centerIndex = periodsValues.length * 5 + (targetIndex >= 0 ? targetIndex : 1);
+      picker.scrollTop = centerIndex * itemHeight;
+      updatePeriodsPickerSelection(picker);
+      setupPeriodsPickerInteraction(picker);
+    }
+    function setupPeriodsPickerInteraction(picker) {
+      let scrollTimeout, startY = 0, lastY = 0, isDragging = false;
+      picker.addEventListener("scroll", () => {
+        updatePeriodsPickerSelection(picker);
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => snapToNearestPeriodsItem(picker), 100);
+      });
+      picker.addEventListener("touchstart", e => { startY = lastY = e.touches[0].clientY; picker.style.scrollBehavior = "auto"; });
+      picker.addEventListener("touchmove", e => { e.preventDefault(); const currentY = e.touches[0].clientY; picker.scrollTop += lastY - currentY; lastY = currentY; });
+      picker.addEventListener("touchend", () => { picker.style.scrollBehavior = "smooth"; snapToNearestPeriodsItem(picker); });
+      picker.addEventListener("mousedown", e => { isDragging = true; startY = e.clientY; picker.style.scrollBehavior = "auto"; e.preventDefault(); });
+      document.addEventListener("mousemove", e => { if (!isDragging) return; picker.scrollTop += startY - e.clientY; startY = e.clientY; });
+      document.addEventListener("mouseup", () => { if (isDragging) { isDragging = false; picker.style.scrollBehavior = "smooth"; snapToNearestPeriodsItem(picker); } });
+    }
+    function updatePeriodsPickerSelection(picker) {
+      const items = picker.querySelectorAll(".picker-item");
+      const itemHeight = 40;
+      const pickerCenter = picker.scrollTop + 60;
+      let closestItem = null, closestDistance = Infinity;
+      items.forEach(item => {
+        const itemCenter = item.offsetTop + itemHeight / 2;
+        const distance = Math.abs(pickerCenter - itemCenter);
+        if (distance < closestDistance) { closestDistance = distance; closestItem = item; }
+        item.classList.remove("selected");
+      });
+      if (closestItem) { closestItem.classList.add("selected"); selectedPeriodsValue = closestItem.dataset.value; }
+    }
+    function snapToNearestPeriodsItem(picker) {
+      const itemHeight = 40;
+      const pickerCenter = picker.scrollTop + 60;
+      const nearestIndex = Math.round((pickerCenter - itemHeight / 2) / itemHeight);
+      const targetScrollTop = nearestIndex * itemHeight - 60 + itemHeight / 2;
+      picker.scrollTop = targetScrollTop;
+      const totalSets = 10, valuesPerSet = periodsValues.length;
+      const currentSet = Math.floor(nearestIndex / valuesPerSet);
+      if (currentSet < 2) { const middleIndex = nearestIndex + valuesPerSet * 4; picker.scrollTop = middleIndex * itemHeight - 60 + itemHeight / 2; }
+      else if (currentSet >= totalSets - 2) { const middleIndex = nearestIndex - valuesPerSet * 4; picker.scrollTop = middleIndex * itemHeight - 60 + itemHeight / 2; }
+      updatePeriodsPickerSelection(picker);
+    }
+    function confirmPeriodsSelection() {
+      document.getElementById("periodsValue").textContent = selectedPeriodsValue;
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (currentActiveTab) {
+        const profileId = currentActiveTab.id;
+        const profileData = getProfileData(profileId);
+        if (selectedPeriodsValue === "مخصص") {
+          profileData.periodsConfig = "مخصص";
+          profileData.dailyVolume = "10.2";
+          profileData.periods = [{ time: "24:00 - 00:00", rate: "0.425" }];
+        } else if (selectedPeriodsValue === "٦ فترات") {
+          profileData.dailyVolume = "10.275";
+          profileData.periods = [
+            { time: "00:00 - 03:00", rate: "0.3" },
+            { time: "03:00 - 09:00", rate: "0.55" },
+            { time: "09:00 - 12:00", rate: "0.425" },
+            { time: "12:00 - 16:00", rate: "0.375" },
+            { time: "16:00 - 20:00", rate: "0.475" },
+            { time: "20:00 - 24:00", rate: "0.35" }
+          ];
+          profileData.periodsConfig = "٦ فترات";
+        } else if (selectedPeriodsValue === "٢٤ فترة") {
+          profileData.dailyVolume = "10.325";
+          profileData.periods = [
+          { time: "00:00 - 01:00", rate: "0.30" },
+          { time: "01:00 - 02:00", rate: "0.32" },
+          { time: "02:00 - 03:00", rate: "0.34" },
+          { time: "03:00 - 04:00", rate: "0.36" },
+          { time: "04:00 - 05:00", rate: "0.38" },
+          { time: "05:00 - 06:00", rate: "0.40" },
+          { time: "06:00 - 07:00", rate: "0.42" },
+          { time: "07:00 - 08:00", rate: "0.44" },
+          { time: "08:00 - 09:00", rate: "0.46" },
+          { time: "09:00 - 10:00", rate: "0.48" },
+          { time: "10:00 - 15:00", rate: "0.35" },
+          { time: "15:00 - 16:00", rate: "0.50" },
+          { time: "16:00 - 17:00", rate: "0.52" },
+          { time: "17:00 - 18:00", rate: "0.54" },
+          { time: "18:00 - 19:00", rate: "0.56" },
+          { time: "19:00 - 20:00", rate: "0.58" },
+          { time: "20:00 - 21:00", rate: "0.60" },
+          { time: "21:00 - 22:00", rate: "0.62" },
+          { time: "22:00 - 23:00", rate: "0.64" },
+          { time: "23:00 - 24:00", rate: "0.66" },
+          { time: "10:00 - 15:00", rate: "0.35"},
+          { time: "15:00 - 16:00", rate: "0.50"},
+          { time: "16:00 - 17:00", rate: "0.52"},
+          { time: "17:00 - 18:00", rate: "0.54"},
+        ];
+        profileData.periodsConfig = "٢٤ فترة";
+          const targetPeriodIndex = 10;
+          if (profileData.periods[targetPeriodIndex]) {
+            profileData.periods[targetPeriodIndex].rate = "0.35";
+          }
+          profileData.periodsConfig = "٢٤ فترة";
+        } else {
+          const num = parseInt(selectedPeriodsValue, 10);
+          if (!isNaN(num) && num > 0) {
+            profileData.periods = generateDefaultPeriodsForCount(num, profileData.basalRate || "1");
+            profileData.periodsConfig = selectedPeriodsValue;
+          }
+        }
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+        generatePeriodItems(profileData.periods || []);
+        updateMainScreenData(profileId, profileData);
+        refreshAllProfilesData();
+        document.getElementById("dailyVolume").textContent = profileData.dailyVolume;
+        updateChartImage(profileData.periodsConfig, profileId);
+      }
+      hidePeriodsModal();
+    }
+    function editPeriod(index) { currentEditingPeriodIndex = index; openPeriodEditScreen(index); }
+    let currentEditingPeriodIndex = 0;
+    function openPeriodEditScreen(periodIndex) {
+      document.getElementById("basalSettingsScreen").style.display = "none";
+      document.getElementById("periodEditScreen").style.display = "block";
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (!currentActiveTab) return;
+      const profileId = currentActiveTab.id;
+      const profileData = getProfileData(profileId);
+      if (profileData.periods && profileData.periods[periodIndex]) {
+        const period = profileData.periods[periodIndex];
+        const times = parseTimeRange(period.time);
+        document.getElementById("startTimeValue").textContent = convertTo12Hour(times.start);
+        document.getElementById("endTimeValue").textContent = convertTo12Hour(times.end);
+        document.getElementById("basalRateInput").value = period.rate;
+      }
+      updatePeriodNavigationButtons(periodIndex, profileData.periods.length);
+    }
+    function parseTimeRange(timeRange) {
+      const parts = timeRange.split(" - ");
+      if (parts.length !== 2) return { start: "00:00", end: "23:59" };
+      return { start: convertTo24Hour(parts[0].trim()), end: convertTo24Hour(parts[1].trim()) };
+    }
+    function convertTo24Hour(timeStr) {
+      const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+      if (!match) {
+        const m2 = timeStr.match(/(\d{1,2}):(\d{2})/);
+        if (m2) {
+          const hh = parseInt(m2[1], 10).toString().padStart(2, '0');
+          const mm = m2[2];
+          return `${hh}:${mm}`;
+        }
+        return timeStr;
+      }
+      let hours = parseInt(match[1]), minutes = match[2], ampm = match[3].toUpperCase();
+      if (ampm === "AM" && hours === 12) hours = 0;
+      else if (ampm === "PM" && hours !== 12) hours += 12;
+      return `${hours.toString().padStart(2, "0")}:${minutes}`;
+    }
+    function convertTo12Hour(timeStr) {
+      const [hours, minutes] = timeStr.split(":");
+      const hour24 = parseInt(hours);
+      if (isNaN(hour24)) return timeStr;
+      if (hour24 === 0) return `12:${minutes} `;
+      else if (hour24 < 12) return `${hour24}:${minutes} `;
+      else if (hour24 === 12) return `12:${minutes}`;
+      else return `${hour24 - 12}:${minutes}`;
+    }
+    function updatePeriodNavigationButtons(currentIndex, totalPeriods) {
+      const prevBtn = document.getElementById("previousPeriodBtn");
+      const nextBtn = document.getElementById("nextPeriodBtn");
+      if (currentIndex === 0) { prevBtn.disabled = true; prevBtn.style.opacity = "0.5"; }
+      else { prevBtn.disabled = false; prevBtn.style.opacity = "1"; }
+      if (currentIndex === totalPeriods - 1) { nextBtn.disabled = true; nextBtn.style.opacity = "0.5"; }
+      else { nextBtn.disabled = false; nextBtn.style.opacity = "1"; }
+    }
+    function closePeriodEditScreen() {
+      document.getElementById("periodEditScreen").style.display = "none";
+      document.getElementById("basalSettingsScreen").style.display = "block";
+    }
+    function showSuccessPopup() {
+      document.getElementById("successPopup").classList.add("active");
+      setTimeout(() => hideSuccessPopup(), 2000);
+    }
+    function hideSuccessPopup() { document.getElementById("successPopup").classList.remove("active"); }
+    function savePeriodEdit() {
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (!currentActiveTab) return;
+      const profileId = currentActiveTab.id;
+      const profileData = getProfileData(profileId);
+      if (profileData.periods && profileData.periods[currentEditingPeriodIndex]) {
+        const startTimeRaw = document.getElementById("startTimeValue").textContent;
+        const endTimeRaw = document.getElementById("endTimeValue").textContent;
+        const startTime = removeAmPm(startTimeRaw);
+        const endTime = removeAmPm(endTimeRaw);
+        const basalRate = document.getElementById("basalRateInput").value;
+        profileData.periods[currentEditingPeriodIndex] = { time: `${startTime} - ${endTime}`, rate: basalRate };
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+        updateMainScreenData(profileId, profileData);
+        generatePeriodItems(profileData.periods);
+        showSuccessPopup();
+      }
+    }
+    function incrementTime(timeElementId) {
+      const timeElement = document.getElementById(timeElementId);
+      const currentTime = timeElement.textContent;
+      const timeParts = currentTime.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+      if (!timeParts) return;
+      let hours = parseInt(timeParts[1]);
+      let minutes = parseInt(timeParts[2]);
+      let ampm = timeParts[3];
+      minutes += 1;
+      if (minutes >= 60) {
+        minutes = 0;
+        hours += 1;
+        if (hours > 12) {
+          hours = 1;
+        } else if (hours === 12) {
+          ampm = ampm === "AM" ? "PM" : "AM";
+        }
+      }
+      const newTimeString = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+      timeElement.textContent = newTimeString;
+    }
+    function decrementTime(timeElementId) {
+      const timeElement = document.getElementById(timeElementId);
+      const currentTime = timeElement.textContent;
+      const timeParts = currentTime.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+      if (!timeParts) return;
+      let hours = parseInt(timeParts[1]);
+      let minutes = parseInt(timeParts[2]);
+      let ampm = timeParts[3];
+      minutes -= 1;
+      if (minutes < 0) {
+        minutes = 59;
+        hours -= 1;
+        if (hours < 1) {
+          hours = 12;
+        } else if (hours === 11 && ampm === "AM") {
+          ampm = "PM";
+        } else if (hours === 11 && ampm === "PM") {
+          ampm = "AM";
+        }
+      }
+      const newTimeString = `${hours}:${minutes.toString().padStart(2, "0")} ${ampm}`;
+      timeElement.textContent = newTimeString;
+    }
+    const basalFirstValues = [0, 1, 2, 3, 4, 5, 6];
+    const basalSecondValues = Array.from({ length: 40 }, (_, i) => {
+      if (i == 0) return "000";
+      return i * 25 < 100 ? "0" + (0 + i * 25) : 0 + i * 25;
+    });
+    let selectedBasalFirstValue = 0;
+    let selectedBasalSecondValue = 550;
+    function showBasalRateModal() {
+      document.getElementById("basalRatePickerModal").classList.add("active");
+      const currentValue = document.getElementById("basalRateInput").value;
+      if (currentValue && currentValue !== "0") {
+        if (currentValue.includes(".")) {
+          const parts = currentValue.split(".");
+          selectedBasalFirstValue = parseInt(parts[0]) || 0;
+          selectedBasalSecondValue = parseInt(parts[1]) || 550;
+        } else {
+          const numValue = parseInt(currentValue);
+          if (numValue >= 100) {
+            selectedBasalFirstValue = Math.floor(numValue / 1000);
+            selectedBasalSecondValue = numValue % 1000;
+          } else {
+            selectedBasalFirstValue = 0;
+            selectedBasalSecondValue = numValue;
+          }
+        }
+      }
+      initBasalRatePicker();
+      updateBasalPickerPosition("basalFirstPicker", basalFirstValues, selectedBasalFirstValue);
+      updateBasalPickerPosition("basalSecondPicker", basalSecondValues, selectedBasalSecondValue);
+    }
+    function initBasalRatePicker() {
+      initBasalSinglePicker("basalFirstPicker", basalFirstValues, selectedBasalFirstValue);
+      initBasalSinglePicker("basalSecondPicker", basalSecondValues, selectedBasalSecondValue);
+    }
+    function initBasalSinglePicker(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      const totalItems = values.length * 3;
+      picker.innerHTML = "";
+      for (let i = 0; i < totalItems; i++) {
+        const item = document.createElement("div");
+        item.className = "picker-item";
+        item.textContent = values[i % values.length];
+        item.dataset.value = values[i % values.length];
+        picker.appendChild(item);
+      }
+      const selectedIndex = values.indexOf(selectedValue);
+      const centerIndex = values.length + selectedIndex;
+      const topPosition = -(centerIndex * itemHeight) + 210 / 2 - itemHeight / 2;
+      picker.style.top = topPosition + "px";
+      updateBasalPickerSelection(pickerId, values);
+      setupBasalPickerInteraction(pickerId, values);
+    }
+    function setupBasalPickerInteraction(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      let startY = 0;
+      let startTop = 0;
+      let isDragging = false;
+      if (picker.boundBasalDrag) {
+        document.removeEventListener("mousemove", picker.boundBasalDrag);
+        document.removeEventListener("touchmove", picker.boundBasalDrag);
+      }
+      if (picker.boundBasalEndDrag) {
+        document.removeEventListener("mouseup", picker.boundBasalEndDrag);
+        document.removeEventListener("touchend", picker.boundBasalEndDrag);
+      }
+      picker.addEventListener("mousedown", startDrag);
+      picker.addEventListener("touchstart", startDrag);
+      function startDrag(e) {
+        isDragging = true;
+        startY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+        startTop = parseInt(picker.style.top) || 0;
+        picker.style.transition = "none";
+        e.preventDefault();
+      }
+      function drag(e) {
+        if (!isDragging) return;
+        const currentY = e.type.includes("mouse") ? e.clientY : e.touches[0].clientY;
+        const deltaY = currentY - startY;
+        const newTop = startTop + deltaY;
+        picker.style.top = newTop + "px";
+        updateBasalPickerSelection(pickerId, values);
+      }
+      function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        snapToNearestBasalItem();
+      }
+      function snapToNearestBasalItem() {
+        picker.style.transition = "top 0.2s ease-out";
+        const currentTop = parseInt(picker.style.top) || 0;
+        const centerY = 105;
+        const selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+        const snappedTop = -(selectedIndex * itemHeight) + centerY - itemHeight / 2;
+        picker.style.top = snappedTop + "px";
+        setTimeout(() => {
+          updateBasalPickerSelection(pickerId, values);
+          picker.style.transition = "none";
+        }, 200);
+      }
+      const boundDrag = drag;
+      const boundEndDrag = endDrag;
+      picker.boundBasalDrag = boundDrag;
+      picker.boundBasalEndDrag = boundEndDrag;
+      document.addEventListener("mousemove", boundDrag);
+      document.addEventListener("touchmove", boundDrag);
+      document.addEventListener("mouseup", boundEndDrag);
+      document.addEventListener("touchend", boundEndDrag);
+    }
+    function updateBasalPickerSelection(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const items = picker.querySelectorAll(".picker-item");
+      const currentTop = parseInt(picker.style.top) || 0;
+      const centerY = 105;
+      const selectedIndex = Math.round((centerY - currentTop) / 40);
+      items.forEach((item, index) => {
+        item.classList.remove("selected");
+        if (index + 1 === selectedIndex) {
+          item.classList.add("selected");
+          const value = parseInt(item.dataset.value);
+          if (pickerId === "basalFirstPicker") {
+            selectedBasalFirstValue = value;
+          } else if (pickerId === "basalSecondPicker") {
+            selectedBasalSecondValue = value;
+          }
+        }
+      });
+    }
+    function updateBasalPickerPosition(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const valueIndex = values.indexOf(selectedValue);
+      if (valueIndex !== -1) {
+        const centerIndex = values.length + valueIndex;
+        const topPosition = -(centerIndex * 40) + 105 - 20;
+        picker.style.top = topPosition + "px";
+        updateBasalPickerSelection(pickerId, values);
+      }
+    }
+    function hideBasalRateModal() {
+      document.getElementById("basalRatePickerModal").classList.remove("active");
+    }
+    function confirmBasalRateSelection() {
+      const combinedValue = selectedBasalFirstValue + "." + selectedBasalSecondValue;
+      document.getElementById("basalRateInput").value = combinedValue;
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (currentActiveTab) {
+        const profileId = currentActiveTab.id;
+        const profileData = getProfileData(profileId);
+        if (profileData.periods && profileData.periods[currentEditingPeriodIndex]) {
+          profileData.periods[currentEditingPeriodIndex].rate = combinedValue;
+          localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+          updateChartImage(profileData.periodsConfig, profileId);
+          updateMainScreenData(profileId, profileData);
+          generatePeriodItems(profileData.periods);
+        }
+      }
+      hideBasalRateModal();
+    }
+    const hourValues = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+    const minuteValues = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, "0"));
+    const ampmValues = ["AM", "PM"];
+    const ampmDisplayValues = ["قبل الظهر", "بعد الظهر"];
+    let selectedHour = "12";
+    let selectedMinute = "00";
+    let selectedAmPm = "AM";
+    let currentTimePickerTarget = null;
+    function getArabicAmPm(englishAmPm) {
+      return englishAmPm === "AM" ? "قبل الظهر" : "بعد الظهر";
+    }
+    function getEnglishAmPm(arabicAmPm) {
+      return arabicAmPm === "قبل الظهر" ? "AM" : "PM";
+    }
+    function showTimePickerModal(target) {
+      currentTimePickerTarget = target;
+      const currentTimeElement = document.getElementById(target + "TimeValue");
+      const currentTime = currentTimeElement.textContent;
+      const timeParts = currentTime.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/);
+      if (timeParts) {
+        selectedHour = timeParts[1];
+        selectedMinute = timeParts[2];
+        selectedAmPm = timeParts[3];
+      }
+      const title = target === "start" ? "تحديد وقت البداية" : "تحديد وقت النهاية";
+      document.getElementById("timePickerTitle").textContent = title;
+      document.getElementById("timePickerModal").classList.add("active");
+      initTimePicker();
+      updateTimePickerPosition("hourPicker", hourValues, selectedHour);
+      updateTimePickerPosition("minutePicker", minuteValues, selectedMinute);
+      updateTimePickerPosition("ampmPicker", ampmDisplayValues, getArabicAmPm(selectedAmPm));
+    }
+    function initTimePicker() {
+      initTimeSinglePicker("hourPicker", hourValues, selectedHour);
+      initTimeSinglePicker("minutePicker", minuteValues, selectedMinute);
+      initTimeSinglePicker("ampmPicker", ampmDisplayValues, getArabicAmPm(selectedAmPm));
+    }
+    function initTimeSinglePicker(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      const totalItems = values.length * 5;
+      picker.innerHTML = "";
+      for (let i = 0; i < totalItems; i++) {
+        const item = document.createElement("div");
+        item.className = "picker-item";
+        item.textContent = values[i % values.length];
+        item.style.height = itemHeight + "px";
+        item.style.lineHeight = itemHeight + "px";
+        item.style.textAlign = "center";
+        item.style.fontSize = "18px";
+        item.style.color = "#666";
+        picker.appendChild(item);
+      }
+      const selectedIndex = values.indexOf(selectedValue);
+      const centerIndex = values.length + selectedIndex;
+      const topPosition = -(centerIndex * itemHeight) + 210 / 2 - itemHeight / 2;
+      picker.style.top = topPosition + "px";
+      updateTimePickerSelection(pickerId, values);
+      setupTimePickerInteraction(pickerId, values);
+    }
+    function setupTimePickerInteraction(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const itemHeight = 40;
+      let startY = 0;
+      let startTop = 0;
+      let isDragging = false;
+      if (picker.boundTimeDrag) {
+        document.removeEventListener("mousemove", picker.boundTimeDrag);
+        document.removeEventListener("touchmove", picker.boundTimeDrag);
+        document.removeEventListener("mouseup", picker.boundTimeEndDrag);
+        document.removeEventListener("touchend", picker.boundTimeEndDrag);
+      }
+      picker.addEventListener("mousedown", startDrag);
+      picker.addEventListener("touchstart", startDrag);
+      function startDrag(e) {
+        isDragging = true;
+        const clientY = e.type === "touchstart" ? e.touches[0].clientY : e.clientY;
+        startY = clientY;
+        startTop = parseInt(picker.style.top) || 0;
+        picker.style.transition = "none";
+      }
+      function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const clientY = e.type === "touchmove" ? e.touches[0].clientY : e.clientY;
+        const deltaY = clientY - startY;
+        const newTop = startTop + deltaY;
+        picker.style.top = newTop + "px";
+        updateTimePickerSelection(pickerId, values);
+      }
+      function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        snapToNearestTimeItem();
+      }
+      function snapToNearestTimeItem() {
+        picker.style.transition = "top 0.2s ease-out";
+        const currentTop = parseInt(picker.style.top) || 0;
+        const centerY = 105;
+        const selectedIndex = Math.round((centerY - currentTop) / itemHeight);
+        const snappedTop = -(selectedIndex * itemHeight) + centerY - itemHeight / 2;
+        picker.style.top = snappedTop + "px";
+        const valueIndex = selectedIndex % values.length;
+        if (pickerId === "hourPicker") selectedHour = values[valueIndex];
+        else if (pickerId === "minutePicker") selectedMinute = values[valueIndex];
+        else if (pickerId === "ampmPicker") selectedAmPm = getEnglishAmPm(values[valueIndex]);
+        setTimeout(() => {
+          picker.style.transition = "none";
+        }, 200);
+      }
+      const boundDrag = drag;
+      const boundEndDrag = endDrag;
+      picker.boundTimeDrag = boundDrag;
+      picker.boundTimeEndDrag = boundEndDrag;
+      document.addEventListener("mousemove", boundDrag);
+      document.addEventListener("touchmove", boundDrag);
+      document.addEventListener("mouseup", boundEndDrag);
+      document.addEventListener("touchend", boundEndDrag);
+    }
+    function updateTimePickerSelection(pickerId, values) {
+      const picker = document.getElementById(pickerId);
+      const items = picker.querySelectorAll(".picker-item");
+      const currentTop = parseInt(picker.style.top) || 0;
+      const centerY = 105;
+      const selectedIndex = Math.round((centerY - currentTop) / 40);
+      items.forEach((item, index) => {
+        item.classList.remove("selected");
+        if (index + 1 === selectedIndex) {
+          item.classList.add("selected");
+          item.style.color = "#fff";
+        } else {
+          item.style.color = "#666";
+          item.style.fontWeight = "normal";
+        }
+      });
+    }
+    function updateTimePickerPosition(pickerId, values, selectedValue) {
+      const picker = document.getElementById(pickerId);
+      const valueIndex = values.indexOf(selectedValue);
+      if (valueIndex !== -1) {
+        const centerIndex = values.length + valueIndex;
+        const topPosition = -(centerIndex * 40) + 105 - 20;
+        picker.style.top = topPosition + "px";
+        updateTimePickerSelection(pickerId, values);
+      }
+    }
+    function hideTimePickerModal() {
+      document.getElementById("timePickerModal").classList.remove("active");
+    }
+    function confirmTimeSelection() {
+      const timeString = selectedHour + ":" + selectedMinute + " " + selectedAmPm;
+      if (currentTimePickerTarget === "start") {
+        document.getElementById("startTimeValue").textContent = timeString;
+      } else if (currentTimePickerTarget === "end") {
+        document.getElementById("endTimeValue").textContent = timeString;
+      }
+      hideTimePickerModal();
+    }
+    function deletePeriod(index) {
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      if (!currentActiveTab) return;
+      const profileId = currentActiveTab.id;
+      const profileData = getProfileData(profileId);
+      if (profileData.periods && profileData.periods.length > index) {
+        profileData.periods.splice(index, 1);
+        localStorage.setItem(`profile_${profileId}`, JSON.stringify(profileData));
+        generatePeriodItems(profileData.periods);
+        updateMainScreenData(profileId, profileData);
+      }
+    }
+    function updateMainScreenData(profileId, profileData) {
+      const contentId = profileId.replace("tab-", "content-");
+      const contentElement = document.getElementById(contentId);
+      if (contentElement) {
+        const volumeElement = contentElement.querySelector("h3");
+        if (volumeElement) {
+          volumeElement.innerHTML = `${profileData.dailyVolume} وحدة/`;
+        }
+        updateMainScreenPeriods(contentElement, profileData.periods);
+      }
+      updateTabName(profileId, profileData.name);
+    }
+    function updateMainScreenPeriods(contentElement, periods) {
+      const periodTable = contentElement.querySelector(".p-3.bg-white");
+      if (!periodTable) return;
+      const header = periodTable.querySelector(".d-flex.justify-content-between.mb-3");
+      periodTable.innerHTML = "";
+      if (header) {
+        periodTable.appendChild(header);
+      } else {
+        const headerDiv = document.createElement("div");
+        headerDiv.className = "d-flex justify-content-around mb-2 pt-2";
+        headerDiv.innerHTML = `
+                  <div class="me-4 pb-2" style="font-size: 20px; font-weight: 500">الفترات</div>
+                  <div class="ms-4" style="font-size: 20px; font-weight: 500">القاعدي (و/س)</div>
+                `;
+        periodTable.appendChild(headerDiv);
+      }
+      periods.forEach((period, index) => {
+        const displayTime = removeAmPm(period.time || "");
+        const periodRow = document.createElement("div");
+        periodRow.className = index < periods.length - 1 ? "d-flex justify-content-between align-items-center mb-2" : "d-flex justify-content-between align-items-center";
+        periodRow.innerHTML = `
+                  <div style="font-size: 19px; color: #333">${displayTime}</div>
+                  <div style="font-size: 24px; color: #333; margin-left: 40px">${period.rate}</div>
+                `;
+        periodTable.appendChild(periodRow);
+      });
+    }
+    if (localStorage.getItem("buttonsActive") === null) {
+      localStorage.setItem("buttonsActive", "false");
+    }
+    // Initialize insulin-qaedy as false
+    if (localStorage.getItem("insulin-qaedy") === null) {
+      localStorage.setItem("insulin-qaedy", "false");
+    }
+    function updateActivateButton() {
+      const insulinQaedy = localStorage.getItem("insulin-qaedy") === "true";
+  
+      if (!insulinQaedy) {
+        localStorage.removeItem("activeTab");
+        console.log("insulin-qaedy is false, removed activeTab from localStorage");
+      }
+      const currentActiveTab = document.querySelector(".tab-item.active-tab");
+      const savedActiveTab = localStorage.getItem("activeTab");
+      const pumpPaired = localStorage.getItem("pump-pairing") === "true";
+      const activateBtn = document.getElementById("activateBasalBtn");
+
+      if (currentActiveTab && (!savedActiveTab || currentActiveTab.id !== savedActiveTab)) {
+        if (currentActiveTab.id.startsWith("tab-basal") || currentActiveTab.id === "tab-school") {
+          let tabText = currentActiveTab.textContent.trim();
+          tabText = tabText.replace(/^●\s*/, "");
+          document.getElementById("activateBasalText").textContent = tabText;
+          document.getElementById("modalBasalText").textContent = tabText;
+          activateBtn.style.display = "block";
+          
+          if (!pumpPaired) {
+            activateBtn.disabled = true;
+            activateBtn.style.color = "#999"; 
+            activateBtn.style.cursor = "not-allowed";
+            activateBtn.style.opacity = "0.5";
+          } else {
+            activateBtn.disabled = false;
+            activateBtn.style.color = "#1b52a4"; 
+            activateBtn.style.cursor = "pointer";
+            activateBtn.style.opacity = "1";
+          }
+        } else {
+          activateBtn.style.display = "none";
+        }
+      } else {
+        activateBtn.style.display = "none";
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".tab-item").forEach((tab) => {
+        tab.addEventListener("click", function () {
+          switchTab(this.id);
+          updateActivateButton();
+        });
+      });
+      loadSavedProfilesFromStorage();
+      initializeBadges();
+      const savedActiveTab = localStorage.getItem("activeTab");
+      if (savedActiveTab) {
+        switchTab(savedActiveTab);
+      } else {
+        const firstTab = document.querySelector('.tab-item');
+        if (firstTab) switchTab(firstTab.id);
+      }
+      const currentActiveTab = document.querySelector('.tab-item.active-tab');
+      if (currentActiveTab) {
+        const profileData = getProfileData(currentActiveTab.id);
+        updateChartImage(profileData.periodsConfig, currentActiveTab.id);
+      }
+      updateActivateButton();
+      refreshAllProfilesData();
+
+      document.getElementById("activateBasalBtn").addEventListener("click", function () {
+        document.getElementById("confirmationModal").style.display = "flex";
+
+        const currentActiveTab = document.querySelector(".tab-item.active-tab");
+        if (currentActiveTab) {
+          const profileData = getProfileData(currentActiveTab.id);
+          const payload = {
+            profileId: currentActiveTab.id,
+            name: profileData.name || (currentActiveTab.textContent ? currentActiveTab.textContent.trim() : ""),
+            periodsConfig: profileData.periodsConfig || "افتراضي"
+          };
+        }
+
+        updateActivateButton();
+      });
+
+      document.getElementById("modalNoBtn").addEventListener("click", function () {
+        document.getElementById("confirmationModal").style.display = "none";
+      });
+      document.getElementById("modalYesBtn").addEventListener("click", function () {
+        // Check if pump is paired first
+        const pumpPaired = localStorage.getItem("pump-pairing") === "true";
+        if (!pumpPaired) {
+          console.error("Cannot set insulin-qaedy to true: pump not paired!");
+          // Close confirmation modal first
+          document.getElementById("confirmationModal").style.display = "none";
+          alert("لا يمكن ضبط القاعدي بدون اقتران المضخة");
+          return;
+        }
+        
+        // Set insulin-qaedy to true when user confirms
+        localStorage.setItem("insulin-qaedy", "true");
+        console.log("insulin-qaedy set to true (pump is paired)");
+        
+        const loadingModal = new bootstrap.Modal(document.getElementById("loadingModal"), {
+          backdrop: false
+        });
+        loadingModal.show();
+        
+        // Auto-hide loading modal after 3 seconds
+        setTimeout(() => loadingModal.hide(), 3000);
+      
+        const currentActiveTab = document.querySelector(".tab-item.active-tab");
+        if (currentActiveTab) {
+          const prevSaved = localStorage.getItem("activeTab");
+          localStorage.setItem("activeTab", currentActiveTab.id);
+          if (prevSaved && prevSaved !== currentActiveTab.id) {
+            clearPreviousActiveBadge(prevSaved);
+          }
+          setProfileBadgeActive(currentActiveTab.id, true);
+      
+          let payload = {}; 
+          try {
+            const profileData = getProfileData(currentActiveTab.id);
+            payload = {
+              profileId: currentActiveTab.id,
+              name: profileData.name || (currentActiveTab.textContent ? currentActiveTab.textContent.trim() : ""),
+              periodsConfig: profileData.periodsConfig || "افتراضي"
+            };
+            const activateBtnState = document.getElementById("activateBasalBtn").classList.contains("active");
+            if (activateBtnState) {
+              localStorage.setItem('suspendChartData', JSON.stringify(payload));
+            }
+          } catch (e) { }
+      
+          localStorage.setItem('suspendChartData', JSON.stringify(payload));
+          localStorage.setItem("buttonsActive", "true");
+          updateActivateButton();
+        }
+        document.getElementById("confirmationModal").style.display = "none";
+      });
+      
+      document.getElementById("settingsLink").addEventListener("click", function (e) {
+        e.preventDefault();
+        openSettingsScreen();
+      });
+      document.getElementById("backToBasal").addEventListener("click", function (e) {
+        e.preventDefault();
+        showBackConfirmationModal();
+      });
+      document.getElementById("backModalYes").addEventListener("click", closeSettingsScreenWithConfirmation);
+      document.getElementById("backModalNo").addEventListener("click", hideBackConfirmationModal);
+      document.getElementById("cancelSettings").addEventListener("click", closeSettingsScreen);
+      document.getElementById("saveSettings").addEventListener("click", function () {
+        showSuccessPopup();
+        saveSettingsData();
+        closeSettingsScreen();
+      });
+      document.getElementById("dailyVolume").addEventListener("click", openDailyVolumePicker);
+      document.getElementById("periodsValue").addEventListener("click", openPeriodsPicker);
+      document.getElementById("backFromPeriodEdit").addEventListener("click", closePeriodEditScreen);
+      document.getElementById("savePeriodEdit").addEventListener("click", savePeriodEdit);
+      document.getElementById("incrementStartTime").addEventListener("click", () => incrementTime("startTimeValue"));
+      document.getElementById("decrementStartTime").addEventListener("click", () => decrementTime("startTimeValue"));
+      document.getElementById("incrementEndTime").addEventListener("click", () => incrementTime("endTimeValue"));
+      document.getElementById("decrementEndTime").addEventListener("click", () => decrementTime("endTimeValue"));
+      document.getElementById("basalRateInput").addEventListener("click", showBasalRateModal);
+      document.getElementById("previousPeriodBtn").addEventListener("click", function () {
+        if (currentEditingPeriodIndex > 0) {
+          savePeriodEdit();
+          currentEditingPeriodIndex--;
+          openPeriodEditScreen(currentEditingPeriodIndex);
+        }
+      });
+      document.getElementById("nextPeriodBtn").addEventListener("click", function () {
+        const currentActiveTab = document.querySelector(".tab-item.active-tab");
+        if (currentActiveTab) {
+          const profileData = getProfileData(currentActiveTab.id);
+          if (currentEditingPeriodIndex < profileData.periods.length - 1) {
+            savePeriodEdit();
+            currentEditingPeriodIndex++;
+            openPeriodEditScreen(currentEditingPeriodIndex);
+          }
+        }
+      });
+      document.getElementById("addProfileButton").addEventListener("click", addNewProfile);
+      document.getElementById('periodEditScreen').addEventListener('click', function (e) {
+        if (e.target.id === 'startTimeValue') {
+          showTimePickerModal('start');
+        } else if (e.target.id === 'endTimeValue') {
+          showTimePickerModal('end');
+        }
+      });
+    });
+    document.querySelectorAll('.tab-item').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab-content').forEach(tc => tc.style.display = 'none');
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active-tab'));
+        const tabId = tab.id.replace('tab-', 'content-');
+        const contentElement = document.getElementById(tabId);
+        if (contentElement) {
+          contentElement.style.display = 'block';
+          tab.classList.add('active-tab');
+          const profileId = tab.id;
+          const profileData = getProfileData(profileId);
+        }
+      });
+    });
+    (function () {
+      const currentActiveTab = document.querySelector('.tab-item.active-tab');
+      if (!currentActiveTab) return;
+      const profileId = currentActiveTab.id;
+      const profileData = getProfileData(profileId);
+    })();
+    function generateDefaultPeriodsForCount(count, baseRate) {
+      const periods = [];
+      const segment = 24 / count;
+      for (let i = 0; i < count; i++) {
+        const startH = i * segment;
+        const endH = (i + 1) * segment;
+        const fmt = (h) => {
+          const hh = Math.floor(h);
+          const mm = Math.round((h - hh) * 60);
+          const hhStr = hh.toString().padStart(2, "0");
+          const mmStr = mm.toString().padStart(2, "0");
+          return (hh === 24 ? "24:00" : `${hhStr}:${mmStr}`);
+        };
+        const start = fmt(startH);
+        const end = fmt(endH);
+        periods.push({ time: `${start} - ${end}`, rate: (baseRate || "1").toString() });
+      }
+      return periods;
+    }
+
+    function setProfileBadgeActive(profileId, isActive) {
+      const contentId = profileId.replace('tab-', 'content-');
+      const contentEl = document.getElementById(contentId);
+      if (!contentEl) return;
+      const badge = contentEl.querySelector('[data-role="activeBadge"]');
+      if (!badge) return;
+      if (isActive) {
+        badge.textContent = 'نشط';
+        badge.classList.remove('text-bg-secondary');
+        badge.classList.add('text-bg-success');
+        badge.style.setProperty('background-color', '#1b52a4', 'important');
+      } else {
+        badge.textContent = 'غير نشط';
+        badge.classList.remove('text-bg-success');
+        badge.classList.add('text-bg-secondary');
+        badge.style.backgroundColor = '';
+      }
+    }
+    function clearPreviousActiveBadge(previousId) {
+      if (!previousId) return;
+      try { setProfileBadgeActive(previousId, false); } catch (e) { }
+    }
+    function initializeBadges() {
+      const allProfileIds = getAllProfileIds();
+      allProfileIds.forEach(id => setProfileBadgeActive(id, false));
+      const savedActiveTab = localStorage.getItem('activeTab');
+      if (savedActiveTab) {
+        setProfileBadgeActive(savedActiveTab, true);
+      }
+    }
+     // الكود المكرر تم نقله إلى shared-rules.js
+  </script>
+  <script src="js/shared-rules.js"></script>
+
+</body>
+
+</html>

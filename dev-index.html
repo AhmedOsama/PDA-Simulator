@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDA Development Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .page-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: 500;
+            display: block;
+        }
+        .page-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        .feature {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .feature h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        .feature ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .status.active {
+            background: #28a745;
+            color: white;
+        }
+        .direct-link {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .direct-link:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 PDA Development Dashboard</h1>
+        <p class="subtitle">اختر الصفحة التي تريد العمل عليها مع Auto-Reload</p>
+        
+        <div class="feature">
+            <h3>✨ المميزات:</h3>
+            <ul>
+                <li>Auto-reload تلقائي عند حفظ أي ملف</li>
+                <li>لا حاجة لـ F5 أبداً</li>
+                <li>يراقب جميع ملفات CSS و JavaScript</li>
+                <li>مؤشر بصري للـ reload</li>
+            </ul>
+        </div>
+
+        <div class="feature">
+            <h3>🔗 روابط مباشرة (بدون auto-reload):</h3>
+            <a href="automatic-mode.html" class="direct-link" target="_blank">Automatic Mode</a>
+            <a href="blood-sugar-records-2.html" class="direct-link" target="_blank">Blood Sugar Records</a>
+            <a href="general-settings.html" class="direct-link" target="_blank">General Settings</a>
+            <a href="suspend.html" class="direct-link" target="_blank">Suspend</a>
+            <a href="pda-mode.html" class="direct-link" target="_blank">PDA Mode</a>
+        </div>
+        
+        <h2 style="text-align: center; color: #667eea;">📱 الصفحات مع Auto-Reload:</h2>
+        
+        <div class="pages-grid">
+            <a href="dev-reload.html?page=automatic-mode" class="page-link">
+                Automatic Mode
+            </a>
+            <a href="dev-reload.html?page=blood-sugar-records-2" class="page-link">
+                Blood Sugar Records
+            </a>
+            <a href="dev-reload.html?page=general-settings" class="page-link">
+                General Settings
+            </a>
+            <a href="dev-reload.html?page=suspend" class="page-link">
+                Suspend
+            </a>
+            <a href="dev-reload.html?page=pda-mode" class="page-link">
+                PDA Mode
+            </a>
+            <a href="dev-reload.html?page=basal" class="page-link">
+                Basal
+            </a>
+            <a href="dev-reload.html?page=pump-preset" class="page-link">
+                Pump Preset
+            </a>
+            <a href="dev-reload.html?page=CGMS" class="page-link">
+                CGMS
+            </a>
+            <a href="dev-reload.html?page=control-screen" class="page-link">
+                Control Screen
+            </a>
+            <a href="dev-reload.html?page=glucose-limits" class="page-link">
+                Glucose Limits
+            </a>
+            <a href="dev-reload.html?page=insulin" class="page-link">
+                Insulin
+            </a>
+            <a href="dev-reload.html?page=login" class="page-link">
+                Login
+            </a>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #666;">
+            <p>Server Status: <span class="status active">Active on port 8080</span></p>
+            <p style="font-size: 0.9em;">💡 نصيحة: احفظ هذه الصفحة في المفضلة للوصول السريع</p>
+        </div>
+    </div>
+</body>
+</html>

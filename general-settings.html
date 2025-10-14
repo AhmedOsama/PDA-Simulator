@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=480, initial-scale=1.0" />
+  <title>الإعدادات العامة</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style/app.css" />
+  <link rel="stylesheet" href="style/keyboard.css" />
+  <script src="js/keyboard.js" defer></script>
+  <script src="js/modal-handler.js" defer></script>
+  <style>
+    * {
+      user-select: none;
+    }
+    .phone-container {
+      background: #fafafa;
+      overflow: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      position: relative;
+    }
+
+    /* Modal overlay to cover the phone */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-overlay .picker-container {
+      margin-bottom: 0;
+      max-height: 80%;
+    }
+
+    .control-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      padding-left: 40px;
+      border-bottom: 1px solid #edeeef;
+      background: #fff;
+      min-height: 65px !important;
+      cursor: pointer;
+    }
+
+    #screen1 .control-item {
+
+      padding-right: 80px;
+      background-image: url('assets/icons.png');
+
+      background-repeat: no-repeat;
+      background-position-x: 420px;
+      background-position-y: 10px;
+    }
+
+    .control-item-label {
+      font-size: 21px;
+      color: #444;
+    }
+
+    .control-item-view {
+      font-size: 18px;
+      color: #777;
+    }
+
+    .control-item-view i.fa-chevron-left {
+      font-size: 14px;
+      padding-right: 10px;
+    }
+
+    .auto-switch {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+
+    .switch-label {
+      margin: 0;
+      padding: 0;
+      cursor: pointer;
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      position: relative;
+    }
+
+    .switch-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 24px;
+      background: #d1d1d6;
+      border-radius: 16px;
+      transition: background 0.2s;
+    }
+
+    .switch-thumb {
+      position: absolute;
+      top: -2px;
+      left: 21px;
+      width: 28px;
+      height: 28px;
+      background: #2056a8;
+      border-radius: 50%;
+      box-shadow: none;
+      transition: left 0.2s, background 0.2s;
+    }
+
+    .switch-input:checked+.switch-track {
+      background: #c7d9f0;
+    }
+
+    .switch-input:checked+.switch-track+.switch-thumb {
+      left: 21px;
+      background: #2056a8;
+    }
+
+    .switch-input:not(:checked)+.switch-track {
+      background: #d1d1d6;
+    }
+
+    .switch-input:not(:checked)+.switch-track+.switch-thumb {
+      left: 0;
+      background: #9e9e9e;
+    }
+
+    .btn.decrement,
+    .btn.increment {
+      width: 60px;
+      height: 60px;
+      background-color: #2e61ae;
+      color: white;
+      border-radius: 10px;
+      font-size: 40px;
+      line-height: 1;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Password input styles */
+    .password-input-container {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    .password-input {
+      text-align: center;
+    }
+
+    .password-toggle {
+      color: #666;
+      font-size: 18px;
+    }
+
+    .password-toggle:hover {
+      color: #2e61ae;
+    }
+
+    /* Display System Mockups */
+    .display-system-container {
+      padding: 20px;
+      direction: ltr;
+    }
+
+    .display-options {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .display-option {
+      text-align: center;
+      text-align: center;
+      width: 50%;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .display-mockup {
+      width: 120px;
+      height: 180px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      background: white;
+      margin-bottom: 10px;
+    }
+
+    .mockup-glucose-icon {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #888;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+    }
+
+    .mockup-glucose-icon div:first-child {
+      width: 10px;
+      height: 2px;
+      background: #888;
+    }
+
+    .mockup-glucose-icon div:last-child {
+      width: 10px;
+      height: 2px;
+      background: #888;
+    }
+
+    .mockup-line {
+      height: 2px;
+      background: #888;
+      margin-bottom: 5px;
+    }
+
+    .mockup-line:nth-child(5) {
+      margin-bottom: 10px;
+    }
+
+    .mockup-bar {
+      height: 8px;
+      background: #888;
+      margin-bottom: 5px;
+    }
+
+    .mockup-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .mockup-button {
+      flex: 1;
+      height: 15px;
+      background: #2e61ae;
+      border-radius: 3px;
+    }
+
+    .mockup-pump-header {
+      height: 30px;
+      background: #ccc;
+      margin-bottom: 5px;
+      border-radius: 3px;
+    }
+
+    .mockup-pump-line {
+      height: 8px;
+      background: #ccc;
+      margin-bottom: 5px;
+      border-radius: 2px;
+    }
+
+    .mockup-pump-line:nth-child(5) {
+      margin-bottom: 10px;
+    }
+
+    .mockup-pump-section {
+      height: 30px;
+      background: #ccc;
+      margin-bottom: 10px;
+      border-radius: 3px;
+    }
+
+    .display-option-label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .radio-button {
+      width: 20px;
+      height: 20px;
+      border: 3px solid #ccc;
+      border-radius: 50%;
+      margin: 0 auto;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .display-radio {
+      display: none;
+    }
+
+    .display-radio:checked+.radio-button {
+      border-color: #2e61ae;
+      background: #2e61ae;
+      position: relative;
+    }
+
+    .display-radio:checked+.radio-button::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .radio-button.selected {
+      border-color: #2e61ae;
+      background: #2e61ae;
+      position: relative;
+    }
+
+    .radio-button.selected::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .no-border {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: inherit;
+      color: inherit;
+      text-align: end;
+    }
+    
+
+    .no-border:focus {
+      outline: none;
+      border: none;
+      box-shadow: none;
+    }
+    .virtual-keyboard-input {
+      display: inline-block;
+    }
+    
+    /* Fix modals to stay within phone-container */
+    .phone-container .modal {
+      position: absolute !important;
+      background: rgba(0, 0, 0, 0.5) !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 99999 !important;
+    }
+    
+    .phone-container .modal.show {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    
+    .phone-container .modal-dialog {
+      margin: 0 !important;
+      z-index: 100000 !important;
+      position: relative !important;
+    }
+    
+    .phone-container .modal-backdrop {
+      display: none !important;
+    }
+    
+    .phone-container .success-popup-overlay {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 99999 !important;
+    }
+    
+  </style>
+</head>
+
+<body>
+  <div class="phone-container">
+    <div class="screen active" id="screen1" style="height: fit-content; ">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 21px">
+          <div>الإعدادات العامة</div>
+          <div class="position-absolute" style="right: 20px;cursor:pointer;font-size: 22px " onclick="history.back()">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item" screen="screen2" style="cursor:pointer">
+        <div class="control-item-label">المستخدم</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen3" style="cursor:pointer;background-position-y: -65px;">
+        <div class="control-item-label">التاريخ والوقت</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen4" style=" cursor:pointer;background-position-y: -140px; ">
+        <div class="control-item-label">اللغة</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" style="cursor:pointer;background-position-y: -290px;">
+        <div class="control-item-label">وحدة قياس السكر في الدم</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="blood_sugar_unit" trigger="true" title="وحدة قياس السكر في الدم"
+            values='["mg/dl","mg/dl"]'>
+            mg/dl
+          </span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen6" style="background-position-y: -365px;cursor:pointer">
+        <div class="control-item-label">الشاشة</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen7" style="background-position-y: -365px;cursor:pointer">
+        <div class="control-item-label">نظام العرض</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen8" style="background-position-y: -440px;cursor:pointer">
+        <div class="control-item-label">حول النظام</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" style="background-position-y: -515px; position: relative;">
+        <div class="control-item-label">إعادة ضبط المصنع</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0"
+            style="cursor:pointer; position: absolute; right: 0; left: 0; width: 480px; height: 60px; top: 0; bottom: 0; opacity: 0; ">
+            <label class="switch-label">
+              <input type="checkbox" id="factory_reset_switch" trigger="true" modal-target="factory_reset_modal"
+                class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen9" style="cursor:pointer;background-position-y: -590px;">
+        <div class="control-item-label">النظام السحابي - تكوين الشبكة</div>
+        <div class="control-item-view">
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+    </div>
+    <div id="screen2" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>المستخدم</div>
+          <div class="position-absolute" style="right: 20px;" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">اسم المستخدم</div>
+        <div class="control-item-view">
+          <input type="text" class="virtual-keyboard-input no-border" value="غير محدد">
+        </div>
+      </div>
+            
+      <div class="control-item">
+        <div class="control-item-label">إلغاء القفل بكلمة المرور</div>
+        <div class="control-item-view">اغلق
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">معلومات الاتصال</div>
+        <div class="control-item-view">
+          <span class="control-item-value">
+            غير محدد
+          </span>
+        </div>
+      </div>
+    </div>
+    <div id="screen3" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>التاريخ والوقت</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item" onclick="openDatePicker()">
+        <div class="control-item-label">التاريخ</div>
+        <div class="control-item-view">
+          <span id="date_setting">19-11-2024</span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" onclick="openTimePicker()">
+        <div class="control-item-label">الوقت</div>
+        <div class="control-item-view">
+          <span id="time_setting">1:01</span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen10">
+        <div class="control-item-label">المنطقة الزمنية</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="timezone_setting">
+            توقيت الصين الرسمي
+          </span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+      <div class="control-item" screen="screen11">
+        <div class="control-item-label">تنسيق الوقت</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="time_format_setting">
+            نظام 24 ساعة
+          </span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+    </div>
+    <div id="screen4" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div style="font-size: 25px">اللغة</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="language_setting">
+        <div class="control-item-view">
+          الصينية (الصين)
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="language_setting">
+        <div class="control-item-view">
+          الإنجليزية
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="language_setting">
+        <div class="control-item-view">
+          الروسية (روسيا)
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="language_setting" selected>
+        <div class="control-item-view">
+          العربية (المملكة العربية السعودية)
+        </div>
+      </div>
+    </div>
+    <div id="screen6" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>الشاشة</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item border-0">
+        <div class="control-item-label">السطوع التلقائي</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input type="checkbox" id="auto_brightness_switch" class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="control-item" style="flex-direction: column; align-items: stretch; padding: 20px;">
+        <div style="width: 100%; position: relative;">
+          <input type="range" id="brightness_slider" min="0" max="100" value="100"
+            style="width: 100%; height: 6px; border-radius: 3px; background: linear-gradient(to right, #ddd 0%, #ddd 75%, #2e61ae 75%, #2e61ae 100%); outline: none; -webkit-appearance: none; direction: ltr;" />
+          <style>
+            #brightness_slider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background: #2e61ae;
+              cursor: pointer;
+            }
+
+            #brightness_slider::-moz-range-thumb {
+              width: 20px;
+              height: 20px;
+              border-radius: 50%;
+              background: #2e61ae;
+              cursor: pointer;
+              border: none;
+            }
+          </style>
+        </div>
+      </div>
+      <div class="control-item" screen="screen14">
+        <div class="control-item-label">زمن إغلاق الشاشة</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="screen_timeout">
+            1دقيقة
+          </span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+    </div>
+    <div id="screen7" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>نظام العرض</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="display-system-container">
+        <div class="display-options">
+          <div class="display-option">
+            <div class="display-mockup">
+              <div class="mockup-glucose-icon">
+                <div></div>
+                <div></div>
+              </div>
+              <div class="mockup-line"></div>
+              <div class="mockup-line"></div>
+              <div class="mockup-line"></div>
+              <div class="mockup-bar"></div>
+              <div class="mockup-buttons">
+                <div class="mockup-button"></div>
+                <div class="mockup-button"></div>
+              </div>
+            </div>
+            <div class="display-option-label">وضع نظام المراقبة المستمرة للجلوكوز</div>
+            <input type="radio" name="display_mode" value="glucose" id="display_glucose" class="display-radio" checked>
+            <label for="display_glucose" class="radio-button"></label>
+          </div>
+          <div class="display-option">
+            <div class="display-mockup">
+              <div class="mockup-pump-header"></div>
+              <div class="mockup-pump-line"></div>
+              <div class="mockup-pump-line"></div>
+              <div class="mockup-pump-line"></div>
+              <div class="mockup-pump-section"></div>
+              <div class="mockup-buttons">
+                <div class="mockup-button"></div>
+                <div class="mockup-button"></div>
+              </div>
+            </div>
+            <div class="display-option-label">وضع المضخة</div>
+            <input type="radio" name="display_mode" value="pump" id="display_pump" class="display-radio">
+            <label for="display_pump" class="radio-button"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="screen8" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>حول النظام</div>
+          <div class="position-absolute" style="right: 20px" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">نموذج</div>
+        <div class="control-item-view">
+          <span class="control-item-value">MTM-2</span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">إصدار البرنامج</div>
+        <div class="control-item-view">
+          <span class="control-item-value">1.0.0</span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label" style=" width: 60%; ">الرقم التسلسلي لجهاز مساعد السكري المحمول</div>
+        <div class="control-item-view">
+          <span class="control-item-value">862569</span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">الرقم التسلسلي للمضخة المقترنة</div>
+        <div class="control-item-view">
+          <span class="control-item-value"></span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">إصدار برنامج المضخة</div>
+        <div class="control-item-view">
+          <span class="control-item-value"></span>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">اكتشاف الإنذار</div>
+        <div class="control-item-view">
+          <span class="control-item-value"></span>
+        </div>
+      </div>
+    </div>
+    <div id="screen9" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>النظام السحابي - تكوين الشبكة</div>
+          <div class="position-absolute" style="right: 20px;cursor: pointer;" screen="screen1">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">واي فاي</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input type="checkbox" id="wifi_switch" checked class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="control-item" screen="screen13" id="wifi_switch_item">
+        <div class="control-item-label">الرجاء تحديد الشبكة</div>
+        <div class="control-item-view">
+          <span class="control-item-value" id="wifi_network">
+           </span>
+          <i class="fa fa-chevron-left"></i>
+        </div>
+      </div>
+    </div>
+    <div id="screen10" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>المنطقة الزمنية</div>
+          <div class="position-absolute" style="right: 20px" screen="screen3">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          توقيت ساموا الرسمي GMT-11:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          توقيت هاواي ألوتيان الرسمي GMT-10:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          التوقيت الرسمي لألاسكا GMT-09:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          توقيت المحيط الهادي الرسمي GMT-08:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          التوقيت الجبلي الرسمي لأمريكا الشمالية GMT-07:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          التوقيت الرسمي المركزي لأمريكا الشمالية GMT-06:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          التوقيت الرسمي الشرقي لأمريكا الشمالية GMT-05:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          التوقيت الرسمي الأطلسي GMT-04:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting">
+        <div class="control-item-view">
+          توقيت الأرجنتين الرسمي GMT-03:00
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="timezone_setting" selected>
+        <div class="control-item-view">
+          توقيت الصين الرسمي
+        </div>
+      </div>
+    </div>
+    <div id="screen11" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>تنسيق الوقت</div>
+          <div class="position-absolute" style="right: 20px" screen="screen3">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="p-3 text-secondary">طريقة العرض</div>
+      <div class="control-item" selectable selectable-target="time_format_setting" selected>
+        <div class="control-item-view">
+          نظام 24 ساعة
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="time_format_setting">
+        <div class="control-item-view">
+          تنسيق 12 ساعة
+        </div>
+      </div>
+    </div>
+    <div id="screen12" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>النظام السحابي - تكوين الشبكة</div>
+          <div class="position-absolute" style="right: 20px" screen="screen9">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item">
+        <div class="control-item-label">واي فاي</div>
+        <div class="control-item-view">
+          <div class="auto-switch form-check form-switch p-0">
+            <label class="switch-label">
+              <input type="checkbox" id="wifi_switch_screen12" class="switch-input" />
+              <span class="switch-track"></span>
+              <span class="switch-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="screen13" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>النظام السحابي - واي فاي</div>
+          <div class="position-absolute" style="right: 20px;cursor: pointer;" screen="screen9">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          AMRSROUR
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          ALI
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          DINA
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          TP-LINK_2C1C
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          WEC48134
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          WE_BC5B8C
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="wifi_network">
+        <div class="control-item-view">
+          WE765C02
+        </div>
+      </div>
+    </div>
+    <div id="screen14" class="screen">
+      <div style="position: sticky; top: 0; z-index: 9999">
+        <header class="mb-0">
+          <div class="white-overlay">
+            <div class="icon-block block1"></div>
+            <div class="icon-block block2"></div>
+            <div class="icon-block block3"></div>
+            <div class="icon-block block4"></div>
+          </div>
+        </header>
+        <div
+          class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+          style="font-size: 20px">
+          <div>نظام توفير الطاقة التلقائي</div>
+          <div class="position-absolute" style="right: 20px" screen="screen6">
+            <i class="fa fa-chevron-left"></i>
+            رجوع
+          </div>
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="screen_timeout">
+        <div class="control-item-view">
+          30 ثانية
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="screen_timeout">
+        <div class="control-item-view">
+          45 ثانية
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="screen_timeout" selected>
+        <div class="control-item-view">
+          1دقيقة
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="screen_timeout">
+        <div class="control-item-view">
+          2 دقيقة
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="screen_timeout">
+        <div class="control-item-view">
+          10 دقائق
+        </div>
+      </div>
+      <div class="control-item" selectable selectable-target="screen_timeout">
+        <div class="control-item-view">
+          30 دقيقة
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="loadingModal" tabindex="-1" data-bs-backdrop="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-3 pb-0">
+        <div class="modal-body rounded-3">
+          <!-- From Uiverse.io by david-mohseni -->
+          <div class="loader">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+            <div class="bar4"></div>
+            <div class="bar5"></div>
+            <div class="bar6"></div>
+            <div class="bar7"></div>
+            <div class="bar8"></div>
+            <div class="bar9"></div>
+            <div class="bar10"></div>
+            <div class="bar11"></div>
+            <div class="bar12"></div>
+          </div>
+          <div class="mt-4 fs-5">إتصال</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="successPopup" class="success-popup-overlay">
+    <div class="success-popup">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <p class="success-message">نجاح</p>
+    </div>
+  </div>
+  <!-- Factory Reset Modal -->
+  <div class="ms-mobile-select custom-ms-modal" id="factory_reset_modal">
+    <div class="ms-gray-layer" onclick="closeModalMs('factory_reset_modal')"></div>
+    <div class="ms-content">
+      <div class="ms-panel">
+        <div class="ms-fix-width">
+          <div class="ms-wheels" style="height: 200px">
+            <div class="text-center my-4" style="font-size: 2rem;">إعادة ضبط المصنع</div>
+            <div class="text-center my-4 " style="color: #666; font-size:1.5rem">
+              يرجى إعادة ضبط المضخة
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ms-footer-bar">
+        <div class="ms-fix-width" style="font-size:1.5rem">
+          <div class="ms-cancel" onclick="closeModalMs('factory_reset_modal')">
+            لا
+          </div>
+          <div class="ms-ensure" onclick="factoryReset()">
+            نعم
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Password Modal -->
+  <div class="ms-mobile-select custom-ms-modal" id="password_modal">
+    <div class="ms-gray-layer" onclick="closeModalMs('password_modal')"></div>
+    <div class="ms-content">
+      <div class="ms-panel">
+        <div class="ms-fix-width">
+          <div class="ms-wheels" style="height: 200px">
+            <div class="text-center my-4 fs-3">تعيين كلمة المرور</div>
+            <div class="password-input-container">
+              <div class="form-group position-relative">
+                <input type="password" class="form-control password-input" id="password_input" placeholder="كلمة السر"
+                  style="padding-left: 50px; border: 2px solid #007bff; border-radius: 8px; height: 50px; font-size: 16px;">
+                <span class="password-toggle position-absolute"
+                  style="left: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;"
+                  onclick="togglePassword()">
+                  <i class="fa fa-eye" id="password_eye_icon"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ms-footer-bar">
+        <div class="ms-fix-width">
+          <div class="ms-cancel" onclick="closeModalMs('password_modal')">
+            إلغاء
+          </div>
+          <div class="ms-ensure" onclick="closeModalMs('password_modal')">
+            نعم
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Date Picker Modal -->
+<div id="datePickerModal" class="modal-overlay">
+  <div class="picker-container">
+    <h3 class="picker-title p-3">اختر التاريخ</h3>
+    <div style="position: relative; height: 280px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; direction: ltr;">
+      <div style="position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 40px; width: 100%; background-color: #1b52a4; pointer-events: none; z-index: 5;"></div>
+      
+      <div class="picker-wheel" style="    height: 160px; position: relative; overflow: hidden; z-index: 10; width: 30%;">
+        <div class="picker-list" id="dateYearList" style="position: absolute; width: 100%; top: 0;"></div>
+      </div>
+      
+      <div style="font-size: 32px; font-weight: bold; color: white; z-index: 15; position: relative; margin-top: 10px;">-</div>
+      
+      <div class="picker-wheel" style="    height: 160px; position: relative; overflow: hidden; z-index: 10; width: 30%;">
+        <div class="picker-list" id="dateMonthList" style="position: absolute; width: 100%; top: 0;"></div>
+      </div>
+      
+      <div style="font-size: 32px; font-weight: bold; color: white; z-index: 15; position: relative; margin-top: 10px;">-</div>
+      
+      <div class="picker-wheel" style="    height: 160px; position: relative; overflow: hidden; z-index: 10; width: 30%;">
+        <div class="picker-list" id="dateDayList" style="position: absolute; width: 100%; top: 0;"></div>
+      </div>
+    </div>
+    <div class="picker-buttons">
+      <button class="picker-btn border-left-1" onclick="closeDatePicker()" style="font-size: 20px; padding: 15px;">إلغاء</button>
+      <button class="picker-btn" onclick="confirmDateSelection()" style="font-size: 20px; padding: 15px;">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<!-- Time Picker Modal -->
+<div id="timePickerModal" class="modal-overlay">
+  <div class="picker-container">
+    <h3 class="picker-title p-3">اختر الوقت</h3>
+    <div style="position: relative; height: 280px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; direction: ltr;">
+      <div style="position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); height: 40px; width: 100%; background-color: #1b52a4; pointer-events: none; z-index: 5;"></div>
+      
+      <div class="picker-wheel" style="    height: 160px; position: relative; overflow: hidden; z-index: 10; width: 40%;">
+        <div class="picker-list" id="timeHourList" style="position: absolute; width: 100%; top: 0;"></div>
+      </div>
+      
+      <div style="font-size: 32px; font-weight: bold; color: white; z-index: 15; position: relative">:</div>
+      
+      <div class="picker-wheel" style="    height: 160px; position: relative; overflow: hidden; z-index: 10; width: 40%;">
+        <div class="picker-list" id="timeMinuteList" style="position: absolute; width: 100%; top: 0;"></div>
+      </div>
+      
+      <div id="timeAmPmContainer" style="    height: 160px; position: relative; overflow: hidden; z-index: 10; width: 20%; display: none;">
+        <div class="picker-list" id="timeAmPmList" style="position: absolute; width: 100%; top: 0;"></div>
+      </div>
+    </div>
+    <div class="picker-buttons">
+      <button class="picker-btn border-left-1" onclick="closeTimePicker()" style="font-size: 20px; padding: 15px;">إلغاء</button>
+      <button class="picker-btn" onclick="confirmTimeSelection()" style="font-size: 20px; padding: 15px;">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+  </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="js/m-select.js"></script>
+<script src="js/control-screen.js"></script>
+
+<script>
+  const originalSetItem = localStorage.setItem;
+  localStorage.setItem = function (key, value) {
+    const oldValue = localStorage.getItem(key);
+    originalSetItem.apply(this, [key, value]);
+    window.dispatchEvent(new StorageEvent('storage', {
+      key,
+      oldValue,
+      newValue: value,
+      storageArea: localStorage,
+      url: location.href
+    }));
+  };
+
+  if (localStorage.getItem('wifi_switch') === null) {
+    localStorage.setItem('wifi_switch', 'false');
+  }
+  if (localStorage.getItem('auto_brightness_switch') === null) {
+    localStorage.setItem('auto_brightness_switch', 'false');
+  }
+  if (localStorage.getItem('display_auto_brightness_switch') === null) {
+    localStorage.setItem('display_auto_brightness_switch', 'true');
+  }
+
+  let lsItems = [
+    'factory_reset_switch',
+    'wifi_switch',
+    'wifi_switch_screen12',
+    'auto_brightness_switch',
+    'display_auto_brightness_switch',
+    'password_unlock_switch'
+  ];
+
+  // Flag to prevent modals from opening during initial page load
+  let isInitialLoad = true;
+
+  window.addEventListener("storage", function (e) {
+    // Ignore storage events during initial load
+    if (isInitialLoad) return;
+    
+    if (lsItems.includes(e.key)) {
+      if (e.key == 'factory_reset_switch') {
+        openModalMs('factory_reset_modal')
+      } else {
+        const loadingModal = new bootstrap.Modal(
+          document.getElementById("loadingModal"),
+          {
+            backdrop: false
+          }
+        );
+        loadingModal.show();
+        setTimeout(() => {
+          loadingModal.hide();
+          document.getElementById("successPopup").classList.add("active");
+
+          setTimeout(() => {
+            document.getElementById("successPopup").classList.remove("active");
+          }, 2000);
+        }, 3000);
+      }
+    }
+  });
+
+  window.addEventListener("load", function () {
+    applyWifiStyle();
+
+    const brightnessSlider = document.getElementById('brightness_slider');
+    if (brightnessSlider) {
+      // Load saved brightness value or set default to 100
+      const savedBrightness = localStorage.getItem('screen_brightness');
+      if (savedBrightness) {
+        brightnessSlider.value = savedBrightness;
+      } else {
+        brightnessSlider.value = 100;
+        localStorage.setItem('screen_brightness', '100');
+      }
+      
+      function updateSliderBackground() {
+        const value = brightnessSlider.value;
+        const percentage = (value / brightnessSlider.max) * 100;
+        brightnessSlider.style.background = `linear-gradient(to right, #ddd 0%, #ddd ${percentage}%, #2e61ae ${percentage}%, #2e61ae 100%)`;
+        
+        // Apply brightness to phone container
+        const phoneContainer = document.querySelector('.phone-container');
+        if (phoneContainer) {
+          const brightnessValue = value / 100; // Convert to 0-1 range
+          phoneContainer.style.filter = `brightness(${0.5 + (brightnessValue * 0.5)})`; // Range: 0.5 to 1.0
+        }
+      }
+      
+      brightnessSlider.addEventListener('input', function() {
+        updateSliderBackground();
+        localStorage.setItem('screen_brightness', brightnessSlider.value);
+      });
+      
+      updateSliderBackground();
+    }
+
+    const displayRadios = document.querySelectorAll('input[name="display_mode"]');
+    displayRadios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (this.checked) {
+          localStorage.setItem('display_mode', this.value);
+          var href = "suspend.html";
+          if (this.value == 'pump') {
+            href = "pda-mode.html?m=1";
+          }
+          window.location.href = href;
+        }
+      });
+    });
+
+    const savedDisplayMode = localStorage.getItem('display_mode');
+    if (savedDisplayMode) {
+      const savedRadio = document.querySelector(`input[name="display_mode"][value="${savedDisplayMode}"]`);
+      if (savedRadio) {
+        savedRadio.checked = true;
+      }
+    } else {
+      localStorage.setItem('display_mode', 'glucose');
+    }
+
+    document.querySelectorAll(".auto-switch input").forEach(function (input) {
+      input.addEventListener("change", function () {
+        localStorage.setItem(input.id, input.checked);
+        
+        // Handle factory_reset_switch modal
+        if (input.id === 'factory_reset_switch') {
+          const modalTarget = input.getAttribute('modal-target');
+          if (modalTarget) {
+            openModalMs(modalTarget);
+          }
+          return;
+        }
+        
+        // Handle auto brightness switch
+        if (input.id === 'auto_brightness_switch') {
+          const brightnessSlider = document.getElementById('brightness_slider');
+          if (brightnessSlider) {
+            brightnessSlider.disabled = input.checked;
+            brightnessSlider.style.opacity = input.checked ? '0.5' : '1';
+          }
+        }
+        
+        // Apply WiFi styles immediately for Firefox compatibility
+        if (input.id === 'wifi_switch' || input.id === 'wifi_switch_screen12') {
+          if (typeof applyWifiStyle === 'function') {
+            applyWifiStyle();
+          }
+        }
+        
+        // Show modal for switches in lsItems (except factory_reset_switch)
+        if (lsItems.includes(input.id)) {
+          console.log('Showing loading modal for:', input.id);
+          const loadingModal = new bootstrap.Modal(
+            document.getElementById("loadingModal"),
+            {
+              backdrop: false
+            }
+          );
+          loadingModal.show();
+          console.log('Loading modal shown');
+          setTimeout(() => {
+            console.log('Hiding loading modal');
+            loadingModal.hide();
+            console.log('Showing success popup');
+            document.getElementById("successPopup").classList.add("active");
+            setTimeout(() => {
+              console.log('Hiding success popup');
+              document.getElementById("successPopup").classList.remove("active");
+            }, 2000);
+          }, 3000);
+        }
+        
+        if (document.getElementById(input.id + "_item")) {
+          document.getElementById(input.id + "_item").style.display =
+            input.checked == false ? "none" : "flex";
+        }
+      });
+    });
+  });
+
+  function loadSwitchStates() {
+    document.querySelectorAll(".auto-switch input").forEach(function (input) {
+      const state = localStorage.getItem(input.id);
+      // Set default to false if not set
+      if (state === null) {
+        localStorage.setItem(input.id, "false");
+        input.checked = false;
+      } else {
+        input.checked = state === "true";
+      }
+      
+      if (document.getElementById(input.id + "_item")) {
+        document.getElementById(input.id + "_item").style.display =
+          input.checked ? "flex" : "none";
+      }
+      
+      // Apply auto brightness state on load
+      if (input.id === 'auto_brightness_switch') {
+        const brightnessSlider = document.getElementById('brightness_slider');
+        if (brightnessSlider) {
+          brightnessSlider.disabled = input.checked;
+          brightnessSlider.style.opacity = input.checked ? '0.5' : '1';
+        }
+      }
+    });
+    
+    // Allow storage events after initial load is complete
+    setTimeout(() => {
+      isInitialLoad = false;
+    }, 100);
+  }
+  loadSwitchStates();
+
+  
+  function factoryReset() {
+    // Clear all localStorage
+    localStorage.clear();
+    // Close the modal
+    closeModalMs('factory_reset_modal');
+    // Reload the page to reset everything
+    window.location.reload();
+  }
+
+  function togglePassword() {
+    const passwordInput = document.getElementById('password_input');
+    const eyeIcon = document.getElementById('password_eye_icon');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      eyeIcon.classList.remove('fa-eye');
+      eyeIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      eyeIcon.classList.remove('fa-eye-slash');
+      eyeIcon.classList.add('fa-eye');
+    }
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    // Screen navigation handler
+    document.querySelectorAll('[screen]').forEach(element => {
+      element.addEventListener('click', function() {
+        const targetScreen = this.getAttribute('screen');
+        if (targetScreen) {
+          // Hide all screens
+          document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+          });
+          // Show target screen
+          const target = document.getElementById(targetScreen);
+          if (target) {
+            target.classList.add('active');
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll(".control-item").forEach((item, index) => {
+      const inputField = item.querySelector(".virtual-keyboard-input");
+  
+      if (inputField) {
+        const storageKey = "controlItemValue_" + index;
+        const savedValue = localStorage.getItem(storageKey);
+  
+        if (savedValue) {
+          inputField.value = savedValue;
+        } else {
+          inputField.value = "غير محدد";
+        }
+  
+        inputField.addEventListener("focus", () => {
+          if (inputField.value === "غير محدد") {
+            inputField.value = "";
+          }
+        });
+  
+        inputField.addEventListener("input", () => {
+          localStorage.setItem(storageKey, inputField.value);
+        });
+  
+        item.addEventListener("click", (e) => {
+          e.stopPropagation();
+          inputField.focus();
+        });
+  
+        document.addEventListener("click", (e) => {
+          if (!item.contains(e.target) && document.activeElement !== inputField) {
+            if (inputField.value.trim() === "") {
+              inputField.value = "غير محدد";
+              localStorage.setItem(storageKey, "غير محدد");
+            }
+          }
+        });
+      }
+    });
+  });
+  
+  
+</script>
+
+<script src="js/ruler.js"></script>
+
+<script>
+// Throttle function
+function throttle(func, limit) {
+  let inThrottle;
+  return function(...args) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// Date Picker Variables
+let selectedYear = 2024;
+let selectedMonth = 11;
+let selectedDay = 19;
+
+// Time Picker Variables  
+let selectedHour = 1;
+let selectedMinute = 1;
+let selectedAmPm = 'AM';
+let is24HourFormat = true;
+
+// Initialize date and time to current values
+function initializeDateTime() {
+  const now = new Date();
+  selectedYear = now.getFullYear();
+  selectedMonth = now.getMonth() + 1;
+  selectedDay = now.getDate();
+  selectedHour = now.getHours();
+  selectedMinute = now.getMinutes();
+  
+  // Load time format preference
+  const timeFormat = localStorage.getItem('time_format_setting') || 'نظام 24 ساعة';
+  is24HourFormat = timeFormat === 'نظام 24 ساعة';
+  
+  updateDateDisplay();
+  updateTimeDisplay();
+}
+
+function updateDateDisplay() {
+  const dateStr = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`;
+  document.getElementById('date_setting').textContent = dateStr;
+  localStorage.setItem('date_setting', dateStr);
+}
+
+function updateTimeDisplay() {
+  let displayHour = selectedHour;
+  let timeStr;
+  
+  if (is24HourFormat) {
+    timeStr = `${String(displayHour).padStart(2, '0')}:${String(selectedMinute).padStart(2, '0')}`;
+  } else {
+    const ampm = displayHour >= 12 ? 'PM' : 'AM';
+    displayHour = displayHour % 12 || 12;
+    timeStr = `${displayHour}:${String(selectedMinute).padStart(2, '0')} ${ampm}`;
+  }
+  
+  document.getElementById('time_setting').textContent = timeStr;
+  localStorage.setItem('time_setting', timeStr);
+}
+
+// Date Picker Functions
+function openDatePicker() {
+  const modal = document.getElementById('datePickerModal');
+  modal.classList.add('active');
+  initDatePicker();
+}
+
+function closeDatePicker() {
+  document.getElementById('datePickerModal').classList.remove('active');
+}
+
+function confirmDateSelection() {
+  updateDateDisplay();
+  closeDatePicker();
+}
+
+function initDatePicker() {
+  // Years (2020-2030)
+  const yearList = document.getElementById('dateYearList');
+  yearList.innerHTML = '';
+  const years = [];
+  for (let i = 2020; i <= 2030; i++) {
+    years.push(i);
+  }
+  const repeatedYears = [...years, ...years, ...years, ...years, ...years];
+  repeatedYears.forEach(year => {
+    const div = document.createElement('div');
+    div.textContent = year;
+    div.dataset.value = year;
+    div.style.cssText = 'height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;';
+    yearList.appendChild(div);
+  });
+  
+  // Months (1-12)
+  const monthList = document.getElementById('dateMonthList');
+  monthList.innerHTML = '';
+  const months = [];
+  for (let i = 1; i <= 12; i++) {
+    months.push(i);
+  }
+  const repeatedMonths = [...months, ...months, ...months, ...months, ...months];
+  repeatedMonths.forEach(month => {
+    const div = document.createElement('div');
+    div.textContent = String(month).padStart(2, '0');
+    div.dataset.value = month;
+    div.style.cssText = 'height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;';
+    monthList.appendChild(div);
+  });
+  
+  // Days (1-31)
+  const dayList = document.getElementById('dateDayList');
+  dayList.innerHTML = '';
+  const days = [];
+  for (let i = 1; i <= 31; i++) {
+    days.push(i);
+  }
+  const repeatedDays = [...days, ...days, ...days, ...days, ...days];
+  repeatedDays.forEach(day => {
+    const div = document.createElement('div');
+    div.textContent = String(day).padStart(2, '0');
+    div.dataset.value = day;
+    div.style.cssText = 'height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;';
+    dayList.appendChild(div);
+  });
+  
+  setupDateWheel(yearList, years, selectedYear, (val) => selectedYear = val);
+  setupDateWheel(monthList, months, selectedMonth, (val) => selectedMonth = val);
+  setupDateWheel(dayList, days, selectedDay, (val) => selectedDay = val);
+}
+
+// Time Picker Functions
+function openTimePicker() {
+  const modal = document.getElementById('timePickerModal');
+  modal.classList.add('active');
+  initTimePicker();
+}
+
+function closeTimePicker() {
+  document.getElementById('timePickerModal').classList.remove('active');
+}
+
+function confirmTimeSelection() {
+  updateTimeDisplay();
+  closeTimePicker();
+}
+
+function initTimePicker() {
+  const amPmContainer = document.getElementById('timeAmPmContainer');
+  
+  // Hours
+  const hourList = document.getElementById('timeHourList');
+  hourList.innerHTML = '';
+  const hours = [];
+  const maxHour = is24HourFormat ? 23 : 12;
+  const minHour = is24HourFormat ? 0 : 1;
+  for (let i = minHour; i <= maxHour; i++) {
+    hours.push(i);
+  }
+  const repeatedHours = [...hours, ...hours, ...hours, ...hours, ...hours];
+  repeatedHours.forEach(hour => {
+    const div = document.createElement('div');
+    div.textContent = is24HourFormat ? String(hour).padStart(2, '0') : hour;
+    div.dataset.value = hour;
+    div.style.cssText = 'height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;';
+    hourList.appendChild(div);
+  });
+  
+  // Minutes (0-59)
+  const minuteList = document.getElementById('timeMinuteList');
+  minuteList.innerHTML = '';
+  const minutes = [];
+  for (let i = 0; i <= 59; i++) {
+    minutes.push(i);
+  }
+  const repeatedMinutes = [...minutes, ...minutes, ...minutes, ...minutes, ...minutes];
+  repeatedMinutes.forEach(minute => {
+    const div = document.createElement('div');
+    div.textContent = String(minute).padStart(2, '0');
+    div.dataset.value = minute;
+    div.style.cssText = 'height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;';
+    minuteList.appendChild(div);
+  });
+  
+  // AM/PM for 12-hour format
+  if (!is24HourFormat) {
+    amPmContainer.style.display = 'block';
+    const amPmList = document.getElementById('timeAmPmList');
+    amPmList.innerHTML = '';
+    const amPmValues = ['AM', 'PM'];
+    const repeatedAmPm = [...amPmValues, ...amPmValues, ...amPmValues, ...amPmValues, ...amPmValues];
+    repeatedAmPm.forEach(ampm => {
+      const div = document.createElement('div');
+      div.textContent = ampm;
+      div.dataset.value = ampm;
+      div.style.cssText = 'height: 40px; line-height: 40px; text-align: center; font-size: 20px; color: #999;';
+      amPmList.appendChild(div);
+    });
+    setupDateWheel(amPmList, amPmValues, selectedAmPm, (val) => selectedAmPm = val);
+  } else {
+    amPmContainer.style.display = 'none';
+  }
+  
+  let displayHour = selectedHour;
+  if (!is24HourFormat) {
+    displayHour = selectedHour % 12 || 12;
+  }
+  
+  setupDateWheel(hourList, hours, displayHour, (val) => {
+    if (is24HourFormat) {
+      selectedHour = val;
+    } else {
+      selectedHour = val === 12 ? (selectedAmPm === 'AM' ? 0 : 12) : (selectedAmPm === 'AM' ? val : val + 12);
+    }
+  });
+  setupDateWheel(minuteList, minutes, selectedMinute, (val) => selectedMinute = val);
+}
+
+function setupDateWheel(list, data, initialValue, onUpdate) {
+  const wheel = list.parentElement;
+  let isDragging = false;
+  let startY = 0;
+  let startTop = 0;
+  const itemHeight = 40;
+  const wheelHeight = 185;
+  const centerOffset = wheelHeight / 2 - itemHeight / 2;
+  const dataLength = data.length;
+  const totalHeight = dataLength * itemHeight;
+  
+  // Set initial position
+  const initialIndex = data.indexOf(initialValue);
+  const middleSetStartTop = centerOffset - totalHeight * 2 - (initialIndex >= 0 ? initialIndex * itemHeight : 0);
+  list.style.top = `${middleSetStartTop}px`;
+  
+  updateAppearance(list, parseFloat(list.style.top));
+  
+  const startDrag = (y) => {
+    isDragging = true;
+    startY = y;
+    startTop = parseFloat(list.style.top);
+    list.style.transition = 'none';
+  };
+  
+  const moveDrag = throttle((y) => {
+    if (!isDragging) return;
+    const diffY = y - startY;
+    let newTop = startTop + diffY;
+    list.style.top = `${newTop}px`;
+    updateAppearance(list, newTop);
+  }, 16);
+  
+  const endDrag = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    let currentTop = parseFloat(list.style.top);
+    
+    // Loop handling
+    if (currentTop > centerOffset - totalHeight) {
+      currentTop -= totalHeight * 2;
+      list.style.top = `${currentTop}px`;
+    } else if (currentTop < centerOffset - totalHeight * 3) {
+      currentTop += totalHeight * 2;
+      list.style.top = `${currentTop}px`;
+    }
+    
+    setTimeout(() => {
+      list.style.transition = 'top 0.2s ease-out';
+      snapToNearest(list, data, onUpdate);
+    }, 10);
+  };
+  
+  wheel.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    startDrag(e.clientY);
+  });
+  
+  wheel.addEventListener('mousemove', (e) => moveDrag(e.clientY));
+  document.addEventListener('mouseup', endDrag);
+  wheel.addEventListener('mouseleave', endDrag);
+  
+  wheel.addEventListener('touchstart', (e) => startDrag(e.touches[0].clientY), { passive: false });
+  wheel.addEventListener('touchmove', (e) => {
+    if (e.cancelable) e.preventDefault();
+    moveDrag(e.touches[0].clientY);
+  }, { passive: false });
+  wheel.addEventListener('touchend', endDrag);
+  wheel.addEventListener('touchcancel', endDrag);
+  
+  function updateAppearance(list, top) {
+    const items = list.children;
+    const itemHeight = 40;
+    const wheelHeight = 185;
+    const centerOffset = wheelHeight / 2 - itemHeight / 2;
+    
+    Array.from(items).forEach((item, index) => {
+      const itemTop = top + index * itemHeight;
+      const distance = Math.abs(itemTop - centerOffset);
+      
+      if (distance < itemHeight / 2) {
+        item.style.color = 'white';
+        item.style.fontSize = '24px';
+        item.style.fontWeight = 'bold';
+      } else {
+        item.style.color = '#999';
+        item.style.fontSize = '20px';
+        item.style.fontWeight = 'normal';
+      }
+    });
+  }
+  
+  function snapToNearest(list, data, onUpdate) {
+    const currentTop = parseFloat(list.style.top);
+    const centerOffset = wheelHeight / 2 - itemHeight / 2;
+    const dataLength = data.length;
+    const totalHeight = dataLength * itemHeight;
+    
+    let closestIndex = Math.round((centerOffset - currentTop) / itemHeight);
+    const actualIndex = ((closestIndex % dataLength) + dataLength) % dataLength;
+    
+    const targetTop = centerOffset - closestIndex * itemHeight;
+    list.style.top = `${targetTop}px`;
+    
+    onUpdate(data[actualIndex]);
+    updateAppearance(list, targetTop);
+  }
+}
+
+// Close modal when clicking outside
+function setupModalBackdropClose() {
+  // Get all modal overlays
+  const modalOverlays = document.querySelectorAll('.modal-overlay');
+  
+  modalOverlays.forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      // Check if clicked on the overlay itself (not the modal content)
+      if (e.target === overlay) {
+        // Find and close the active modal
+        const activeModal = overlay.querySelector('.picker-container, .modal-content, [class*="modal"]');
+        if (activeModal) {
+          const modalId = overlay.id || overlay.querySelector('[id]')?.id;
+          if (modalId && typeof closeModalMs === 'function') {
+            closeModalMs(modalId);
+          } else {
+            // Fallback: just remove active class
+            overlay.classList.remove('active');
+          }
+        }
+      }
+    });
+  });
+  
+  // Also handle Bootstrap modals
+  const bootstrapModals = document.querySelectorAll('.modal');
+  bootstrapModals.forEach(modal => {
+    modal.addEventListener('click', function(e) {
+      // Check if clicked on the backdrop
+      if (e.target === modal) {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) {
+          bsModal.hide();
+        }
+      }
+    });
+  });
+}
+
+// Time format change handler
+document.addEventListener('DOMContentLoaded', function() {
+  initializeDateTime();
+  setupModalBackdropClose();
+  
+  // Listen for time format changes
+  document.querySelectorAll('[selectable-target="time_format_setting"]').forEach(item => {
+    item.addEventListener('click', function() {
+      const newFormat = this.querySelector('.control-item-view').textContent.trim();
+      is24HourFormat = newFormat === 'نظام 24 ساعة';
+      localStorage.setItem('time_format_setting', newFormat);
+      document.getElementById('time_format_setting').textContent = newFormat;
+      updateTimeDisplay();
+    });
+  });
+});
+</script>
+
+</body>
+

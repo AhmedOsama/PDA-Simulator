@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=480, initial-scale=1.0" />
+    <title>إعدادات</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="style/app.css" />
+    <style>
+      * {
+        user-select: none;
+      }
+
+      .phone-container {
+        background: #fafafa;
+        overflow: hidden;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .control-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px;
+        padding-left: 40px;
+        border-bottom: 1px solid #edeeef;
+        background: #fff;
+        min-height: 65px !important;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .control-item:hover {
+        background-color: #f8f9fa;
+      }
+
+      .control-item-label {
+        font-size: 18px;
+        color: #444;
+        font-weight: 400;
+      }
+
+      .control-item-view {
+        font-size: 18px;
+        color: #777;
+        display: flex;
+        align-items: center;
+      }
+
+      .control-item-view i.fa-chevron-left {
+        font-size: 14px;
+        padding-right: 10px;
+      }
+
+      .control-item-icon {
+        width: 24px;
+        height: 24px;
+        margin-left: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+
+      .back-button {
+        background: none;
+        border: none;
+        color: #333;
+        font-size: 22px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-button:hover {
+        color: #333;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="phone-container">
+      <div class="screen active" id="screen1" style="height: fit-content">
+        <div style="position: sticky; top: 0; z-index: 9999">
+          <header class="mb-0">
+            <div class="white-overlay">
+              <div class="icon-block block1"></div>
+              <div class="icon-block block2"></div>
+              <div class="icon-block block3"></div>
+              <div class="icon-block block4"></div>
+            </div>
+          </header>
+          <div
+            class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+            style="font-size: 20px"
+          >
+            <div>إعدادات</div>
+            <div class="position-absolute" style="right: 20px">
+              <button class="back-button" onclick="handlePdaModeNavigation(); ">
+                <i class="fa fa-chevron-left"></i>
+                رجوع
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- General Settings -->
+        <div
+          class="control-item mt-3"
+          onclick="location.href='general-settings.html'"
+        >
+          <div class="control-item-label d-flex align-items-center">
+            <div class="control-item-icon">
+              <i class="fa fa-cog"></i>
+            </div>
+            إعدادات عامة
+          </div>
+          <div class="control-item-view">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+        </div>
+
+        <!-- Pump Calculator Settings -->
+        <div
+          class="control-item"
+          onclick="location.href='insulin-sensitivity.html'"
+        >
+          <div class="control-item-label d-flex align-items-center">
+            <div class="control-item-icon">
+              <i class="fa fa-calculator"></i>
+            </div>
+            إعدادات حاسبة الضخ
+          </div>
+          <div class="control-item-view">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+        </div>
+
+        <!-- Insulin Administration Settings -->
+        <div
+          class="control-item"
+          onclick="location.href='insulin-settings.html'"
+        >
+          <div class="control-item-label d-flex align-items-center">
+            <div class="control-item-icon">
+              <i class="fa fa-syringe"></i>
+            </div>
+            إعدادات إعطاء الأنسولين
+          </div>
+          <div class="control-item-view">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+        </div>
+
+        <!-- Alert Settings -->
+        <div
+          class="control-item"
+          onclick="location.href='reminder-settings.html'"
+        >
+          <div class="control-item-label d-flex align-items-center">
+            <div class="control-item-icon">
+              <i class="fa fa-bell"></i>
+            </div>
+            إعدادات التنبيهة
+          </div>
+          <div class="control-item-view">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+        </div>
+        <!-- pump -->
+        <div
+          class="control-item"
+          onclick="location.href='replace_battery.html?step=3'"
+        >
+          <div class="control-item-label d-flex align-items-center">
+            <div class="control-item-icon">
+              <img src="assets/pump.jpg" alt="" style="width: 25px" />
+            </div>
+            إقران المضخة
+          </div>
+          <div class="control-item-view">
+            <i class="fa fa-chevron-left"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/control-screen.js"></script>
+    <script src="js/shared-rules.js"></script>
+  </body>
+</html>
