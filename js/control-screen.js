@@ -278,6 +278,14 @@ class ControlScreen {
     return new ControlScreen(options);
   }
 }
+// Helper function for smooth page transitions
+function smoothNavigate(url) {
+  document.body.classList.add('fade-out');
+  setTimeout(() => {
+    window.location.href = url;
+  }, 150);
+}
+
 function handlePdaModeNavigation() {
   // Always navigate to the main page based on display mode
   var isPump = localStorage.getItem("display_mode");
@@ -293,8 +301,8 @@ function handlePdaModeNavigation() {
     href = "suspend.html";
   }
   
-  // Always go to main page, never use history.back()
-  window.location.href = href;
+  // Always go to main page with smooth transition
+  smoothNavigate(href);
 }
 
 // Export for use in other files
@@ -303,6 +311,7 @@ if (typeof module !== "undefined" && module.exports) {
 } else if (typeof window !== "undefined") {
   window.ControlScreen = ControlScreen;
   window.handlePdaModeNavigation = handlePdaModeNavigation;
+  window.smoothNavigate = smoothNavigate;
 }
 // For direct browser usage
 if (typeof window !== "undefined") {
@@ -456,10 +465,8 @@ function applyPairingStyles() {
     block.style.display = "block";
     block.style.backgroundColor = "transparent";
   });
-  // Avoid redundant writes that can trigger feedback loops
-  if (localStorage.getItem("cgms_paired") !== "true") {
-    localStorage.setItem("cgms_paired", "true");
-  }
+  // DON'T set localStorage here - it causes infinite loops
+  // The value is already set by the caller
 }
 
 function removePairingStyles() {
@@ -476,49 +483,62 @@ function removePairingStyles() {
   const cgmsSection = document.querySelector(".cgms-middle-section");
   if (cgmsSection) cgmsSection.style.display = "none";
 
-  if (localStorage.getItem("cgms_paired") !== "false") {
-    localStorage.setItem("cgms_paired", "false");
-  }
-  localStorage.removeItem("cgms_serial");
+  // DON'T set localStorage here - it causes infinite loops
+  // The value is already set by the caller
 }
 
+// Debounce helper to prevent rapid re-execution
+let updateCGMSTimeout = null;
 function updateCGMS() {
-  const paired = localStorage.getItem("cgms_paired") === "true";
-  paired ? applyPairingStyles() : removePairingStyles();
+  clearTimeout(updateCGMSTimeout);
+  updateCGMSTimeout = setTimeout(() => {
+    const paired = localStorage.getItem("cgms_paired") === "true";
+    paired ? applyPairingStyles() : removePairingStyles();
+  }, 10);
 }
 
 /* ==========================
    WiFi Styles
 ========================== */
+let applyWifiStyleTimeout = null;
 function applyWifiStyle() {
-  if (localStorage.getItem("wifi_switch") === null) {
-    localStorage.setItem("wifi_switch", "false");
-  }
+  clearTimeout(applyWifiStyleTimeout);
+  applyWifiStyleTimeout = setTimeout(() => {
+    // Use direct set to avoid triggering events for default values
+    if (localStorage.getItem("wifi_switch") === null) {
+      try {
+        Object.getPrototypeOf(localStorage).setItem.call(localStorage, "wifi_switch", "false");
+      } catch (e) {
+        // Fallback if override hasn't been applied yet
+        localStorage.setItem("wifi_switch", "false");
+      }
+    }
 
-  const wifiState = localStorage.getItem("wifi_switch");
-  const savedWifiValue = localStorage.getItem("wifi_network_name");
+    const wifiState = localStorage.getItem("wifi_switch");
+    const savedWifiValue = localStorage.getItem("wifi_network_name");
 
-  const blocks = document.querySelectorAll(".icon-block.block4");
-  const wifiNetworkEl = document.getElementById("wifi_network");
+    const blocks = document.querySelectorAll(".icon-block.block4");
+    const wifiNetworkEl = document.getElementById("wifi_network");
 
-  if (wifiNetworkEl && savedWifiValue)
-    wifiNetworkEl.textContent = savedWifiValue;
+    if (wifiNetworkEl && savedWifiValue)
+      wifiNetworkEl.textContent = savedWifiValue;
 
-  blocks.forEach((block) =>
-    block.classList.toggle("wifi-true", wifiState === "true")
-  );
+    blocks.forEach((block) =>
+      block.classList.toggle("wifi-true", wifiState === "true")
+    );
 
-  const signalImage = document.querySelector(".image-4, .image-4p");
-  if (signalImage) {
-    signalImage.classList.toggle("image-4", wifiState !== "true");
-    signalImage.classList.toggle("image-4p", wifiState === "true");
-  }
+    const signalImage = document.querySelector(".image-4, .image-4p");
+    if (signalImage) {
+      signalImage.classList.toggle("image-4", wifiState !== "true");
+      signalImage.classList.toggle("image-4p", wifiState === "true");
+    }
 
-  // Update wifi text
-  const wifiTextElements = document.querySelectorAll(".wifi");
-  wifiTextElements.forEach((el) => {
-    el.textContent = wifiState === "true" ? "إشارة طبيعية" : "لا يوجد إِشارة";
-  });
+    // Update wifi text
+    const wifiTextElements = document.querySelectorAll(".wifi");
+    wifiTextElements.forEach((el) => {
+      el.textContent = wifiState === "true" ? "إشارة طبيعية" : "لا يوجد إِشارة";
+    });
+  }, 10);
 }
 
 /* ==========================
@@ -527,9 +547,13 @@ function applyWifiStyle() {
 function loadSwitchStates() {
   document.querySelectorAll(".auto-switch input").forEach((input) => {
     const state = localStorage.getItem(input.id);
-    // Set default to false if not set
+    // Set default to false if not set - use direct set to avoid triggering events
     if (state === null) {
-      localStorage.setItem(input.id, "false");
+      try {
+        Object.getPrototypeOf(localStorage).setItem.call(localStorage, input.id, "false");
+      } catch (e) {
+        localStorage.setItem(input.id, "false");
+      }
       input.checked = false;
     } else {
       input.checked = state === "true";
@@ -600,9 +624,42 @@ window.addEventListener("DOMContentLoaded", function () {
   if (window.__pageInitialized) return;
   window.__pageInitialized = true;
   
-  // Initialize insulin-qaedy as false if not set
+  // ===== SMOOTH NAVIGATION SETUP =====
+  // Fade out on page unload
+  window.addEventListener('beforeunload', function() {
+    document.body.classList.add('fade-out');
+  });
+  
+  // Also handle pagehide for better browser support
+  window.addEventListener('pagehide', function() {
+    document.body.classList.add('fade-out');
+  });
+  
+  // Click interceptor for immediate feedback
+  document.addEventListener('click', function(e) {
+    let target = e.target;
+    
+    // Walk up the DOM tree to find an element with onclick
+    while (target && target !== document) {
+      const onclick = target.getAttribute('onclick');
+      
+      if (onclick && onclick.includes('window.location')) {
+        // Don't prevent default, just add fade class for visual feedback
+        document.body.classList.add('fade-out');
+        break;
+      }
+      
+      target = target.parentElement;
+    }
+  }, true);
+  
+  // Initialize insulin-qaedy as false if not set - use direct set to avoid triggering events
   if (localStorage.getItem("insulin-qaedy") === null) {
-    localStorage.setItem("insulin-qaedy", "false");
+    try {
+      Object.getPrototypeOf(localStorage).setItem.call(localStorage, "insulin-qaedy", "false");
+    } catch (e) {
+      localStorage.setItem("insulin-qaedy", "false");
+    }
   }
   
   loadSwitchStates();
@@ -721,50 +778,64 @@ window.addEventListener("storage", (e) => {
 ========================== */
 if (!localStorage.__overrideDone) {
   const originalSetItem = localStorage.setItem;
+  let isProcessingStorageChange = false; // Flag to prevent re-entry
+  
   localStorage.setItem = function (key, value) {
     const oldValue = localStorage.getItem(key);
     if (String(oldValue) === String(value)) {
       return; // Avoid redundant writes and feedback loops
     }
-    originalSetItem.apply(this, [key, value]);
-
-    // Firefox-compatible StorageEvent
+    
+    // Prevent re-entry during processing
+    if (isProcessingStorageChange) {
+      originalSetItem.apply(this, [key, value]);
+      return;
+    }
+    
+    isProcessingStorageChange = true;
     try {
-      window.dispatchEvent(
-        new StorageEvent("storage", {
-          key: key,
-          oldValue: oldValue,
-          newValue: value,
-          storageArea: localStorage,
-          url: location.href,
-        })
-      );
-    } catch (e) {
-      // Fallback for older browsers
-      const event = document.createEvent('StorageEvent');
-      event.initStorageEvent('storage', false, false, key, oldValue, value, location.href, localStorage);
-      window.dispatchEvent(event);
-    }
+      originalSetItem.apply(this, [key, value]);
 
-    if (["wifi_switch", "wifi_network_name"].includes(key)) applyWifiStyle();
-    if (["cgms_paired", "cgms_serial"].includes(key)) updateCGMS();
-    if (key === "screen_brightness") applyBrightness(); // Apply brightness when changed
-    if (key === "pump-pairing") {
-      const isPaired = value === 'true';
-      console.log('pump-pairing changed to:', isPaired);
-      if (isPaired) {
-        applyPreparationStyles();
-      } else {
-        removePreparationStyles();
+      // Firefox-compatible StorageEvent
+      try {
+        window.dispatchEvent(
+          new StorageEvent("storage", {
+            key: key,
+            oldValue: oldValue,
+            newValue: value,
+            storageArea: localStorage,
+            url: location.href,
+          })
+        );
+      } catch (e) {
+        // Fallback for older browsers
+        const event = document.createEvent('StorageEvent');
+        event.initStorageEvent('storage', false, false, key, oldValue, value, location.href, localStorage);
+        window.dispatchEvent(event);
       }
-      // Update ControlScreen instance if exists
-      if (window.controlScreenInstance) {
-        window.controlScreenInstance.updatePumpPairingStatus();
+
+      if (["wifi_switch", "wifi_network_name"].includes(key)) applyWifiStyle();
+      if (["cgms_paired", "cgms_serial"].includes(key)) updateCGMS();
+      if (key === "screen_brightness") applyBrightness(); // Apply brightness when changed
+      if (key === "pump-pairing") {
+        const isPaired = value === 'true';
+        console.log('pump-pairing changed to:', isPaired);
+        if (isPaired) {
+          applyPreparationStyles();
+        } else {
+          removePreparationStyles();
+        }
+        // Update ControlScreen instance if exists
+        if (window.controlScreenInstance) {
+          window.controlScreenInstance.updatePumpPairingStatus();
+        }
+        if (typeof updateNoInsulinBox === "function") updateNoInsulinBox();
       }
-      if (typeof updateNoInsulinBox === "function") updateNoInsulinBox();
-    }
-    if (key === "insulin-qaedy") {
-      if (typeof updateNoInsulinBox === "function") updateNoInsulinBox();
+      if (key === "insulin-qaedy") {
+        if (typeof updateNoInsulinBox === "function") updateNoInsulinBox();
+      }
+    } finally {
+      isProcessingStorageChange = false;
     }
   };
   localStorage.__overrideDone = true;

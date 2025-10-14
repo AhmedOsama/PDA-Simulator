@@ -34,6 +34,25 @@ body {
   margin: 0 !important;
 }
 
+/* Page transition styles - prevent white flash */
+html {
+  background-color: #ffffff !important;
+}
+
+html, body {
+  background-color: #ffffff !important;
+}
+
+body {
+  opacity: 1;
+  transition: opacity 0.15s ease-out;
+}
+
+body.fade-out {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease-in;
+}
+
 /* Apply Arial font to all English letters and numbers automatically */
 body * {
   font-family: "Noto Naskh Arabic", Arial, Helvetica, sans-serif;
