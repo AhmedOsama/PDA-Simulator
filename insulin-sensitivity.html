@@ -16,21 +16,10 @@
     referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="style/app.css" />
   <link rel="stylesheet" href="style/keyboard.css" />
-  <script src="js/keyboard.js"></script>
+  <link rel="preload" href="assets/FinalCover.png" as="image">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <script src="js/keyboard.js" defer></script>
   <style>
-    * {
-      user-select: none;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-
-
-    .phone-container {
-      background: #fafafa;
-      overflow-y: scroll;
-    }
-
     .control-item {
       display: flex;
       justify-content: space-between;
@@ -38,9 +27,15 @@
       padding: 16px;
       padding-left: 40px;
       border-bottom: 1px solid #edeeef;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.9);
       min-height: 75px !important;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    .control-item:hover {
+      background: rgba(255, 255, 255, 0.95);
     }
 
     .control-item-label {
@@ -301,7 +296,7 @@
   </style>
 </head>
 
-<body>
+<body style="transition: opacity 0.3s ease;">
   <div class="phone-container">
     <header class="mb-0">  <div class="white-overlay">
       <div class="icon-block block1"></div>
