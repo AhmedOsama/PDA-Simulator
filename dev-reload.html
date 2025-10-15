@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDA Development - Auto Reload</title>
+    <link rel="preload" href="assets/FinalCover.png" as="image">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <style>
         body {
             margin: 0;
@@ -129,6 +131,13 @@
                 iframe.src = iframe.src;
             }
         });
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
     </script>
 </body>
 </html>
