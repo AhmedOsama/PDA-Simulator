@@ -913,7 +913,7 @@
         <div class="step-content">
           <div class="header-title fs-3">إلغاء اقتران المضخة</div>
           <div class="step-title fs-4">إلغاء تحكم جهاز مساعد السكري المحمول في المضخة A0260</div>
-          <div class="illustration">
+          <div class="illustration" style="margin: 20px 0 25px 0 !important;">
             <!-- Empty space for illustration -->
           </div>
           <div class="progress-dots">
@@ -1247,14 +1247,8 @@
     }
 
     function handleScanClick() {
-      showVideo('assets/pumppair.mp4');
-
-      // انتظار وقت أطول قبل إزالة الفيديو وإظهار شاشة التحميل
-      setTimeout(() => {
-        // Remove image overlay first
-        const overlay = document.getElementById('image-overlay');
-        if (overlay) overlay.remove();
-
+      showVideo('assets/pumppair.mp4', function() {
+        // This callback runs after video ends
         // Show loading modal
         const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'), {
           backdrop: false
@@ -1299,7 +1293,7 @@
             }, 1500);
           }, 300);
         }, 2000);
-      }, 19000); // تغيير الوقت إلى 19 ثانية
+      });
     }
 
     function showImage(src) {
@@ -1334,7 +1328,7 @@
       setTimeout(() => { overlay.remove(); }, 2500);
     }
 
-    function showVideo(src) {
+    function showVideo(src, onVideoEnd) {
       console.log('showVideo called with:', src);
       let container = document.querySelector('.phone-container');
       if (!container) {
@@ -1367,10 +1361,9 @@
       video.autoplay = true;
       video.muted = true; 
       video.playsInline = true;
-      video.loop = true; 
+      video.loop = false; 
       overlay.style.background = 'linear-gradient(to bottom, transparent 80px, rgba(0,0,0,0.85) 70px)';
 
-      // إضافة معالجة أخطاء
       video.addEventListener('error', (e) => {
         console.error('Video error:', e);
         console.error('Video src:', video.src);
@@ -1378,25 +1371,22 @@
 
       video.addEventListener('loadeddata', () => {
         console.log('Video loaded successfully');
+        video.currentTime = 9;
       });
 
       overlay.appendChild(video);
       container.appendChild(overlay);
       
-      // محاولة تشغيل الفيديو يدوياً
       video.play().catch(e => {
         console.error('Failed to play video:', e);
       });
 
       video.addEventListener('ended', () => {
         overlay.remove();
-      });
-      
-      setTimeout(() => { 
-        if (overlay.parentNode) {
-          overlay.remove();
+        if (onVideoEnd && typeof onVideoEnd === 'function') {
+          onVideoEnd();
         }
-      }, 30000); 
+      });
     }
 
     function completePumpPairing() {
