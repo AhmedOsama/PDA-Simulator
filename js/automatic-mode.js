@@ -1,5 +1,5 @@
 // Constants
-const minValue = 20;
+const minValue = 19;
 const maxValue = 600;
 const step = 1;
 const unitsVisible = 40;
@@ -286,8 +286,10 @@ function updateGlucoseText() {
   if (!glucoseValue) return;
   
   // Determine color based on glucose value
-  let color = "#33cc7a"; // Green (default for < 180)
-  if (currentValue >= 180) {
+  let color = "#FF4D4D"; // Red (default for < 70)
+  if (currentValue >= 70 && currentValue <= 180) {
+    color = "#33cc7a"; // Green
+  } else if (currentValue > 180) {
     color = "#FFD700"; // Yellow/Gold
   }
   
@@ -381,12 +383,12 @@ function checkWhatModal() {
   const deviation35 = (bloodSugarValue * 0.35).toFixed(0);
   
   // Update deviation text in both modals
-  const showValElement = document.querySelector(".show-val");
-  if (showValElement) {
+  const showValElements = document.querySelectorAll(".show-val");
+  showValElements.forEach((element) => {
     const deviation = bloodSugarValue <= 170 ? deviation10 : deviation35;
     const percentage = bloodSugarValue <= 170 ? 10 : 35;
-    showValElement.innerText = `${bloodSugarValue.toFixed(1)} ± ${deviation} (%${percentage})`;
-  }
+    element.innerText = `${bloodSugarValue.toFixed(1)} ± ${deviation} (%${percentage})`;
+  });
   
   // Update notconnection modal deviation (35% always)
   const notconnectionDeviationElement = document.getElementById("notconnectionDeviation");
@@ -395,7 +397,10 @@ function checkWhatModal() {
   }
 
   // Show appropriate modal based on glucose value
-  if (bloodSugarValue <= 170) {
+  if (bloodSugarValue >= 103 && bloodSugarValue <= 127) {
+    // Show success modal when glucose is within optimal range
+    showModal("successModal", true);
+  } else if (bloodSugarValue <= 170) {
     // Show calibration modal for values 170 or less (10% deviation)
     showModal("calibrationModal", true);
   } else {
@@ -429,7 +434,8 @@ function generateRuler() {
     if (i % 10 === 0) {
       lineColor = 'black';
     } else {
-      if (i < 180) lineColor = '#33cc7a'; // Green
+      if (i < 70) lineColor = '#FF4D4D'; // Red
+      else if (i <= 180) lineColor = '#33cc7a'; // Green
       else lineColor = '#FFD700'; // Yellow
     }
     
@@ -450,8 +456,9 @@ function generateRuler() {
     if (i == 79) flexValue = '0 0 8px';
     if (i == 80) flexValue = '0 0 20px';
     
-    let bgColor = "#33cc7a"; // Green for < 180
-    if (i >= 180) bgColor = "#FFD700"; // Yellow for 180+
+    let bgColor = "#FF4D4D"; // Red for < 70
+    if (i >= 70 && i <= 180) bgColor = "#33cc7a"; // Green for 70-180
+    if (i > 180) bgColor = "#FFD700"; // Yellow for 181+
     
     rulerSegment.style.cssText = `flex: ${flexValue}; height: 6px; background-color: ${bgColor};`;
     rulerFragment.appendChild(rulerSegment);

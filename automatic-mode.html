@@ -12033,47 +12033,40 @@
     </div>
 
     <!-- Success Modal -->
-    <!-- - <div id="successModal" class="modal-overlay shadow-none">
-        <div class="modal-content pb-0">
-          <h3>تفعيل الوضع الأوتوماتيكي؟</h3>
-          <div
-            class="icon success"
-            style="display: flex; justify-content: center; align-items: center"
-          >
-            <i class="fa fa-check"></i>
-          </div>
-          <p>المضخة جاهزة لبدء الوضع الأوتوماتيكي</p>
-          <div class="modal-details mb-0 text-center">
-            <p class="mb-0 text-black-50">
-              قيمة الجلوكوز الحالية
-              <span
-                id="modalGlucoseValue"
-                class="modalGlucoseValue fs-3 text-black-50"
-              ></span>
-              mg/dl
-            </p>
-            <p class="mb-0 text-black-50">
-              الانحراف المرجعي <span class="show-val"></span> (%10)
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button
-              class="btn-link"
-              onclick="hideModal('successModal'); showScreen('finalStatusScreen')"
-            >
-              إبدأ
-            </button>
-            <button class="btn-link" onclick="hideModal('successModal')">
-              رجوع
-            </button>
-          </div>
+    <div id="successModal" class="modal-overlay shadow-none">
+      <div class="modal-content pb-2">
+        <h3>تفعيل الوضع الأوتوماتيكي؟</h3>
+        <div class="icon success" style="display: flex; justify-content: center; align-items: center">
+          <i class="fa fa-check"></i>
         </div>
-         </div>
-              <p class="mb-0 text-black-50">
-              قيمة الجلوكوز الحالية
-              <span id="modalGlucoseValue" class="modalGlucoseValue fs-3 text-black-50">153</span>
-              mg/dl
-            </p>-->
+        <p>المضخة جاهزة لبدء الوضع الأوتوماتيكي</p>
+        <div class="modal-details mb-0 text-center">
+          <p class="mb-0 text-black-50">
+            قيمة الجلوكوز الحالية
+            <span id="modalGlucoseValue" class="modalGlucoseValue fs-3 text-black-50"></span>
+            mg/dl
+          </p>
+          <p class="mb-0 text-black-50">
+            الانحراف المرجعي <span class="show-val"></span> 
+          </p>
+        </div>
+        <div class="modal-footer">
+          
+          <button class="btn-link" onclick="hideModal('successModal')">
+            رجوع
+          </button>
+          <button class="btn-link" onclick="hideModal('successModal'); showScreen('finalStatusScreen')">
+            إبدأ
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- <p class="mb-0 text-black-50">
+      قيمة الجلوكوز الحالية
+      <span id="modalGlucoseValue" class="modalGlucoseValue fs-3 text-black-50">153</span>
+      mg/dl
+    </p> -->
+
     <!--  Calibration Modal -->
     <div id="calibrationModal" class="modal-overlay shadow-none">
       <div class="modal-content">
@@ -12092,7 +12085,7 @@
             mg/dl
           </p>
           <p class="mb-0 text-black-50">
-            الانحراف المرجعي <span class="show-val"></span> (%10)
+            الانحراف المرجعي <span class="show-val"></span> 
           </p>
         </div>
         <div class="modal-footer">

@@ -8,6 +8,7 @@
   --special-key-active-bg: #8e96a4;
   --bs-secondary-rgb: 222, 222, 222;
   /* --bs-secondary-rgb: 27, 82, 164; */
+  --scrollbar-compensation: 0px;
 }
 
 * {
@@ -23,7 +24,8 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 165vh !important;
-  padding: 20px;
+  padding-block: 20px;
+  padding-inline: 20px;
   overscroll-behavior: none;
   background-color: #ffffff !important;
   background-image: url(../assets/FinalCover.png) !important;
@@ -32,6 +34,11 @@ body {
   background-repeat: no-repeat !important;
   zoom:0.60;
   margin: 0 !important;
+}
+
+body.overlay-open {
+  padding-inline-start: 20px;
+  padding-inline-end: calc(20px + var(--scrollbar-compensation, 0px));
 }
 
 /* Page transition styles - prevent white flash */
@@ -46,6 +53,14 @@ html, body {
 body {
   opacity: 1;
   transition: opacity 0.15s ease-out;
+}
+
+body.page-fade-transition {
+  transition: opacity 0.2s ease-in-out;
+}
+
+body.page-fade-transition.is-transitioning {
+  opacity: 0;
 }
 
 body.fade-out {

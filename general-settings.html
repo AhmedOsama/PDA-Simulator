@@ -797,7 +797,7 @@
       <div class="control-item">
         <div class="control-item-label">إصدار البرنامج</div>
         <div class="control-item-view">
-          <span class="control-item-value">1.0.0</span>
+          <span class="control-item-value">2.0.0</span>
         </div>
       </div>
       <div class="control-item">
@@ -809,13 +809,13 @@
       <div class="control-item">
         <div class="control-item-label">الرقم التسلسلي للمضخة المقترنة</div>
         <div class="control-item-view">
-          <span class="control-item-value"></span>
+          <span class="control-item-value" id="paired_pump_serial"></span>
         </div>
       </div>
       <div class="control-item">
         <div class="control-item-label">إصدار برنامج المضخة</div>
         <div class="control-item-view">
-          <span class="control-item-value"></span>
+          <span class="control-item-value" id="paired_pump_firmware">2.0.0</span>
         </div>
       </div>
       <div class="control-item">
@@ -1897,6 +1897,35 @@ function setupDateWheel(list, data, initialValue, onUpdate) {
   }
 }
 
+function updatePairedPumpSerial() {
+  const serialElement = document.getElementById('paired_pump_serial');
+  const firmwareElement = document.getElementById('paired_pump_firmware');
+  if (!serialElement) return;
+
+  const isPaired = localStorage.getItem('pump-pairing') === 'true';
+  if (isPaired) {
+    const pumpSerial = localStorage.getItem('pump-serial') || '062A0A';
+    const formattedSerial = pumpSerial.split('').reverse().join('');
+    serialElement.textContent = formattedSerial;
+    serialElement.classList.remove('text-muted');
+    serialElement.style.display = '';
+    if (firmwareElement) {
+      firmwareElement.textContent = '2.0.0';
+      firmwareElement.classList.remove('text-muted');
+      firmwareElement.style.display = '';
+    }
+  } else {
+    serialElement.textContent = '';
+    serialElement.classList.add('text-muted');
+    serialElement.style.display = 'none';
+    if (firmwareElement) {
+      firmwareElement.textContent = '';
+      firmwareElement.classList.add('text-muted');
+      firmwareElement.style.display = 'none';
+    }
+  }
+}
+
 // Close modal when clicking outside
 function setupModalBackdropClose() {
   // Get all modal overlays
@@ -1940,6 +1969,7 @@ function setupModalBackdropClose() {
 document.addEventListener('DOMContentLoaded', function() {
   initializeDateTime();
   setupModalBackdropClose();
+  updatePairedPumpSerial();
   
   // Listen for time format changes
   document.querySelectorAll('[selectable-target="time_format_setting"]').forEach(item => {
@@ -1951,6 +1981,12 @@ document.addEventListener('DOMContentLoaded', function() {
       updateTimeDisplay();
     });
   });
+});
+
+window.addEventListener('storage', function(e) {
+  if (e.key === 'pump-pairing' || e.key === 'pump-serial') {
+    updatePairedPumpSerial();
+  }
 });
 </script>
 

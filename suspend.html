@@ -1676,10 +1676,12 @@
         notcomBtn.addEventListener("click", openModalForResume);
       }
       
-      // Add event listener for notcomNoInsulin button to open menu
+      // Add event listener for notcomNoInsulin button to navigate to basal settings
       const notcomNoInsulinBtn = document.getElementById("notcomNoInsulin");
       if (notcomNoInsulinBtn) {
-        notcomNoInsulinBtn.addEventListener("click", toggleMenu);
+        notcomNoInsulinBtn.addEventListener("click", () => {
+          window.location.href = "basal.html";
+        });
       }
       
       // Check if we should open the menu

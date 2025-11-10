@@ -10,7 +10,7 @@ class ControlScreen {
       deviceId: options.deviceId || "--",
       insulinAmount: options.insulinAmount || "123 وحدة",
       cgmsId: options.cgmsId || "22222C4JT",
-      sensorAge: options.sensorAge || "15 يوم ",
+      sensorAge: options.sensorAge || "13 يوم ",
       isLocked: options.isLocked !== undefined ? options.isLocked : true,
       ...options,
     };
@@ -99,7 +99,7 @@ class ControlScreen {
               </div>
               <div class="text-end">
                 <div class="mb-3">
-                  <div class="text-white mb-1" style="font-size: 20px">15 يوم</div>
+                  <div class="text-white mb-1" style="font-size: 20px">13 يوم</div>
                   <div style="font-size: 20px; color: #fff">عمر المستشعر</div>
                 </div>
               </div>
@@ -235,12 +235,13 @@ class ControlScreen {
 
     const isPaired = localStorage.getItem('pump-pairing') === 'true';
     const pumpSerial = localStorage.getItem('pump-serial') || '062A0A';
+    const formattedSerial = pumpSerial.split('').reverse().join('');
 
     if (isPaired) {
       // Update device ID
       const deviceIdElement = this.element.querySelector(".device-id-line");
       if (deviceIdElement) {
-        deviceIdElement.textContent = pumpSerial;
+        deviceIdElement.textContent = formattedSerial;
         deviceIdElement.classList.remove('dashW');
       }
 
@@ -344,7 +345,7 @@ if (typeof window !== "undefined") {
       deviceId: "--",
       insulinAmount: "123 وحدة",
       cgmsId: "--",
-      sensorAge: "15 يوم",
+      sensorAge: "13 يوم",
     });
     // Save instance globally for access from localStorage override
     window.controlScreenInstance = controlScreen;
