@@ -751,6 +751,11 @@ window.addEventListener("storage", (e) => {
   if (["wifi_switch", "wifi_network_name"].includes(e.key)) applyWifiStyle();
   if (["cgms_paired", "cgms_serial"].includes(e.key)) updateCGMS();
   if (e.key === "screen_brightness") applyBrightness(); // Apply brightness when changed
+  if (e.key === "exerciseautoModeSwitch" || e.key === "statusautoModeSwitch" || e.key === "planautoModeSwitch") {
+    if (typeof window.enforceSleepSwitchRule === 'function') {
+      window.enforceSleepSwitchRule();
+    }
+  }
   if (e.key === "pump-pairing") {
     const isPaired = localStorage.getItem('pump-pairing') === 'true';
     if (isPaired) {
@@ -850,6 +855,11 @@ if (!localStorage.__overrideDone) {
           window.controlScreenInstance.updatePumpPairingStatus();
         }
         if (typeof updateNoInsulinBox === "function") updateNoInsulinBox();
+      }
+      if (key === "exerciseautoModeSwitch" || key === "statusautoModeSwitch" || key === "planautoModeSwitch") {
+        if (typeof window.enforceSleepSwitchRule === 'function') {
+          window.enforceSleepSwitchRule();
+        }
       }
       if (key === "insulin-qaedy") {
         if (typeof updateNoInsulinBox === "function") updateNoInsulinBox();

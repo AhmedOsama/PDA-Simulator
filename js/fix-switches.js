@@ -27,6 +27,36 @@
     }
   }
   
+  const sleepSwitchIds = ['statusautoModeSwitch', 'planautoModeSwitch'];
+
+  function enforceSleepSwitchRule() {
+    const exerciseActive = localStorage.getItem('exerciseautoModeSwitch') === 'true';
+    
+    sleepSwitchIds.forEach((switchId) => {
+      const sleepSwitch = document.getElementById(switchId);
+      if (!sleepSwitch) return;
+
+      const label = sleepSwitch.closest('label');
+      const wrapper = sleepSwitch.closest('.auto-switch');
+
+      if (exerciseActive) {
+        if (sleepSwitch.checked) {
+          sleepSwitch.checked = false;
+          localStorage.setItem(switchId, 'false');
+        }
+        sleepSwitch.setAttribute('disabled', 'disabled');
+        if (label) label.style.pointerEvents = 'none';
+        if (wrapper) wrapper.style.opacity = '0.5';
+      } else {
+        sleepSwitch.removeAttribute('disabled');
+        if (label) label.style.pointerEvents = '';
+        if (wrapper) wrapper.style.opacity = '';
+      }
+
+      updateSwitchVisual(sleepSwitch);
+    });
+  }
+
   // Function to handle main auto mode switch
   function handleMainAutoSwitch(event) {
     const switchEl = event.target;
@@ -84,6 +114,9 @@
     } else {
       localStorage.setItem('exerciseautoModeSwitch', 'false');
     }
+
+    localStorage.setItem('exerciseautoModeSwitch', switchEl.checked ? 'true' : 'false');
+    enforceSleepSwitchRule();
     
     updateSwitchVisual(switchEl);
   }
@@ -106,8 +139,25 @@
       }
     }
     
+    if (sleepSwitchIds.includes(switchId)) {
+      const exerciseSwitch = document.getElementById('exerciseautoModeSwitch');
+      const exerciseActive = exerciseSwitch ? exerciseSwitch.checked : (localStorage.getItem('exerciseautoModeSwitch') === 'true');
+      if (exerciseActive) {
+        event.preventDefault();
+        switchEl.checked = false;
+        updateSwitchVisual(switchEl);
+        if (typeof showConfirmationModal === 'function') {
+          showConfirmationModal("لا يمكن تفعيل حالة أو خطة النوم أثناء تشغيل وضع التمارين");
+        }
+        return;
+      }
+    }
+    
     // Save state
     localStorage.setItem(switchId, switchEl.checked ? 'true' : 'false');
+    if (sleepSwitchIds.includes(switchId)) {
+      enforceSleepSwitchRule();
+    }
     updateSwitchVisual(switchEl);
   }
   
@@ -253,6 +303,8 @@
     // Other switches
     initializeSwitch('statusautoModeSwitch', 'other');
     initializeSwitch('planautoModeSwitch', 'other');
+
+    enforceSleepSwitchRule();
     
     console.log("✅ All switches initialized");
   }
@@ -301,6 +353,8 @@
         updateSwitchVisual(switchEl);
       }
     });
+
+    enforceSleepSwitchRule();
   }
   
   // Global function for debugging
@@ -332,12 +386,17 @@
     const switchEl = initializeSwitch(switchId, isMain);
     if (switchEl) {
       console.log(`✅ ${switchId} fixed`);
+      if (sleepSwitchIds.includes(switchId) || switchId === 'exerciseautoModeSwitch') {
+        enforceSleepSwitchRule();
+      }
       return switchEl;
     } else {
       console.error(`❌ Could not fix ${switchId}`);
       return null;
     }
   };
+
+  window.enforceSleepSwitchRule = enforceSleepSwitchRule;
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
