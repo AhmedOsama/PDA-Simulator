@@ -131,7 +131,7 @@ class ControlScreen {
           <div class="dashed-sep"></div>
         </div>
 
-        <div class="close-chevron w-100 text-center mb-3"><i class="fa-solid fa-chevron-up"></i></div>
+        <div class="close-chevron w-100 text-center position-absolute" style="bottom: 0; left: 0; right: 0; padding-bottom: 20px; z-index: 10;"><i class="fa-solid fa-chevron-up"></i></div>
       </div>
     `;
 

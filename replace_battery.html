@@ -136,10 +136,10 @@
     }
 
     .header-title {
-      font-size: 19px;
+      font-size: 20px;
       text-align: center;
       color: #000;
-      padding: 0 20px;
+      padding: 15px 20px;
     }
 
     .step-content {
@@ -648,11 +648,11 @@
     </header>
 
     <div class="main-content">
-      <div class="px-3 cursor-pointer fs-4" onclick="handleBackNavigation()">
+      <div class="px-3 cursor-pointer back-button" onclick="handleBackNavigation()">
         <i class="fas fa-chevron-left"></i>
         رجوع
       </div>
-      <div class="header-title fs-3" id="headerTitle">استبدال الخزان/البطارية</div>
+      <div class="header-title" id="headerTitle">استبدال الخزان/البطارية</div>
 
       <!-- Step 1: Tank removal instruction -->
       <div class="step step1 hidden">
@@ -707,9 +707,9 @@
       </div>
 
       <!-- Step 3: Tank collection instruction & pump pairing-->
-      <div class="step step3 hidden">
-        <div class="step-content">
-          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+        <div class="step step3 hidden">
+          <div class="step-content">
+           <div class="header-title p-0 pt-5" style="margin: 0; color: #666;">مرحبًا بك في برنامج إيكويل
             لإدارة إعطاء الأنسولين</div>
           <div class="step-title fs-4 pt-2" style="color:#333">قم بتجميع الخزان المملوء مع المضخة</div>
           <div class="illustration">
@@ -746,8 +746,8 @@
             <div class="icon-block block4"></div>
           </div>
         </header>
-        <div class="header pb-3 pt-2 mt-0 bg-white" style="font-size: 19px">
-          <div class="position-absolute" style="right: 20px;" onclick="hidePumpPairingScreen()">
+        <div class="header pb-3 pt-2 mt-0 bg-white">
+          <div class="position-absolute back-button" style="right: 20px;" onclick="hidePumpPairingScreen()">
             <i class="fa fa-chevron-left cursor-pointer" style="color:#333"></i>
             رجوع
           </div>
@@ -787,7 +787,7 @@
 
       <div class="step step8 hidden">
         <div class="step-content">
-          <div class="header-title fs-3">استبدال الخزان/البطارية</div>
+          <div class="header-title ">استبدال الخزان/البطارية</div>
           <div class="step-title fs-4" style="color:#333">قم بتجميع الخزان المملوء مع المضخة</div>
           <div class="illustration">
             <div class="video-container">
@@ -812,7 +812,7 @@
 
       <div class="step step9 hidden">
         <div class="step-content pb-0">
-          <div class="header-title fs-3">استبدال الخزان/البطارية</div>
+          <div class="header-title">استبدال الخزان/البطارية</div>
           <div class="step-title mb-0  pt-1" style="color:#333;font-size: 32.6px !important;text-align: start;padding-right: 16px;">يرجى التهيئة حتى تصل القطرة إلى طرف الإبرة</div>
           
             <div class="img-container" >
@@ -838,7 +838,7 @@
       </div>
       <div class="step step7 hidden">
         <div class="step-content">
-          <div class="header-title fs-3">استبدال الخزان/البطارية</div>
+          <div class="header-title ">استبدال الخزان/البطارية</div>
 
           <div class="step-title fs-4">قم بتثبيت المضخة على القاعدة</div>
           <div class="illustration">
@@ -865,7 +865,7 @@
       <!-- Step 10: Unpair - Remove pump from base -->
       <div class="step step10 hidden">
         <div class="step-content">
-          <div class="header-title fs-3">إلغاء اقتران المضخة</div>
+          <div class="header-title ">إلغاء اقتران المضخة</div>
           <div class="step-title fs-2">يرجى إزالة المضخة من القاعدة.</div>
           <div class="illustration">
             <div class="video-container">
@@ -888,7 +888,7 @@
       <!-- Step 11: Unpair - Reset pump -->
       <div class="step step11 hidden">
         <div class="step-content">
-          <div class="header-title fs-3">إلغاء اقتران المضخة</div>
+          <div class="header-title ">إلغاء اقتران المضخة</div>
           <div class="step-title fs-2">يرجى إعادة ضبط المضخة</div>
           <div class="illustration">
             <div class="video-container">
@@ -911,7 +911,7 @@
       <!-- Step 12: Unpair - Cancel control -->
       <div class="step step12 hidden">
         <div class="step-content">
-          <div class="header-title fs-3">إلغاء اقتران المضخة</div>
+          <div class="header-title ">إلغاء اقتران المضخة</div>
           <div class="step-title fs-4">إلغاء تحكم جهاز مساعد السكري المحمول في المضخة A0A260</div>
           <div class="illustration" style="margin: 20px 0 25px 0 !important;">
             <!-- Empty space for illustration -->
@@ -982,9 +982,9 @@
         </div>
       </div>
       <!-- Step 4: Ventilation instruction -->
-      <div class="step step4 hidden">
-        <div class="step-content pb-0">
-          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+        <div class="step step4 hidden">
+          <div class="step-content pb-0">
+           <div class="header-title p-0 pt-5 " style="margin: 0; color: #666;">مرحبًا بك في برنامج إيكويل
             لإدارة إعطاء الأنسولين</div>
           <div class="step-title fs-4 pt-2" style="color:#333">قم بتجميع الخزان المملوء مع المضخة</div>
           <div class="illustration">
@@ -1038,9 +1038,9 @@
         </div>
       </div>
       <!-- Step 5: Final installation -->
-      <div class="step step5 hidden">
-        <div class="step-content">
-          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+        <div class="step step5 hidden">
+          <div class="step-content">
+           <div class="header-title p-0 pt-5" style="margin: 0; color: #666;">مرحبًا بك في برنامج إيكويل
             لإدارة إعطاء الأنسولين</div>
           <div class="step-title fs-4">قم بتثبيت المضخة على القاعدة</div>
           <div class="illustration">
@@ -1065,9 +1065,9 @@
       </div>
 
       <!-- Step 6: Cartridge priming -->
-      <div class="step step6 hidden">
-        <div class="step-content">
-          <div class="header-title p-0 " style="margin: 0; color: #666;font-size: 21.95px;">مرحبًا بك في برنامج إيكويل
+        <div class="step step6 hidden">
+          <div class="step-content">
+           <div class="header-title p-0 pt-5" style="margin: 0; color: #666;">مرحبًا بك في برنامج إيكويل
             لإدارة إعطاء الأنسولين</div>
           <div class="step-title fs-4 mt-3">تهيئة الكانيولا؟</div>
           <div class="illustration m-5">
@@ -1371,7 +1371,7 @@
 
       video.addEventListener('loadeddata', () => {
         console.log('Video loaded successfully');
-        video.currentTime = 13;
+        video.currentTime = 15;
       });
 
       overlay.appendChild(video);

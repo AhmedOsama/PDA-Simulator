@@ -186,8 +186,8 @@
         <div class="icon-block block4"></div>
       </div></header>
       <div
-        class="header text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
-        style="font-size: 20px">
+        class="header header-title text-center position-relative d-flex justify-content-center align-items-center pb-2 pt-2 mt-0 bg-white"
+        >
         <div>إعدادات التنبيه</div>
         <div class="position-absolute" style="right: 20px; cursor: pointer;" onclick="window.location.href='settings.html'">
           <i class="fa fa-chevron-left"></i>
@@ -483,9 +483,14 @@
             <div
               id="cgms_high_glucose_alert_ruler"
               hasRuller="true"
-              minValue="0"
-              maxValue="400"
-              borderColoring='[{"start":0,"end":200,"color":"#38b27d"},{"start":200,"end":300,"color":"#f9bf13"},{"start":300,"end":400,"color":"red"}]'></div>
+              minValue="37"
+              maxValue="540"
+              precision="1"
+              borderColoring='[
+                {"start":37,"end":69,"color":"#FF4D4D"},
+                {"start":70,"end":180,"color":"#33cc7a"},
+                {"start":181,"end":540,"color":"#FFD700"}
+              ]'></div>
             <div class="text-secondary text-center">
               <div class="mb-3">mg/dl</div>
               حرك المسطرة لأدخال قيمة سكر الدم
@@ -534,9 +539,14 @@
             <div
               id="cgms_low_glucose_alert_ruler"
               hasRuller="true"
-              minValue="0"
-              maxValue="400"
-              borderColoring='[{"start":0,"end":80,"color":"red"},{"start":80,"end":400,"color":"#38b27d"}]'></div>
+              minValue="37"
+              maxValue="540"
+              precision="1"
+              borderColoring='[
+                {"start":37,"end":69,"color":"#FF4D4D"},
+                {"start":70,"end":180,"color":"#33cc7a"},
+                {"start":181,"end":540,"color":"#FFD700"}
+              ]'></div>
             <div class="text-secondary text-center">
               <div class="mb-3">mg/dl</div>
               حرك المسطرة لأدخال قيمة سكر الدم

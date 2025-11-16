@@ -240,34 +240,43 @@
       const derivative = 1 / precision;
 
       // draw ticks and numbers
-      for (
-        let i = Math.round((startValue / precision) * 10) / 10;
-        i <= endValue / precision;
-        i++
-      ) {
+      // Ensure we iterate through the visible range properly
+      const startIter = Math.floor(startValue / precision);
+      const endIter = Math.ceil(endValue / precision);
+      
+      for (let i = startIter; i <= endIter; i++) {
+        const value = i * precision;
+        if (value < minValue || value > maxValue) continue;
+        
+        const xPos = origin.x + ((value - startValue) / precision) * divide;
+        
+        // Only draw if within canvas bounds
+        if (xPos < 0 || xPos > canvasWidth * 2) continue;
+        
         context.beginPath();
-        context.moveTo(origin.x + (i - startValue / precision) * divide, 0);
+        context.moveTo(xPos, 0);
         context.lineTo(
-          origin.x + (i - startValue / precision) * divide,
+          xPos,
           i % 10 === 0 ? heightDecimal : heightDigit
         );
         context.lineWidth = lineWidth;
         context.strokeStyle = i % 10 === 0 ? colorDecimal : colorDigit;
         context.stroke();
-          context.fillStyle = fontColor;
+        context.closePath();
 
+        // Draw numbers for multiples of 10
         if (i % 10 === 0) {
           context.fillStyle = colorDecimal;
           context.textAlign = "center";
           context.textBaseline = "top";
           context.font = `${fontSize}px Arial`;
+          const labelText = Math.round(value).toString();
           context.fillText(
-            Math.round(i / 10) / (derivative / 10),
-            origin.x + (i - startValue / precision) * divide,
+            labelText,
+            xPos,
             fontMarginTop
           );
         }
-        context.closePath();
       }
 
       // draw top border coloring
@@ -354,17 +363,19 @@
       const maxVal = parseFloat(el.getAttribute("maxValue") || 100);
       value = el.getAttribute("currentValue") || ((minVal + maxVal) / 2);
     }
+    // Ensure value is a number
+    value = parseFloat(value) || 0;
     el.dir = "ltr";
     el.style.direction = "ltr";
     var hasStoredValue = initialValue && initialValue !== "null" && initialValue !== "undefined" && initialValue !== "غير محدد" && initialValue !== "--";
     const ruler = new sliderRuler({
       el: el,
-      minValue: el.getAttribute("minValue") || 0,
-      maxValue: el.getAttribute("maxValue") || 100,
-      currentValue: value || 0,
+      minValue: parseFloat(el.getAttribute("minValue") || 0),
+      maxValue: parseFloat(el.getAttribute("maxValue") || 100),
+      currentValue: value,
       borderColoring: JSON.parse(el.getAttribute("borderColoring") || "[]"),
-      divide: el.getAttribute("divide") || 10,
-      precision: el.getAttribute("precision") || 1,
+      divide: parseFloat(el.getAttribute("divide") || 10),
+      precision: parseFloat(el.getAttribute("precision") || 1),
       handleValue: (val) => {
         if (el._ruler) {
           el.style.setProperty(
@@ -373,52 +384,44 @@
           );
         }
 
-        // Don't save to localStorage here - only save when user confirms
-        // localStorage.setItem(el.id.replace("_ruler", "") + "_value", val);
-        // Only update preview if there was a stored value OR user has interacted with ruler
-        if (hasStoredValue || el._userInteracted) {
-          if (
-            document.getElementById(
-              el.id.replace("_ruler", "") + "_value_preview"
-            )
-          ) {
-            document.getElementById(
-              el.id.replace("_ruler", "") + "_value_preview"
-            ).innerText = val;
-            if (el._ruler) {
-              document
-                .getElementById(el.id.replace("_ruler", "") + "_value_preview")
-                .style.setProperty(
-                  "color",
-                  el._ruler.getCurrentBorderColor() || "#000"
-                );
-            }
+        // Always show the current value and color in the preview/value elements
+        const previewEl = document.getElementById(
+          el.id.replace("_ruler", "") + "_value_preview"
+        );
+        if (previewEl) {
+          previewEl.innerText = val;
+          if (el._ruler) {
+            previewEl.style.setProperty(
+              "color",
+              el._ruler.getCurrentBorderColor() || "#000"
+            );
           }
-          
-          if (document.getElementById(el.id.replace("_ruler", "") + "_value")) {
-            document.getElementById(
-              el.id.replace("_ruler", "") + "_value"
-            ).innerText = val;
-            if (el._ruler) {
-              document
-                .getElementById(el.id.replace("_ruler", "") + "_value")
-                .style.setProperty(
-                  "color",
-                  el._ruler.getCurrentBorderColor() || "#000"
-                );
-            }
-          }
-          
-          // Don't update preview elements here - let closeModalMs handle it with proper formatting
-          // document
-          //   .querySelectorAll("." + el.id.replace("_ruler", "") + "_preview")
-          //   .forEach((previewEl) => {
-          //     previewEl.innerText = val;
-          //   });
         }
+
+        const valueEl = document.getElementById(
+          el.id.replace("_ruler", "") + "_value"
+        );
+        if (valueEl) {
+          valueEl.innerText = val;
+          if (el._ruler) {
+            valueEl.style.setProperty(
+              "color",
+              el._ruler.getCurrentBorderColor() || "#000"
+            );
+          }
+        }
+
+        // Don't update any other preview classes here – closeModalMs handles final formatting
       },
     });
     el._ruler = ruler;
+    
+    // Force initial canvas redraw to ensure tick labels are visible
+    if (el._ruler && el._ruler.canvas) {
+      setTimeout(() => {
+        el._ruler.dreawCanvas();
+      }, 0);
+    }
     
     // Mark as user interacted when they touch/drag the ruler
     el.addEventListener('touchstart', function() {
@@ -427,26 +430,30 @@
     el.addEventListener('mousedown', function() {
       el._userInteracted = true;
     });
-    if (el._ruler) {
-      el.style.setProperty(
-        "--ruler-border-color",
-        el._ruler.getCurrentBorderColor() || "#000"
+    
+    // Initialize display values after ruler is created (only once)
+    if (el._ruler && !el._initialized) {
+      el._initialized = true;
+      const currentVal = el._ruler.options.currentValue;
+      const borderColor = el._ruler.getCurrentBorderColor() || "#000";
+      
+      el.style.setProperty("--ruler-border-color", borderColor);
+      
+      const previewEl = document.getElementById(
+        el.id.replace("_ruler", "") + "_value_preview"
       );
-      document
-        .getElementById(el.id.replace("_ruler", "") + "_value_preview")
-        ?.style.setProperty(
-          "color",
-          el._ruler.getCurrentBorderColor() || "#000"
-        );
+      if (previewEl) {
+        previewEl.innerText = currentVal;
+        previewEl.style.setProperty("color", borderColor);
+      }
 
-      document
-        .querySelectorAll("." + el.id.replace("_ruler", "") + "_preview")
-        .forEach((ell) => {
-          ell.style.setProperty(
-            "color",
-            el._ruler.getCurrentBorderColor() || "#000"
-          );
-        });
+      const valueEl = document.getElementById(
+        el.id.replace("_ruler", "") + "_value"
+      );
+      if (valueEl) {
+        valueEl.innerText = currentVal;
+        valueEl.style.setProperty("color", borderColor);
+      }
     }
   });
 

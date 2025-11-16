@@ -77,6 +77,22 @@ body * {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Unified header title size */
+.header-title {
+  font-size: 25px;
+}
+
+/* Unified back button text size - applies to all back buttons in headers */
+.back-button,
+.header .position-absolute[style*="right"],
+.header .position-absolute[onclick],
+.header span[onclick*="showScreen"],
+.header span[onclick*="handlePdaModeNavigation"],
+.header div[onclick*="showScreen"],
+.header div[onclick*="history.back"] {
+  font-size: 20px !important;
+}
+
 .text-center {
   text-align: justify;
 }

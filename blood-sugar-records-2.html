@@ -103,7 +103,7 @@
     .ruler-container {
       position: relative;
       width: 100%;
-      height: 100px;
+      height: 120px;
       overflow: hidden;
       margin: 20px 0;
     }
@@ -527,7 +527,7 @@
 
               <div
                 class="position-relative w-100"
-                style="overflow: hidden">
+                style="overflow: hidden;">
                 <div class="d-flex justify-content-center align-items-center gap-5 my-4"><button class="btn decrement" target="ruler-container">
                     <i class="fa fa-minus"></i>
                   </button>
@@ -540,10 +540,15 @@
                   id="ruler-container_ruler"
                   class="bg-white"
                   hasRuller="true"
-                  minValue="0"
-                  maxValue="35"
-                  precision=".1"
-                  borderColoring='[{"start":0,"end":4.4,"color":"#ee5e56"},{"start":4.4,"end":35,"color":"#33cc7a"}]'></div>
+                  minValue="37"
+                  maxValue="540"
+                  precision="1"
+                  currentValue="180"
+                  borderColoring='[
+                    {"start":37,"end":69,"color":"#FF4D4D"},
+                    {"start":70,"end":180,"color":"#33cc7a"},
+                    {"start":181,"end":540,"color":"#FFD700"}
+                  ]'></div>
               </div>
           </section>
         </div>

@@ -662,50 +662,60 @@
               function generateRuler() {
                 ruler.innerHTML = "";
                 ticksContainer.innerHTML = "";
-
+                
                 for (let i = minValue; i <= maxValue; i++) {
                   const tick = document.createElement("div");
                   tick.style.position = "relative";
                   tick.style.flex = `0 0 ${unitWidth}px`;
                   tick.style.maxWidth = `${unitWidth}px`;
                   tick.style.textAlign = "center";
-
+                  
+                  // نفس ألوان مسطرة الأوتوماتيك: 37–69 أحمر، 70–180 أخضر، 181–540 أصفر
+                  let lineColor = "gray";
+                  if (i % 10 === 0) {
+                    lineColor = "black";
+                  } else {
+                    if (i < 70) lineColor = "#FF4D4D"; // Red
+                    else if (i <= 180) lineColor = "#33cc7a"; // Green
+                    else lineColor = "#FFD700"; // Yellow
+                  }
+                  
                   const line = document.createElement("div");
                   line.style.height = i % 10 === 0 ? "26px" : "12px";
-                  line.style.background = i % 10 === 0 ? "black" : "gray";
+                  line.style.background = lineColor;
                   line.style.margin = "2px auto";
                   line.style.width = "2px";
                   tick.appendChild(line);
-
+                  
                   if (i % 10 === 0) {
                     const label = document.createElement("div");
                     label.innerText = i;
                     label.style.fontSize = "20px";
                     label.style.fontWeight = "bold";
                     label.style.marginTop = "10px";
+                    label.style.color = "#333";
                     tick.appendChild(label);
                   }
-
+                  
                   ticksContainer.appendChild(tick);
-
+                  
                   const rulerSegment = document.createElement("div");
                   rulerSegment.style.flex = `0 0 ${unitWidth}px`;
                   rulerSegment.style.height = "6px";
-
+                  
                   if (i == 79) {
                     rulerSegment.style.flex = `0 0 8px`;
                   }
                   if (i == 80) {
                     rulerSegment.style.flex = `0 0 20px`;
                   }
-                  if (i <= 79) {
-                    rulerSegment.style.backgroundColor = "#ee5e56";
-                  } else if (i <= 140) {
-                    rulerSegment.style.backgroundColor = "#33cc7a";
-                  } else {
-                    rulerSegment.style.backgroundColor = "#ee5e56";
-                  }
-
+                  
+                  let bgColor = "#FF4D4D"; // Red
+                  if (i >= 70 && i <= 180) bgColor = "#33cc7a";
+                  if (i > 180) bgColor = "#FFD700";
+                  
+                  rulerSegment.style.backgroundColor = bgColor;
+                  
                   ruler.appendChild(rulerSegment);
                 }
               }

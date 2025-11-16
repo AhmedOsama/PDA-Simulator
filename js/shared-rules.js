@@ -22,16 +22,25 @@
     console.log(`🔄 Fallback UI Update for ${key}: ${value}`);
 
     if (key === "cgms_paired") {
+      // Exclude container elements and CGMS UI elements
+      const excludedClasses = ['cgms-middle-section', 'cgms-box', 'cgms-inner', 'cgms-inner-dot', 'cgms-label'];
       const cgmsElements = document.querySelectorAll('[id*="cgms"], [class*="cgms"], .cgms-paired, .cgms-status, #cgmsStatus');
       cgmsElements.forEach(el => {
-        if (el && el.textContent !== undefined) {
-          if (!el.children.length || el.tagName === 'SPAN' || el.tagName === 'DIV') {
-            if (value === "true") {
-              el.textContent = "جاهز";
-              el.style.color = "#1b52a4";
-            } else {
-              el.textContent = "غير جاهز";
-              el.style.color = "#7b7b7b";
+        // Skip container elements and CGMS UI elements
+        const isExcluded = excludedClasses.some(className => el.classList.contains(className));
+        if (el && el.textContent !== undefined && !isExcluded) {
+          // Only update elements that are not containers (elements with many children are likely containers)
+          // Also check if element has specific CGMS-related classes that should be excluded
+          if (el.children.length <= 3 && (el.tagName === 'SPAN' || el.tagName === 'DIV' || el.tagName === 'P')) {
+            // Double check: don't update if it's a container-like element
+            if (!el.classList.contains('cgms-box') && !el.classList.contains('cgms-inner') && !el.classList.contains('cgms-label')) {
+              if (value === "true") {
+                el.textContent = "جاهز";
+                el.style.color = "#1b52a4";
+              } else {
+                el.textContent = "غير جاهز";
+                el.style.color = "#7b7b7b";
+              }
             }
           }
         }
