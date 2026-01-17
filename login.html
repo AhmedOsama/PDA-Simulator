@@ -10,6 +10,11 @@
 
     <link rel="stylesheet" href="style/keyboard.css">
     <link rel="stylesheet" href="style/app.css">
+    <script>
+      if (new URLSearchParams(window.location.search).get('embed') === '1') {
+        document.documentElement.classList.add('embed-mode');
+      }
+    </script>
     <link rel="preload" href="assets/FinalCover.png" as="image">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <style>

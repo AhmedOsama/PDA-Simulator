@@ -1,0 +1,225 @@
+<style>
+  .pump-content-section {
+    padding: 40px 20px;
+    background: {{ section.settings.background_color }};
+  }
+
+  .pump-content-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pump-content-block {
+    flex: 1;
+    min-width: 280px;
+    max-width: 500px;
+  }
+
+  .pump-simulator-container {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 480 / 800;
+    margin: 0 auto;
+  }
+
+  .pump-simulator-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .pump-simulator-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #666;
+  }
+
+  .pump-simulator-iframe.loaded + .pump-simulator-loading {
+    display: none;
+  }
+
+  .pump-text-block h2 {
+    margin-bottom: 15px;
+    font-size: 28px;
+  }
+
+  .pump-text-block p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+  }
+
+  .pump-image-block img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  /* Tablet */
+  @media (min-width: 768px) {
+    .pump-simulator-container {
+      max-width: 400px;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .pump-simulator-container {
+      max-width: 480px;
+    }
+  }
+</style>
+
+<div class="pump-content-section">
+  <div class="pump-content-grid">
+    {% for block in section.blocks %}
+      <div class="pump-content-block" {{ block.shopify_attributes }}>
+        {% case block.type %}
+
+          {% when 'simulator' %}
+            <div class="pump-simulator-container">
+              <iframe
+                id="pump-simulator-iframe-{{ block.id }}"
+                class="pump-simulator-iframe"
+                src="{{ block.settings.simulator_url }}"
+                title="{{ block.settings.iframe_title }}"
+                loading="lazy"
+                allow="fullscreen"
+                onload="this.classList.add('loaded')"
+              ></iframe>
+              <div class="pump-simulator-loading">جاري التحميل...</div>
+            </div>
+
+          {% when 'text' %}
+            <div class="pump-text-block">
+              {% if block.settings.heading != blank %}
+                <h2>{{ block.settings.heading }}</h2>
+              {% endif %}
+              {% if block.settings.text != blank %}
+                <p>{{ block.settings.text }}</p>
+              {% endif %}
+            </div>
+
+          {% when 'image' %}
+            <div class="pump-image-block">
+              {% if block.settings.image != blank %}
+                <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.image.alt | default: 'Image' }}">
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+
+          {% when 'html' %}
+            <div class="pump-html-block">
+              {{ block.settings.html_content }}
+            </div>
+
+        {% endcase %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pump Simulator + Content",
+  "tag": "section",
+  "class": "pump-simulator-content-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f5f5f5"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "simulator",
+      "name": "Pump Simulator",
+      "settings": [
+        {
+          "type": "text",
+          "id": "simulator_url",
+          "label": "Simulator URL",
+          "default": "https://ahmedosama.github.io/PDA-Simulator/login.html?embed=1",
+          "info": "Add ?embed=1 for transparent background"
+        },
+        {
+          "type": "text",
+          "id": "iframe_title",
+          "label": "Accessibility Title",
+          "default": "Insulin Pump Simulator"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "About the Simulator"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Learn how to use the insulin pump with our interactive simulator.</p>"
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "html",
+      "name": "Custom HTML",
+      "settings": [
+        {
+          "type": "html",
+          "id": "html_content",
+          "label": "HTML Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pump Simulator + Content",
+      "blocks": [
+        {
+          "type": "simulator"
+        },
+        {
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

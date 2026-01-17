@@ -1,0 +1,49 @@
+<style>
+  .pump-fullpage {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+
+  .pump-fullpage iframe {
+    width: 480px;
+    height: 800px;
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  @media (max-width: 540px) {
+    .pump-fullpage iframe {
+      width: 100%;
+      max-width: 320px;
+      height: 533px;
+    }
+  }
+</style>
+
+<div class="pump-fullpage">
+  <iframe
+    src="{{ section.settings.simulator_url }}"
+    title="Insulin Pump Simulator"
+    loading="lazy"
+    allow="fullscreen"
+  ></iframe>
+</div>
+
+{% schema %}
+{
+  "name": "Pump Simulator Full Page",
+  "settings": [
+    {
+      "type": "url",
+      "id": "simulator_url",
+      "label": "Simulator URL",
+      "default": "https://ahmedosama.github.io/PDA-Simulator/login.html"
+    }
+  ]
+}
+{% endschema %}

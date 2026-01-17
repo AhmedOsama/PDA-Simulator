@@ -50,6 +50,17 @@ html, body {
   background-color: #ffffff !important;
 }
 
+/* Transparent mode for iframe embedding - add ?embed=1 to URL */
+html.embed-mode,
+html.embed-mode body {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+html.embed-mode .phone-container {
+  background-color: transparent !important;
+}
+
 body {
   opacity: 1;
   transition: opacity 0.15s ease-out;

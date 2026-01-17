@@ -1,0 +1,91 @@
+<style>
+  .pump-simulator-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 600px;
+  }
+
+  .pump-simulator-container {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 480 / 800;
+  }
+
+  .pump-simulator-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Tablet */
+  @media (min-width: 768px) {
+    .pump-simulator-container {
+      max-width: 400px;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .pump-simulator-container {
+      max-width: 480px;
+    }
+  }
+
+  .pump-simulator-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: #666;
+  }
+
+  .pump-simulator-iframe.loaded + .pump-simulator-loading {
+    display: none;
+  }
+</style>
+
+<div class="pump-simulator-wrapper">
+  <div class="pump-simulator-container">
+    <iframe
+      id="pump-simulator-iframe-{{ block.id }}"
+      class="pump-simulator-iframe"
+      src="{{ block.settings.simulator_url }}"
+      title="{{ block.settings.iframe_title }}"
+      loading="lazy"
+      allow="fullscreen"
+      onload="this.classList.add('loaded')"
+    ></iframe>
+    <div class="pump-simulator-loading">جاري التحميل...</div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Pump Simulator",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "simulator_url",
+      "label": "Simulator URL",
+      "default": "https://ahmedosama.github.io/PDA-Simulator/login.html",
+      "info": "Enter the full URL to the pump simulator"
+    },
+    {
+      "type": "text",
+      "id": "iframe_title",
+      "label": "Accessibility Title",
+      "default": "Insulin Pump Simulator"
+    }
+  ]
+}
+{% endschema %}
