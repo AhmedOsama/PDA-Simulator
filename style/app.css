@@ -61,6 +61,30 @@ html.embed-mode .phone-container {
   background-color: transparent !important;
 }
 
+/* Mobile responsive styles for iframe embedding */
+@media screen and (max-width: 500px) {
+  html.embed-mode body {
+    zoom: 1 !important;
+    transform: scale(0.85);
+    transform-origin: top center;
+    min-height: auto !important;
+    padding: 0 !important;
+  }
+
+  html.embed-mode .phone-container {
+    max-width: 100vw !important;
+    width: 100vw !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  html.embed-mode body {
+    transform: scale(0.75);
+  }
+}
+
 body {
   opacity: 1;
   transition: opacity 0.15s ease-out;
