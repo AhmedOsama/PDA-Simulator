@@ -23,6 +23,28 @@
     border: none;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    touch-action: pan-y pinch-zoom;
+  }
+
+  /* Mobile - larger size for better usability */
+  @media (max-width: 767px) {
+    .pump-simulator-wrapper {
+      padding: 10px;
+      min-height: auto;
+    }
+
+    .pump-simulator-container {
+      max-width: 100%;
+      width: 100%;
+      aspect-ratio: auto;
+      height: 85vh;
+      min-height: 600px;
+      max-height: 800px;
+    }
+
+    .pump-simulator-iframe {
+      border-radius: 12px;
+    }
   }
 
   /* Tablet */
@@ -56,10 +78,10 @@
 <div class="pump-simulator-wrapper">
   <div class="pump-simulator-container">
     <iframe
-      id="pump-simulator-iframe-{{ block.id }}"
+      id="pump-simulator-iframe-{{ section.id }}"
       class="pump-simulator-iframe"
-      src="{{ block.settings.simulator_url }}"
-      title="{{ block.settings.iframe_title }}"
+      src="{{ section.settings.simulator_url | append: '?embed=1' }}"
+      title="{{ section.settings.iframe_title }}"
       loading="lazy"
       allow="fullscreen"
       onload="this.classList.add('loaded')"
@@ -71,13 +93,14 @@
 {% schema %}
 {
   "name": "Pump Simulator",
-  "target": "section",
+  "tag": "section",
+  "class": "pump-simulator-content-section",
   "settings": [
     {
       "type": "text",
       "id": "simulator_url",
       "label": "Simulator URL",
-      "default": "https://ahmedosama.github.io/PDA-Simulator/login.html",
+      "default": "https://ahmedosama.github.io/PDA-Simulator/pda-mode.html",
       "info": "Enter the full URL to the pump simulator"
     },
     {
@@ -85,6 +108,11 @@
       "id": "iframe_title",
       "label": "Accessibility Title",
       "default": "Insulin Pump Simulator"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pump Simulator"
     }
   ]
 }
