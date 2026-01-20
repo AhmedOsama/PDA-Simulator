@@ -37,6 +37,7 @@
     border: none;
     border-radius: 20px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    touch-action: pan-y pinch-zoom;
   }
 
   .pump-simulator-loading {
@@ -69,6 +70,31 @@
     border-radius: 12px;
   }
 
+  /* Mobile - larger size for better usability */
+  @media (max-width: 767px) {
+    .pump-content-section {
+      padding: 20px 10px;
+    }
+
+    .pump-content-block {
+      min-width: 100%;
+      max-width: 100%;
+    }
+
+    .pump-simulator-container {
+      max-width: 100%;
+      width: 100%;
+      aspect-ratio: auto;
+      height: 85vh;
+      min-height: 600px;
+      max-height: 800px;
+    }
+
+    .pump-simulator-iframe {
+      border-radius: 12px;
+    }
+  }
+
   /* Tablet */
   @media (min-width: 768px) {
     .pump-simulator-container {
@@ -95,7 +121,7 @@
               <iframe
                 id="pump-simulator-iframe-{{ block.id }}"
                 class="pump-simulator-iframe"
-                src="{{ block.settings.simulator_url }}"
+                src="{{ block.settings.simulator_url | append: '?embed=1' }}"
                 title="{{ block.settings.iframe_title }}"
                 loading="lazy"
                 allow="fullscreen"
@@ -156,8 +182,8 @@
           "type": "text",
           "id": "simulator_url",
           "label": "Simulator URL",
-          "default": "https://ahmedosama.github.io/PDA-Simulator/login.html?embed=1",
-          "info": "Add ?embed=1 for transparent background"
+          "default": "https://ahmedosama.github.io/PDA-Simulator/pda-mode.html",
+          "info": "The ?embed=1 parameter will be added automatically"
         },
         {
           "type": "text",
