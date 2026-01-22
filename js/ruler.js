@@ -82,7 +82,7 @@
     }
 
     touchStart(e) {
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
       if (e || this.localState.isTouchEnd) {
         this.touchPoints(e);
         let touch = (e.touches && e.touches[0]) || e;

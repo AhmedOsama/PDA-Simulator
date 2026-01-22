@@ -250,7 +250,7 @@ function setupWheel(list, data, defaultValue) {
   wheel.addEventListener(
     "touchmove",
     (e) => {
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
       onMove(e.touches[0].clientY);
     },
     { passive: false }
